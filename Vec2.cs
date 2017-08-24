@@ -69,6 +69,15 @@ namespace mathx
 		}
 
 
+		public static explicit operator Vec2(Vec3 v)
+		{
+			return new Vec2(v.x, v.y);
+		}
+		public static explicit operator Vec2(Vec4 v)
+		{
+			return new Vec2(v.x, v.y);
+		}
+
 		public static bool operator ==(Vec2 lhs, Vec2 rhs)
 		{
 			bool bx = Math.Abs(lhs.x - rhs.x) <= MathX.accuracy;

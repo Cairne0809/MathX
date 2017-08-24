@@ -75,7 +75,16 @@ namespace mathx
 			return this == v;
 		}
 
-		
+
+		public static explicit operator Quat(Vec3 v)
+		{
+			return new Quat(v.x, v.y, v.z, 0);
+		}
+		public static explicit operator Quat(Vec4 v)
+		{
+			return new Quat(v.x, v.y, v.z, v.w);
+		}
+
 		public static bool operator ==(Quat lhs, Quat rhs)
 		{
 			bool bx = Math.Abs(lhs.x - rhs.x) <= MathX.accuracy;
@@ -153,21 +162,21 @@ namespace mathx
 			double vx, vy, vz;
 			if (test >= 0.5)
 			{
-				vx = 2.0 * Math.Atan2(qx, qw);
-				vy = MathX.HalfPI;
+				vx = MathX.HalfPI;
+				vy = 2.0 * Math.Atan2(qy, qw);
 				vz = 0;
 			}
 			else if (test <= -0.5)
 			{
-				vx = -2.0 * Math.Atan2(qx, qw);
-				vy = -MathX.HalfPI;
+				vx = -MathX.HalfPI;
+				vy = -2.0 * Math.Atan2(qy, qw);
 				vz = 0;
 			}
 			else
 			{
-				vx = Math.Atan2(2.0 * qy * qw - 2.0 * qx * qz, 1.0 - 2.0 * qy * qy - 2.0 * qz * qz);
+				vx = Math.Atan2(2.0 * (qy * qw - qx * qz), 1.0 - 2.0 * (qy * qy + qz * qz));
 				vy = Math.Asin(2.0 * test);
-				vz = Math.Atan2(2.0 * qx * qw - 2.0 * qy * qz, 1.0 - 2.0 * qx * qx - 2.0 * qz * qz);
+				vz = Math.Atan2(2.0 * (qx * qw - qy * qz), 1.0 - 2.0 * (qx * qx + qz * qz));
 			}
 			return new Vec3(vx, vy, vz);
 		}

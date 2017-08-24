@@ -77,9 +77,13 @@ namespace mathx
 		{
 			return new Vec3(v.x, v.y, 0);
 		}
-		public static explicit operator Vec2(Vec3 v)
+		public static explicit operator Vec3(Vec4 v)
 		{
-			return new Vec2(v.x, v.y);
+			return new Vec3(v.x, v.y, v.z);
+		}
+		public static explicit operator Vec3(Quat q)
+		{
+			return new Vec3(q.x, q.y, q.z);
 		}
 
 		public static bool operator ==(Vec3 lhs, Vec3 rhs)
