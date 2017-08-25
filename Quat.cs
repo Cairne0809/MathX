@@ -162,12 +162,12 @@ namespace mathx
 
 		public static Vec3 ToEuler(Quat quat)
 		{
+			quat = quat.normalized;
 			double qx = quat.x, qy = quat.y, qz = quat.z, qw = quat.w;
-			double vx, vy, vz;
-			vx = Math.Atan2(2.0 * (qx * qw - qy * qz), 1.0 - 2.0 * (qx * qx + qz * qz));
-			vy = Math.Atan2(2.0 * (qy * qw - qx * qz), 1.0 - 2.0 * (qy * qy + qz * qz));
+			double vx = Math.Atan2(2.0 * (qx * qw - qy * qz), 1.0 - 2.0 * (qx * qx + qz * qz));
+			double vy = Math.Atan2(2.0 * (qy * qw - qx * qz), 1.0 - 2.0 * (qy * qy + qz * qz));
 			double sin = 2.0 * (qx * qy + qz * qw);
-			vz = Math.Asin(sin > 1 ? 1 : sin < -1 ? -1 : sin);
+			double vz = Math.Asin(sin > 1 ? 1 : sin < -1 ? -1 : sin);
 			return new Vec3(vx, vy, vz);
 		}
 
