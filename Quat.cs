@@ -103,7 +103,7 @@ namespace mathx
 		}
 
 		/// <summary>
-		/// ~Q = (-x, -y, -z, w)
+		/// Conjugate: ~Q = (-x, -y, -z, w)
 		/// </summary>
 		public static Quat operator ~(Quat q)
 		{
@@ -140,6 +140,11 @@ namespace mathx
 			double vz = nw * z1 - nx * y1 + ny * x1 + nz * w1;
 			return new Vec3(vx, vy, vz);
 		}
+		
+		public static Vec3 operator *(Vec3 lhs, Quat rhs)
+		{
+			return rhs * lhs;
+		}
 
 		public static double Angle(Quat lhs, Quat rhs)
 		{
@@ -158,26 +163,11 @@ namespace mathx
 		public static Vec3 ToEuler(Quat quat)
 		{
 			double qx = quat.x, qy = quat.y, qz = quat.z, qw = quat.w;
-			double test = qx * qy + qz * qw;
 			double vx, vy, vz;
-			if (test >= 0.5)
-			{
-				vx = MathX.HalfPI;
-				vy = 2.0 * Math.Atan2(qy, qw);
-				vz = 0;
-			}
-			else if (test <= -0.5)
-			{
-				vx = -MathX.HalfPI;
-				vy = -2.0 * Math.Atan2(qy, qw);
-				vz = 0;
-			}
-			else
-			{
-				vx = Math.Atan2(2.0 * (qy * qw - qx * qz), 1.0 - 2.0 * (qy * qy + qz * qz));
-				vy = Math.Asin(2.0 * test);
-				vz = Math.Atan2(2.0 * (qx * qw - qy * qz), 1.0 - 2.0 * (qx * qx + qz * qz));
-			}
+			vx = Math.Atan2(2.0 * (qx * qw - qy * qz), 1.0 - 2.0 * (qx * qx + qz * qz));
+			vy = Math.Atan2(2.0 * (qy * qw - qx * qz), 1.0 - 2.0 * (qy * qy + qz * qz));
+			double sin = 2.0 * (qx * qy + qz * qw);
+			vz = Math.Asin(sin > 1 ? 1 : sin < -1 ? -1 : sin);
 			return new Vec3(vx, vy, vz);
 		}
 
