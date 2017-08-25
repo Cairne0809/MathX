@@ -151,10 +151,10 @@ namespace mathx
 			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z, w1 = lhs.w;
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z, w2 = rhs.w;
 			double dot = x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2;
-			double m1 = Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1);
-			double m2 = Math.Sqrt(x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2);
-			if (m1 == 0 || m2 == 0) return 0;
-			double cos = dot / m1 / m2;
+			double sm1 = x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1;
+			double sm2 = x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2;
+			if (sm1 == 0 || sm2 == 0) return 0;
+			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
 			double angle = 2.0 * Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 			if (angle > MathX.PI) angle = MathX.DoublePI - angle;
 			return angle;
@@ -162,8 +162,14 @@ namespace mathx
 
 		public static Vec3 ToEuler(Quat quat)
 		{
-			quat = quat.normalized;
 			double qx = quat.x, qy = quat.y, qz = quat.z, qw = quat.w;
+			double sm = qx * qx + qy * qy + qz * qz + qw * qw;
+			if (sm == 0) return new Vec3();
+			double mag = Math.Sqrt(sm);
+			qx /= mag;
+			qy /= mag;
+			qz /= mag;
+			qw /= mag;
 			double vx = Math.Atan2(2.0 * (qx * qw - qy * qz), 1.0 - 2.0 * (qx * qx + qz * qz));
 			double vy = Math.Atan2(2.0 * (qy * qw - qx * qz), 1.0 - 2.0 * (qy * qy + qz * qz));
 			double sin = 2.0 * (qx * qy + qz * qw);
@@ -192,10 +198,10 @@ namespace mathx
 		public static Quat AxisAngle(Vec3 axis, double angle)
 		{
 			double ax = axis.x, ay = axis.y, az = axis.z;
-			double mag = Math.Sqrt(ax * ax + ay * ay + az * az);
-			if (mag == 0) return identity;
+			double sm = ax * ax + ay * ay + az * az;
+			if (sm == 0) return new Quat(0, 0, 0, 1);
 			angle /= 2.0;
-			double SdM = Math.Sin(angle) / mag;
+			double SdM = Math.Sin(angle) / Math.Sqrt(sm);
 			double qx = ax * SdM;
 			double qy = ay * SdM;
 			double qz = az * SdM;
