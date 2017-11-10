@@ -2,7 +2,7 @@
 
 namespace mathx
 {
-	public struct Mtx44
+	public struct Mtx4
 	{
 		public double v00;
 		public double v01;
@@ -144,16 +144,16 @@ namespace mathx
 		}
 
 
-		public static bool operator ==(Mtx44 lhs, Mtx44 rhs)
+		public static bool operator ==(Mtx4 lhs, Mtx4 rhs)
 		{
 			return lhs.Equals(rhs);
 		}
-		public static bool operator !=(Mtx44 lhs, Mtx44 rhs)
+		public static bool operator !=(Mtx4 lhs, Mtx4 rhs)
 		{
 			return !lhs.Equals(rhs);
 		}
 
-		public static Mtx44 operator ~(Mtx44 m)
+		public static Mtx4 operator ~(Mtx4 m)
 		{
 			double n12 = m.v10;
 			double n13 = m.v20;
@@ -190,9 +190,9 @@ namespace mathx
 			return m;
 		}
 
-		public static Mtx44 operator +(Mtx44 lhs, Mtx44 rhs)
+		public static Mtx4 operator +(Mtx4 lhs, Mtx4 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx4 m = new Mtx4();
 
 			m.v00 = lhs.v00 + rhs.v00;
 			m.v01 = lhs.v01 + rhs.v01;
@@ -217,9 +217,9 @@ namespace mathx
 			return m;
 		}
 
-		public static Mtx44 operator -(Mtx44 lhs, Mtx44 rhs)
+		public static Mtx4 operator -(Mtx4 lhs, Mtx4 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx4 m = new Mtx4();
 
 			m.v00 = lhs.v00 - rhs.v00;
 			m.v01 = lhs.v01 - rhs.v01;
@@ -244,9 +244,9 @@ namespace mathx
 			return m;
 		}
 
-		public static Mtx44 operator *(double lhs, Mtx44 rhs)
+		public static Mtx4 operator *(double lhs, Mtx4 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx4 m = new Mtx4();
 
 			m.v00 = lhs * rhs.v00;
 			m.v01 = lhs * rhs.v01;
@@ -271,9 +271,9 @@ namespace mathx
 			return m;
 		}
 
-		public static Mtx44 operator *(Mtx44 lhs, double rhs)
+		public static Mtx4 operator *(Mtx4 lhs, double rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx4 m = new Mtx4();
 
 			m.v00 = lhs.v00 * rhs;
 			m.v01 = lhs.v01 * rhs;
@@ -298,9 +298,9 @@ namespace mathx
 			return m;
 		}
 
-		public static Mtx44 operator /(Mtx44 lhs, double rhs)
+		public static Mtx4 operator /(Mtx4 lhs, double rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx4 m = new Mtx4();
 
 			m.v00 = lhs.v00 / rhs;
 			m.v01 = lhs.v01 / rhs;
@@ -325,9 +325,9 @@ namespace mathx
 			return m;
 		}
 
-		public static Mtx44 operator *(Mtx44 lhs, Mtx44 rhs)
+		public static Mtx4 operator *(Mtx4 lhs, Mtx4 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx4 m = new Mtx4();
 
 			m.v00 = lhs.v00 * rhs.v00 + lhs.v01 * rhs.v10 + lhs.v02 * rhs.v20 + lhs.v03 * rhs.v30;
 			m.v01 = lhs.v00 * rhs.v01 + lhs.v01 * rhs.v11 + lhs.v02 * rhs.v21 + lhs.v03 * rhs.v31;

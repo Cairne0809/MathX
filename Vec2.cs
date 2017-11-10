@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mathx
 {
@@ -17,14 +13,14 @@ namespace mathx
 			{
 				if (index == 0) return x;
 				else if (index == 1) return y;
-				else throw (new Exception("The index is out of range!"));
+				else throw new Exception("The index is out of range!");
 			}
 			set
 			{
 				if (index == 0) x = value;
 				else if (index == 1) y = value;
-				else throw (new Exception("The index is out of range!"));
-			}
+				else throw new Exception("The index is out of range!");
+            }
 		}
 		public int dimension { get { return 2; } }
 		public bool isNaN { get { return double.IsNaN(x) || double.IsNaN(y); } }

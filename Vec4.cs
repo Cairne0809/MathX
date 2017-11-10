@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mathx
 {
@@ -21,7 +17,7 @@ namespace mathx
 				else if (index == 1) return y;
 				else if (index == 2) return z;
 				else if (index == 3) return w;
-				else throw (new Exception("The index is out of range!"));
+				else throw new Exception("The index is out of range!");
 			}
 			set
 			{
@@ -29,7 +25,7 @@ namespace mathx
 				else if (index == 1) y = value;
 				else if (index == 2) z = value;
 				else if (index == 3) w = value;
-				else throw (new Exception("The index is out of range!"));
+				else throw new Exception("The index is out of range!");
 			}
 		}
 		public int dimension { get { return 4; } }

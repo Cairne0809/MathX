@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mathx
 {
 	public class MathX
 	{
 		public const double PI = Math.PI;
-		public const double DoublePI = 2 * Math.PI;
-		public const double HalfPI = 0.5 * Math.PI;
-		public const double Rad2Deg = 180 / Math.PI;
-		public const double Deg2Rad = Math.PI / 180;
+		public const double DoublePI = 2 * PI;
+		public const double HalfPI = 0.5 * PI;
+		public const double Rad2Deg = 180 / PI;
+		public const double Deg2Rad = PI / 180;
 
 		/// <summary>
 		/// The accuracy is related to the number of significant digit.
@@ -125,17 +121,6 @@ namespace mathx
 			opt[0] = a = ((x3 - x1) * (y1 - y2) - (x1 - x2) * (y3 - y1)) / de3;
 			opt[1] = b = (y1 - y2 - a * (x1 * x1 - x2 * x2)) / de1;
 			opt[2] = c = y1 - a * x1 * x1 - b * x1;
-			return opt;
-		}
-		public static double[] SolveParaCurve(double x1, double y1, double x2, double y2, double[] opt = null)
-		{
-			if (opt == null) opt = new double[2];
-			double de1 = x1 - x2;
-			double de2 = -de1 * x2 * x1;
-			double a;
-			double b;
-			opt[0] = a = (x1 * (y2 - y1) - (x2 - x1) * y1) / de2;
-			opt[1] = b = (y1 - y2 - a * (x1 * x1 - x2 * x2)) / de1;
 			return opt;
 		}
 		

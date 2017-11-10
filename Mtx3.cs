@@ -2,27 +2,19 @@
 
 namespace mathx
 {
-	public struct Mtx44
+	public struct Mtx3
 	{
 		public double v00;
 		public double v01;
 		public double v02;
-		public double v03;
 
 		public double v10;
 		public double v11;
 		public double v12;
-		public double v13;
 
 		public double v20;
 		public double v21;
 		public double v22;
-		public double v23;
-
-		public double v30;
-		public double v31;
-		public double v32;
-		public double v33;
 
 		public double this[int index]
 		{
@@ -33,22 +25,14 @@ namespace mathx
 					case 0: return v00;
 					case 1: return v01;
 					case 2: return v02;
-					case 3: return v03;
 					
 					case 4: return v10;
 					case 5: return v11;
 					case 6: return v12;
-					case 7: return v13;
 					
 					case 8: return v20;
 					case 9: return v21;
 					case 10: return v22;
-					case 11: return v23;
-					
-					case 12: return v30;
-					case 13: return v31;
-					case 14: return v32;
-					case 15: return v33;
 					
 					default: throw new Exception("The index is out of range!");
 				}
@@ -60,22 +44,14 @@ namespace mathx
 					case 0: v00 = value; break;
 					case 1: v01 = value; break;
 					case 2: v02 = value; break;
-					case 3: v03 = value; break;
 					
 					case 4: v10 = value; break;
 					case 5: v11 = value; break;
 					case 6: v12 = value; break;
-					case 7: v13 = value; break;
 					
 					case 8: v20 = value; break;
 					case 9: v21 = value; break;
 					case 10: v22 = value; break;
-					case 11: v23 = value; break;
-					
-					case 12: v30 = value; break;
-					case 13: v31 = value; break;
-					case 14: v32 = value; break;
-					case 15: v33 = value; break;
 					
 					default: throw new Exception("The index is out of range!");
 				}
@@ -89,22 +65,14 @@ namespace mathx
 					double.IsNaN(v00) ||
 					double.IsNaN(v01) ||
 					double.IsNaN(v02) ||
-					double.IsNaN(v03) ||
 
 					double.IsNaN(v10) ||
 					double.IsNaN(v11) ||
 					double.IsNaN(v12) ||
-					double.IsNaN(v13) ||
 
 					double.IsNaN(v20) ||
 					double.IsNaN(v21) ||
-					double.IsNaN(v22) ||
-					double.IsNaN(v23) ||
-
-					double.IsNaN(v30) ||
-					double.IsNaN(v31) ||
-					double.IsNaN(v32) ||
-					double.IsNaN(v33);
+					double.IsNaN(v22);
 			}
 		}
 		
@@ -114,20 +82,13 @@ namespace mathx
 			str += "|\t";
 			str += v00.ToString(format) + "\t";
 			str += v01.ToString(format) + "\t";
-			str += v02.ToString(format) + "\t";
-			str += v03.ToString(format) + "\t|\n|\t";
+			str += v02.ToString(format) + "\t|\n|\t";
 			str += v10.ToString(format) + "\t";
 			str += v11.ToString(format) + "\t";
-			str += v12.ToString(format) + "\t";
-			str += v13.ToString(format) + "\t|\n|\t";
+			str += v12.ToString(format) + "\t|\n|\t";
 			str += v20.ToString(format) + "\t";
 			str += v21.ToString(format) + "\t";
-			str += v22.ToString(format) + "\t";
-			str += v23.ToString(format) + "\t|\n|\t";
-			str += v30.ToString(format) + "\t";
-			str += v31.ToString(format) + "\t";
-			str += v32.ToString(format) + "\t";
-			str += v33.ToString(format) + "\t|";
+			str += v22.ToString(format) + "\t|";
 			return str;
 		}
 		public override string ToString()
