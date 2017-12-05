@@ -105,210 +105,148 @@ namespace mathx
 		}
 
 
-		public static bool operator ==(Mtx44 lhs, Mtx44 rhs)
+		public static bool operator ==(Mtx3 lhs, Mtx3 rhs)
 		{
 			return lhs.Equals(rhs);
 		}
-		public static bool operator !=(Mtx44 lhs, Mtx44 rhs)
+		public static bool operator !=(Mtx3 lhs, Mtx3 rhs)
 		{
 			return !lhs.Equals(rhs);
 		}
 
-		public static Mtx44 operator ~(Mtx44 m)
+		public static Mtx3 operator ~(Mtx3 m)
 		{
-			double n12 = m.v10;
-			double n13 = m.v20;
-			double n14 = m.v30;
+			double n01 = m.v10;
+			double n02 = m.v20;
 
-			double n21 = m.v01;
-			double n23 = m.v21;
-			double n24 = m.v31;
+			double n10 = m.v01;
+			double n12 = m.v21;
 
-			double n31 = m.v02;
-			double n32 = m.v12;
-			double n34 = m.v32;
+			double n20 = m.v02;
+			double n21 = m.v12;
 
-			double n41 = m.v03;
-			double n42 = m.v13;
-			double n43 = m.v23;
+			m.v01 = n01;
+			m.v02 = n02;
 
-			m.v01 = n12;
-			m.v02 = n13;
-			m.v03 = n14;
+			m.v10 = n10;
+			m.v12 = n12;
 
-			m.v10 = n21;
-			m.v12 = n23;
-			m.v13 = n24;
-
-			m.v20 = n31;
-			m.v21 = n32;
-			m.v23 = n34;
-
-			m.v30 = n41;
-			m.v31 = n42;
-			m.v32 = n43;
+			m.v20 = n20;
+			m.v21 = n21;
 
 			return m;
 		}
 
-		public static Mtx44 operator +(Mtx44 lhs, Mtx44 rhs)
+		public static Mtx3 operator +(Mtx3 lhs, Mtx3 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx3 m = new Mtx3();
 
 			m.v00 = lhs.v00 + rhs.v00;
 			m.v01 = lhs.v01 + rhs.v01;
 			m.v02 = lhs.v02 + rhs.v02;
-			m.v03 = lhs.v03 + rhs.v03;
 
 			m.v10 = lhs.v10 + rhs.v10;
 			m.v11 = lhs.v11 + rhs.v11;
 			m.v12 = lhs.v12 + rhs.v12;
-			m.v13 = lhs.v13 + rhs.v13;
 
 			m.v20 = lhs.v20 + rhs.v20;
 			m.v21 = lhs.v21 + rhs.v21;
 			m.v22 = lhs.v22 + rhs.v22;
-			m.v23 = lhs.v23 + rhs.v23;
-
-			m.v30 = lhs.v30 + rhs.v30;
-			m.v31 = lhs.v31 + rhs.v31;
-			m.v32 = lhs.v32 + rhs.v32;
-			m.v33 = lhs.v33 + rhs.v33;
 
 			return m;
 		}
 
-		public static Mtx44 operator -(Mtx44 lhs, Mtx44 rhs)
+		public static Mtx3 operator -(Mtx3 lhs, Mtx3 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx3 m = new Mtx3();
 
 			m.v00 = lhs.v00 - rhs.v00;
 			m.v01 = lhs.v01 - rhs.v01;
 			m.v02 = lhs.v02 - rhs.v02;
-			m.v03 = lhs.v03 - rhs.v03;
 
 			m.v10 = lhs.v10 - rhs.v10;
 			m.v11 = lhs.v11 - rhs.v11;
 			m.v12 = lhs.v12 - rhs.v12;
-			m.v13 = lhs.v13 - rhs.v13;
 
 			m.v20 = lhs.v20 - rhs.v20;
 			m.v21 = lhs.v21 - rhs.v21;
 			m.v22 = lhs.v22 - rhs.v22;
-			m.v23 = lhs.v23 - rhs.v23;
-
-			m.v30 = lhs.v30 - rhs.v30;
-			m.v31 = lhs.v31 - rhs.v31;
-			m.v32 = lhs.v32 - rhs.v32;
-			m.v33 = lhs.v33 - rhs.v33;
 
 			return m;
 		}
 
-		public static Mtx44 operator *(double lhs, Mtx44 rhs)
+		public static Mtx3 operator *(double lhs, Mtx3 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx3 m = new Mtx3();
 
 			m.v00 = lhs * rhs.v00;
 			m.v01 = lhs * rhs.v01;
 			m.v02 = lhs * rhs.v02;
-			m.v03 = lhs * rhs.v03;
 
 			m.v10 = lhs * rhs.v10;
 			m.v11 = lhs * rhs.v11;
 			m.v12 = lhs * rhs.v12;
-			m.v13 = lhs * rhs.v13;
 
 			m.v20 = lhs * rhs.v20;
 			m.v21 = lhs * rhs.v21;
 			m.v22 = lhs * rhs.v22;
-			m.v23 = lhs * rhs.v23;
-
-			m.v30 = lhs * rhs.v30;
-			m.v31 = lhs * rhs.v31;
-			m.v32 = lhs * rhs.v32;
-			m.v33 = lhs * rhs.v33;
 
 			return m;
 		}
 
-		public static Mtx44 operator *(Mtx44 lhs, double rhs)
+		public static Mtx3 operator *(Mtx3 lhs, double rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx3 m = new Mtx3();
 
 			m.v00 = lhs.v00 * rhs;
 			m.v01 = lhs.v01 * rhs;
 			m.v02 = lhs.v02 * rhs;
-			m.v03 = lhs.v03 * rhs;
 
 			m.v10 = lhs.v10 * rhs;
 			m.v11 = lhs.v11 * rhs;
 			m.v12 = lhs.v12 * rhs;
-			m.v13 = lhs.v13 * rhs;
 
 			m.v20 = lhs.v20 * rhs;
 			m.v21 = lhs.v21 * rhs;
 			m.v22 = lhs.v22 * rhs;
-			m.v23 = lhs.v23 * rhs;
-
-			m.v30 = lhs.v30 * rhs;
-			m.v31 = lhs.v31 * rhs;
-			m.v32 = lhs.v32 * rhs;
-			m.v33 = lhs.v33 * rhs;
 
 			return m;
 		}
 
-		public static Mtx44 operator /(Mtx44 lhs, double rhs)
+		public static Mtx3 operator /(Mtx3 lhs, double rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx3 m = new Mtx3();
 
 			m.v00 = lhs.v00 / rhs;
 			m.v01 = lhs.v01 / rhs;
 			m.v02 = lhs.v02 / rhs;
-			m.v03 = lhs.v03 / rhs;
 
 			m.v10 = lhs.v10 / rhs;
 			m.v11 = lhs.v11 / rhs;
 			m.v12 = lhs.v12 / rhs;
-			m.v13 = lhs.v13 / rhs;
 
 			m.v20 = lhs.v20 / rhs;
 			m.v21 = lhs.v21 / rhs;
 			m.v22 = lhs.v22 / rhs;
-			m.v23 = lhs.v23 / rhs;
-
-			m.v30 = lhs.v30 / rhs;
-			m.v31 = lhs.v31 / rhs;
-			m.v32 = lhs.v32 / rhs;
-			m.v33 = lhs.v33 / rhs;
 
 			return m;
 		}
 
-		public static Mtx44 operator *(Mtx44 lhs, Mtx44 rhs)
+		public static Mtx3 operator *(Mtx3 lhs, Mtx3 rhs)
 		{
-			Mtx44 m = new Mtx44();
+			Mtx3 m = new Mtx3();
 
-			m.v00 = lhs.v00 * rhs.v00 + lhs.v01 * rhs.v10 + lhs.v02 * rhs.v20 + lhs.v03 * rhs.v30;
-			m.v01 = lhs.v00 * rhs.v01 + lhs.v01 * rhs.v11 + lhs.v02 * rhs.v21 + lhs.v03 * rhs.v31;
-			m.v02 = lhs.v00 * rhs.v02 + lhs.v01 * rhs.v12 + lhs.v02 * rhs.v22 + lhs.v03 * rhs.v32;
-			m.v03 = lhs.v00 * rhs.v03 + lhs.v01 * rhs.v13 + lhs.v02 * rhs.v23 + lhs.v03 * rhs.v33;
+			m.v00 = lhs.v00 * rhs.v00 + lhs.v01 * rhs.v10 + lhs.v02 * rhs.v20;
+			m.v01 = lhs.v00 * rhs.v01 + lhs.v01 * rhs.v11 + lhs.v02 * rhs.v21;
+			m.v02 = lhs.v00 * rhs.v02 + lhs.v01 * rhs.v12 + lhs.v02 * rhs.v22;
 
-			m.v10 = lhs.v10 * rhs.v00 + lhs.v11 * rhs.v10 + lhs.v12 * rhs.v20 + lhs.v13 * rhs.v30;
-			m.v11 = lhs.v10 * rhs.v01 + lhs.v11 * rhs.v11 + lhs.v12 * rhs.v21 + lhs.v13 * rhs.v31;
-			m.v12 = lhs.v10 * rhs.v02 + lhs.v11 * rhs.v12 + lhs.v12 * rhs.v22 + lhs.v13 * rhs.v32;
-			m.v13 = lhs.v10 * rhs.v03 + lhs.v11 * rhs.v13 + lhs.v12 * rhs.v23 + lhs.v13 * rhs.v33;
+			m.v10 = lhs.v10 * rhs.v00 + lhs.v11 * rhs.v10 + lhs.v12 * rhs.v20;
+			m.v11 = lhs.v10 * rhs.v01 + lhs.v11 * rhs.v11 + lhs.v12 * rhs.v21;
+			m.v12 = lhs.v10 * rhs.v02 + lhs.v11 * rhs.v12 + lhs.v12 * rhs.v22;
 
-			m.v20 = lhs.v20 * rhs.v00 + lhs.v21 * rhs.v10 + lhs.v22 * rhs.v20 + lhs.v23 * rhs.v30;
-			m.v21 = lhs.v20 * rhs.v01 + lhs.v21 * rhs.v11 + lhs.v22 * rhs.v21 + lhs.v23 * rhs.v31;
-			m.v22 = lhs.v20 * rhs.v02 + lhs.v21 * rhs.v12 + lhs.v22 * rhs.v22 + lhs.v23 * rhs.v32;
-			m.v23 = lhs.v20 * rhs.v03 + lhs.v21 * rhs.v13 + lhs.v22 * rhs.v23 + lhs.v23 * rhs.v33;
-
-			m.v30 = lhs.v30 * rhs.v00 + lhs.v31 * rhs.v10 + lhs.v32 * rhs.v20 + lhs.v33 * rhs.v30;
-			m.v31 = lhs.v30 * rhs.v01 + lhs.v31 * rhs.v11 + lhs.v32 * rhs.v21 + lhs.v33 * rhs.v31;
-			m.v32 = lhs.v30 * rhs.v02 + lhs.v31 * rhs.v12 + lhs.v32 * rhs.v22 + lhs.v33 * rhs.v32;
-			m.v33 = lhs.v30 * rhs.v03 + lhs.v31 * rhs.v13 + lhs.v32 * rhs.v23 + lhs.v33 * rhs.v33;
+			m.v20 = lhs.v20 * rhs.v00 + lhs.v21 * rhs.v10 + lhs.v22 * rhs.v20;
+			m.v21 = lhs.v20 * rhs.v01 + lhs.v21 * rhs.v11 + lhs.v22 * rhs.v21;
+			m.v22 = lhs.v20 * rhs.v02 + lhs.v21 * rhs.v12 + lhs.v22 * rhs.v22;
 
 			return m;
 		}
