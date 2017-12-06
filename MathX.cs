@@ -74,41 +74,7 @@ namespace mathx
 			}
 			return dst;
 		}
-		
-		public static bool SegmentsIntersect(Vec2 p1, Vec2 p2, Vec2 q1, Vec2 q2)
-		{
-			Vec2 vp0 = p2 - p1;
-			Vec2 vp1 = q1 - p1;
-			Vec2 vp2 = q2 - p1;
-			if (Vec2.Det(vp0, vp1) * Vec2.Det(vp0, vp2) > 0.0) return false;
-			Vec2 vq0 = q2 - q1;
-			Vec2 vq1 = p1 - q1;
-			Vec2 vq2 = p2 - q1;
-			if (Vec2.Det(vq0, vq1) * Vec2.Det(vq0, vq2) > 0.0) return false;
-			return true;
-		}
-		
-		public static Vec2 SegmentsIntersection(Vec2 p1, Vec2 p2, Vec2 q1, Vec2 q2)
-		{
-			if (!SegmentsIntersect(p1, p2, q1, q2)) return new Vec2(double.NaN, double.NaN);
-			Vec2 pv = p2 - p1;
-			Vec2 qv = q2 - q1;
-			double det = Vec2.Det(pv, qv);
-			double x = -(pv.x * qv.x * (q1.y - p1.y) + pv.y * qv.x * p1.x - qv.y * pv.x * q1.x) / det;
-			double y = (pv.y * qv.y * (q1.x - p1.x) + pv.x * qv.y * p1.y - qv.x * pv.y * q1.y) / det;
-			return new Vec2(x, y);
-		}
 
-		public static Vec3 LinePlaneIntersection(Vec3 lp, Vec3 ld, Vec3 pp, Vec3 pn)
-		{
-			double dot = ld * pn;
-			if (dot == 0.0) return new Vec3(double.NaN, double.NaN, double.NaN);
-			double t = ((pp.x - lp.x) * pn.x + (pp.y - lp.y) * pn.y + (pp.z - lp.z) * pn.z) / dot;
-			double nx = lp.x + ld.x * t;
-			double ny = lp.y + ld.y * t;
-			double nz = lp.z + ld.z * t;
-			return new Vec3(nx, ny, nz);
-		}
 
 		public static double[] SolveParaCurve(double x1, double y1, double x2, double y2, double x3, double y3, double[] opt = null)
 		{
@@ -122,6 +88,119 @@ namespace mathx
 			opt[1] = b = (y1 - y2 - a * (x1 * x1 - x2 * x2)) / de1;
 			opt[2] = c = y1 - a * x1 * x1 - b * x1;
 			return opt;
+		}
+
+		public static double PointLineDistance(Vec2 p, Vec2 lnP, Vec2 lnDir)
+		{
+			Vec2 lpp = p - lnP;
+			Vec2 proj = Vec2.Project(lpp, lnDir);
+			return Math.Sqrt(lpp.sqrMagnitude - proj.sqrMagnitude);
+		}
+		public static double PointLineDistance(Vec3 p, Vec3 lnP, Vec3 lnDir)
+		{
+			Vec3 lpp = p - lnP;
+			Vec3 proj = Vec3.Project(lpp, lnDir);
+			return Math.Sqrt(lpp.sqrMagnitude - proj.sqrMagnitude);
+		}
+		public static double PointLineDistance(Vec4 p, Vec4 lnP, Vec4 lnDir)
+		{
+			Vec4 lpp = p - lnP;
+			Vec4 proj = Vec4.Project(lpp, lnDir);
+			return Math.Sqrt(lpp.sqrMagnitude - proj.sqrMagnitude);
+		}
+
+		public static bool SegmentsIntersect(Vec2 p0, Vec2 p1, Vec2 q0, Vec2 q1)
+		{
+			Vec2 vp0 = p1 - p0;
+			Vec2 vp1 = q0 - p0;
+			Vec2 vp2 = q1 - p0;
+			if (Vec2.Det(vp0, vp1) * Vec2.Det(vp0, vp2) > 0.0) return false;
+			Vec2 vq0 = q1 - q0;
+			Vec2 vq1 = p0 - q0;
+			Vec2 vq2 = p1 - q0;
+			if (Vec2.Det(vq0, vq1) * Vec2.Det(vq0, vq2) > 0.0) return false;
+			return true;
+		}
+		
+		public static Vec2 SegmentsIntersection(Vec2 p0, Vec2 p1, Vec2 q0, Vec2 q1)
+		{
+			if (!SegmentsIntersect(p0, p1, q0, q1)) return Vec2.NaV;
+			Vec2 pv = p1 - p0;
+			Vec2 qv = q1 - q0;
+			double det = Vec2.Det(pv, qv);
+			double x = -(pv.x * qv.x * (q0.y - p0.y) + pv.y * qv.x * p0.x - qv.y * pv.x * q0.x) / det;
+			double y = (pv.y * qv.y * (q0.x - p0.x) + pv.x * qv.y * p0.y - qv.x * pv.y * q0.y) / det;
+			return new Vec2(x, y);
+		}
+
+		public static Vec3 LinePlaneIntersection(Vec3 lnP, Vec3 lnDir, Vec3 plnP, Vec3 norm)
+		{
+			double dot = lnDir * norm;
+			if (dot == 0.0) return Vec3.NaV;
+			double t = (plnP - lnP) * norm / dot;
+			double nx = lnP.x + lnDir.x * t;
+			double ny = lnP.y + lnDir.y * t;
+			double nz = lnP.z + lnDir.z * t;
+			return new Vec3(nx, ny, nz);
+		}
+
+		public static Vec3 SegmentTriangleIntersection(Vec3 p0, Vec3 p1, Vec3 v0, Vec3 v1, Vec3 v2)
+		{
+			Vec3 cp = LinePlaneIntersection(p0, p1 - p0, v0, Vec3.Cross(v0 - v1, v0 - v2));
+			if (cp.isNaV) return Vec3.NaV;
+			if ((cp - p0) * (cp - p1) > 0) return Vec3.NaV;
+			Vec3 c0 = Vec3.Cross(cp - v0, cp - v1);
+			Vec3 c1 = Vec3.Cross(cp - v1, cp - v2);
+			Vec3 c2 = Vec3.Cross(cp - v2, cp - v0);
+			if (c0 * c1 < 0 || c1 * c2 < 0 || c2 * c0 < 0) return Vec3.NaV;
+			return cp;
+		}
+
+		public static int LineSphereIntersection(Vec3 lnP, Vec3 lnDir, Vec3 center, double radius, out Vec3 cp0, out Vec3 cp1)
+		{
+			//SqrDistance(sc, lp + ld * t) = sr * sr, solve t
+			//ld*ld * t*t + 2*(sc-lp)*ld * t + (sc-lp)*(sc-lp) - sr*sr = 0
+
+			lnDir = lnDir.normalized;
+			Vec3 pc = center - lnP;
+			double a = lnDir.sqrMagnitude;
+			double b = pc * lnDir * -2;
+			double c = pc.sqrMagnitude - radius * radius;
+			double delta = b * b - 4 * a * c;
+			if (delta > 0)
+			{
+				delta = Math.Sqrt(delta);
+				cp0 = lnP + (b + delta) / a / 2 * lnDir;
+				cp1 = lnP + (b - delta) / a / 2 * lnDir;
+				return 2;
+			}
+			else if (delta == 0)
+			{
+				cp0 = lnP + b / a / 2 * lnDir;
+				cp1 = Vec3.NaV;
+				return 1;
+			}
+			else
+			{
+				cp0 = cp1 = Vec3.NaV;
+				return 0;
+			}
+		}
+
+		public static int SegmentSphereIntersection(Vec3 p0, Vec3 p1, Vec3 sphereCenter, double radius, out Vec3 cp0, out Vec3 cp1)
+		{
+			int count = LineSphereIntersection(p0, p1 - p0, sphereCenter, radius, out cp0, out cp1);
+			if (count == 2 && (cp1 - p0) * (cp1 - p1) > 0)
+			{
+				cp1 = Vec3.NaV;
+				count--;
+			}
+			if (count >= 1 && (cp0 - p0) * (cp0 - p1) > 0)
+			{
+				cp0 = cp1;
+				count--;
+			}
+			return count;
 		}
 		
 	}

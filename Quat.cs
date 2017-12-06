@@ -28,7 +28,7 @@ namespace mathx
 				else throw new Exception("The index is out of range!");
 			}
 		}
-		public bool isNaN { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z) || double.IsNaN(w); } }
+		public bool isNaQ { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z) || double.IsNaN(w); } }
 		public double sqrMagnitude { get { return x * x + y * y + z * z + w * w; } }
 		public double magnitude { get { return Math.Sqrt(x * x + y * y + z * z + w * w); } }
 
@@ -207,5 +207,6 @@ namespace mathx
 
 		public static Quat zero { get { return new Quat(); } }
 		public static Quat identity { get { return new Quat(0, 0, 0, 1); } }
+		public static Quat NaQ { get { return new Quat(double.NaN, double.NaN, double.NaN, double.NaN); } }
 	}
 }

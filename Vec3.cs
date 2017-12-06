@@ -2,7 +2,7 @@
 
 namespace mathx
 {
-	public struct Vec3 : IVec
+	public struct Vec3
 	{
 		public double x;
 		public double y;
@@ -26,7 +26,7 @@ namespace mathx
 			}
 		}
 		public int dimension { get { return 3; } }
-		public bool isNaN { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z); } }
+		public bool isNaV { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z); } }
 		public double sqrMagnitude { get { return x * x + y * y + z * z; } }
 		public double magnitude { get { return Math.Sqrt(x * x + y * y + z * z); } }
 
@@ -91,10 +91,7 @@ namespace mathx
 		}
 		public static bool operator !=(Vec3 lhs, Vec3 rhs)
 		{
-			bool bx = Math.Abs(lhs.x - rhs.x) > MathX.accuracy;
-			bool by = Math.Abs(lhs.y - rhs.y) > MathX.accuracy;
-			bool bz = Math.Abs(lhs.z - rhs.z) > MathX.accuracy;
-			return bx || by || bz;
+			return !(lhs == rhs);
 		}
 
 		public static Vec3 operator -(Vec3 v)
@@ -174,7 +171,7 @@ namespace mathx
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z;
 			double m1 = Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1);
 			double m2 = Math.Sqrt(x2 * x2 + y2 * y2 + z2 * z2);
-			if (m1 == 0 || m2 == 0) return 0;
+			if (m1 == 0 || m2 == 0) return double.NaN;
 			double dot = x1 * x2 + y1 * y2 + z1 * z2;
 			double cos = dot / m1 / m2;
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
@@ -225,5 +222,6 @@ namespace mathx
 		public static Vec3 right { get { return new Vec3(1, 0, 0); } }
 		public static Vec3 up { get { return new Vec3(0, 1, 0); } }
 		public static Vec3 forward { get { return new Vec3(0, 0, 1); } }
+		public static Vec3 NaV { get { return new Vec3(double.NaN, double.NaN, double.NaN); } }
 	}
 }
