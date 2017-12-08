@@ -25,7 +25,6 @@ namespace mathx
 				else throw new Exception("The index is out of range!");
 			}
 		}
-		public int dimension { get { return 3; } }
 		public bool isNaV { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z); } }
 		public double sqrMagnitude { get { return x * x + y * y + z * z; } }
 		public double magnitude { get { return Math.Sqrt(x * x + y * y + z * z); } }
@@ -34,9 +33,13 @@ namespace mathx
 		{
 			get
 			{
-				double mag = Math.Sqrt(x * x + y * y + z * z);
-				if (mag > 0) return new Vec3(x / mag, y / mag, z / mag);
-				return new Vec3();
+				double div = x * x + y * y + z * z;
+				if (div > 0 && div != 1)
+				{
+					div = Math.Sqrt(div);
+					return new Vec3(x / div, y / div, z / div);
+				}
+				return this;
 			}
 		}
 

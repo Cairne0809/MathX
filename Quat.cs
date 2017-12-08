@@ -36,9 +36,13 @@ namespace mathx
 		{
 			get
 			{
-				double mag = Math.Sqrt(x * x + y * y + z * z + w * w);
-				if (mag > 0) return new Quat(x / mag, y / mag, z / mag, w / mag);
-				return new Quat();
+				double div = x * x + y * y + z * z + w * w;
+				if (div > 0 && div != 1)
+				{
+					div = Math.Sqrt(div);
+					return new Quat(x / div, y / div, z / div, w / div);
+				}
+				return this;
 			}
 		}
 
