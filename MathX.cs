@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MathX
+namespace MathematicsX
 {
 	public class MathX
 	{
