@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace MathematicsX
 {
@@ -18,20 +19,24 @@ namespace MathematicsX
 			_v = v;
 		}
 
-		public override string ToString()
+		public string ToString(string format)
 		{
-			string str = "";
+			StringBuilder sb = new StringBuilder();
 			for (int j = 0; j < _r; j++)
 			{
-				str += "\n|\t";
+				sb.Append("\n|\t");
 				for (int i = 0; i < _c; i++)
 				{
-					str += _v[_c * j + i].ToString();
-					if (i < _c - 1) str += "\t";
+					sb.AppendFormat(format, _v[_c * j + i]);
+					if (i < _c - 1) sb.Append("\t");
 				}
-				str += "\t|";
+				sb.Append("\t|");
 			}
-			return str;
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			return ToString("");
 		}
 
 		public Mtx Clone()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace MathematicsX
 {
@@ -56,7 +57,13 @@ namespace MathematicsX
 
 		public string ToString(string format)
 		{
-			return "(" + x.ToString(format) + ", " + y.ToString(format) + ", " + z.ToString(format) + ", " + w.ToString(format) + ")";
+			StringBuilder sb = new StringBuilder();
+			sb.Append("(")
+				.AppendFormat(format, x).Append(", ")
+				.AppendFormat(format, y).Append(", ")
+				.AppendFormat(format, z).Append(", ")
+				.AppendFormat(format, w).Append(")");
+			return sb.ToString();
 		}
 		public override string ToString()
 		{
@@ -70,9 +77,13 @@ namespace MathematicsX
 		{
 			return base.Equals(obj);
 		}
-		public bool ValueEquals(Quat v)
+		public bool ValueEquals(Quat q)
 		{
-			return this == v;
+			bool bx = Math.Abs(x - q.x) <= MathX.accuracy;
+			bool by = Math.Abs(y - q.y) <= MathX.accuracy;
+			bool bz = Math.Abs(z - q.z) <= MathX.accuracy;
+			bool bw = Math.Abs(w - q.w) <= MathX.accuracy;
+			return bx && by && bz && bw;
 		}
 
 
@@ -87,19 +98,11 @@ namespace MathematicsX
 
 		public static bool operator ==(Quat lhs, Quat rhs)
 		{
-			bool bx = Math.Abs(lhs.x - rhs.x) <= MathX.accuracy;
-			bool by = Math.Abs(lhs.y - rhs.y) <= MathX.accuracy;
-			bool bz = Math.Abs(lhs.z - rhs.z) <= MathX.accuracy;
-			bool bw = Math.Abs(lhs.w - rhs.w) <= MathX.accuracy;
-			return bx && by && bz && bw;
+			return lhs.ValueEquals(rhs);
 		}
 		public static bool operator !=(Quat lhs, Quat rhs)
 		{
-			bool bx = Math.Abs(lhs.x - rhs.x) > MathX.accuracy;
-			bool by = Math.Abs(lhs.y - rhs.y) > MathX.accuracy;
-			bool bz = Math.Abs(lhs.z - rhs.z) > MathX.accuracy;
-			bool bw = Math.Abs(lhs.w - rhs.w) > MathX.accuracy;
-			return bx || by || bz || bw;
+			return !lhs.ValueEquals(rhs);
 		}
 
 		/// <summary>

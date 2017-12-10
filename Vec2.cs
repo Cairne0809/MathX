@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace MathematicsX
 {
@@ -48,7 +49,11 @@ namespace MathematicsX
 
 		public string ToString(string format)
 		{
-			return "(" + x.ToString(format) + ", " + y.ToString(format) + ")";
+			StringBuilder sb = new StringBuilder();
+			sb.Append("(")
+				.AppendFormat(format, x).Append(", ")
+				.AppendFormat(format, y).Append(")");
+			return sb.ToString();
 		}
 		public override string ToString()
 		{
@@ -64,7 +69,9 @@ namespace MathematicsX
 		}
 		public bool ValueEquals(Vec2 v)
 		{
-			return this == v;
+			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
+			bool by = Math.Abs(y - v.y) <= MathX.accuracy;
+			return bx && by;
 		}
 
 
@@ -79,13 +86,11 @@ namespace MathematicsX
 
 		public static bool operator ==(Vec2 lhs, Vec2 rhs)
 		{
-			bool bx = Math.Abs(lhs.x - rhs.x) <= MathX.accuracy;
-			bool by = Math.Abs(lhs.y - rhs.y) <= MathX.accuracy;
-			return bx && by;
+			return lhs.ValueEquals(rhs);
 		}
 		public static bool operator !=(Vec2 lhs, Vec2 rhs)
 		{
-			return !(lhs == rhs);
+			return !lhs.ValueEquals(rhs);
 		}
 
 		public static Vec2 operator -(Vec2 v)

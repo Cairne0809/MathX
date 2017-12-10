@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace MathematicsX
 {
@@ -56,7 +57,13 @@ namespace MathematicsX
 
 		public string ToString(string format)
 		{
-			return "(" + x.ToString(format) + ", " + y.ToString(format) + ", " + z.ToString(format) + ", " + w.ToString(format) + ")";
+			StringBuilder sb = new StringBuilder();
+			sb.Append("(")
+				.AppendFormat(format, x).Append(", ")
+				.AppendFormat(format, y).Append(", ")
+				.AppendFormat(format, z).Append(", ")
+				.AppendFormat(format, w).Append(")");
+			return sb.ToString();
 		}
 		public override string ToString()
 		{
@@ -72,7 +79,11 @@ namespace MathematicsX
 		}
 		public bool ValueEquals(Vec4 v)
 		{
-			return this == v;
+			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
+			bool by = Math.Abs(y - v.y) <= MathX.accuracy;
+			bool bz = Math.Abs(z - v.z) <= MathX.accuracy;
+			bool bw = Math.Abs(w - v.w) <= MathX.accuracy;
+			return bx && by && bz && bw;
 		}
 
 
@@ -91,15 +102,11 @@ namespace MathematicsX
 
 		public static bool operator ==(Vec4 lhs, Vec4 rhs)
 		{
-			bool bx = Math.Abs(lhs.x - rhs.x) <= MathX.accuracy;
-			bool by = Math.Abs(lhs.y - rhs.y) <= MathX.accuracy;
-			bool bz = Math.Abs(lhs.z - rhs.z) <= MathX.accuracy;
-			bool bw = Math.Abs(lhs.w - rhs.w) <= MathX.accuracy;
-			return bx && by && bz && bw;
+			return lhs.ValueEquals(rhs);
 		}
 		public static bool operator !=(Vec4 lhs, Vec4 rhs)
 		{
-			return !(lhs == rhs);
+			return !lhs.ValueEquals(rhs);
 		}
 
 		public static Vec4 operator -(Vec4 v)

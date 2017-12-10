@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace MathematicsX
 {
@@ -78,18 +79,18 @@ namespace MathematicsX
 		
 		public string ToString(string format)
 		{
-			string str = "";
-			str += "|\t";
-			str += v00.ToString(format) + "\t";
-			str += v01.ToString(format) + "\t";
-			str += v02.ToString(format) + "\t|\n|\t";
-			str += v10.ToString(format) + "\t";
-			str += v11.ToString(format) + "\t";
-			str += v12.ToString(format) + "\t|\n|\t";
-			str += v20.ToString(format) + "\t";
-			str += v21.ToString(format) + "\t";
-			str += v22.ToString(format) + "\t|";
-			return str;
+			StringBuilder sb = new StringBuilder();
+			sb.Append("|\t")
+				.AppendFormat(format, v00).Append("\t")
+				.AppendFormat(format, v01).Append("\t")
+				.AppendFormat(format, v02).Append("\t|\n|\t")
+				.AppendFormat(format, v10).Append("\t")
+				.AppendFormat(format, v11).Append("\t")
+				.AppendFormat(format, v12).Append("\t|\n|\t")
+				.AppendFormat(format, v20).Append("\t")
+				.AppendFormat(format, v21).Append("\t")
+				.AppendFormat(format, v22).Append("\t|");
+			return sb.ToString();
 		}
 		public override string ToString()
 		{
