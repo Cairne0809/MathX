@@ -81,15 +81,15 @@ namespace MathematicsX
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("|\t")
-				.AppendFormat(format, v00).Append("\t")
-				.AppendFormat(format, v01).Append("\t")
-				.AppendFormat(format, v02).Append("\t|\n|\t")
-				.AppendFormat(format, v10).Append("\t")
-				.AppendFormat(format, v11).Append("\t")
-				.AppendFormat(format, v12).Append("\t|\n|\t")
-				.AppendFormat(format, v20).Append("\t")
-				.AppendFormat(format, v21).Append("\t")
-				.AppendFormat(format, v22).Append("\t|");
+				.Append(v00.ToString(format)).Append("\t")
+				.Append(v01.ToString(format)).Append("\t")
+				.Append(v02.ToString(format)).Append("\t|\n|\t")
+				.Append(v10.ToString(format)).Append("\t")
+				.Append(v11.ToString(format)).Append("\t")
+				.Append(v12.ToString(format)).Append("\t|\n|\t")
+				.Append(v20.ToString(format)).Append("\t")
+				.Append(v21.ToString(format)).Append("\t")
+				.Append(v22.ToString(format)).Append("\t|");
 			return sb.ToString();
 		}
 		public override string ToString()

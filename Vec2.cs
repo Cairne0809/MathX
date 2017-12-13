@@ -50,9 +50,9 @@ namespace MathematicsX
 		public string ToString(string format)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("(")
-				.AppendFormat(format, x).Append(", ")
-				.AppendFormat(format, y).Append(")");
+			sb.Append("V(")
+				.Append(x.ToString(format)).Append(", ")
+				.Append(y.ToString(format)).Append(")");
 			return sb.ToString();
 		}
 		public override string ToString()

@@ -27,7 +27,7 @@ namespace MathematicsX
 				sb.Append("\n|\t");
 				for (int i = 0; i < _c; i++)
 				{
-					sb.AppendFormat(format, _v[_c * j + i]);
+					sb.Append(_v[_c * j + i].ToString(format));
 					if (i < _c - 1) sb.Append("\t");
 				}
 				sb.Append("\t|");

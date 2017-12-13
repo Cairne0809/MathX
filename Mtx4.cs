@@ -113,22 +113,22 @@ namespace MathematicsX
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("|\t")
-				.AppendFormat(format, v00).Append("\t")
-				.AppendFormat(format, v01).Append("\t")
-				.AppendFormat(format, v02).Append("\t")
-				.AppendFormat(format, v03).Append("\t|\n|\t")
-				.AppendFormat(format, v10).Append("\t")
-				.AppendFormat(format, v11).Append("\t")
-				.AppendFormat(format, v12).Append("\t")
-				.AppendFormat(format, v13).Append("\t|\n|\t")
-				.AppendFormat(format, v20).Append("\t")
-				.AppendFormat(format, v21).Append("\t")
-				.AppendFormat(format, v22).Append("\t")
-				.AppendFormat(format, v23).Append("\t|\n|\t")
-				.AppendFormat(format, v30).Append("\t")
-				.AppendFormat(format, v31).Append("\t")
-				.AppendFormat(format, v32).Append("\t")
-				.AppendFormat(format, v33).Append("\t|");
+				.Append(v00.ToString(format)).Append("\t")
+				.Append(v01.ToString(format)).Append("\t")
+				.Append(v02.ToString(format)).Append("\t")
+				.Append(v03.ToString(format)).Append("\t|\n|\t")
+				.Append(v10.ToString(format)).Append("\t")
+				.Append(v11.ToString(format)).Append("\t")
+				.Append(v12.ToString(format)).Append("\t")
+				.Append(v13.ToString(format)).Append("\t|\n|\t")
+				.Append(v20.ToString(format)).Append("\t")
+				.Append(v21.ToString(format)).Append("\t")
+				.Append(v22.ToString(format)).Append("\t")
+				.Append(v23.ToString(format)).Append("\t|\n|\t")
+				.Append(v30.ToString(format)).Append("\t")
+				.Append(v31.ToString(format)).Append("\t")
+				.Append(v32.ToString(format)).Append("\t")
+				.Append(v33.ToString(format)).Append("\t|");
 			return sb.ToString();
 		}
 		public override string ToString()

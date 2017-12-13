@@ -58,11 +58,11 @@ namespace MathematicsX
 		public string ToString(string format)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("(")
-				.AppendFormat(format, x).Append(", ")
-				.AppendFormat(format, y).Append(", ")
-				.AppendFormat(format, z).Append(", ")
-				.AppendFormat(format, w).Append(")");
+			sb.Append("Q(")
+				.Append(x.ToString(format)).Append(", ")
+				.Append(y.ToString(format)).Append(", ")
+				.Append(z.ToString(format)).Append(", ")
+				.Append(w.ToString(format)).Append(")");
 			return sb.ToString();
 		}
 		public override string ToString()
