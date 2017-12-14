@@ -3,16 +3,38 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public class Mtx
+	public class Matrix : IMatrix
 	{
 		int _r;
 		int _c;
 		double[] _v;
-		
+
+		public double this[int r, int c]
+		{
+			get
+			{
+				return _v[_c * r  + c];
+			}
+			set
+			{
+				_v[_c * r + c] = value;
+			}
+		}
 		public int row { get { return _r; } }
 		public int column { get { return _c; } }
+		public bool isNaM
+		{
+			get
+			{
+				for (int i = 0; i < _v.Length; i++)
+				{
+					if (double.IsNaN(_v[i])) return true;
+				}
+				return false;
+			}
+		}
 
-		public Mtx(int row, int column, params double[] v)
+		public Matrix(int row, int column, params double[] v)
 		{
 			_r = row;
 			_c = column;
@@ -25,12 +47,11 @@ namespace MathematicsX
 			for (int j = 0; j < _r; j++)
 			{
 				sb.Append("\n|\t");
-				for (int i = 0; i < _c; i++)
+				for (int i = 0; i < _c - 1; i++)
 				{
-					sb.Append(_v[_c * j + i].ToString(format));
-					if (i < _c - 1) sb.Append("\t");
+					sb.Append(_v[_c * j + i].ToString(format)).Append("\t");
 				}
-				sb.Append("\t|");
+				sb.Append(_v[_c * j + _c - 1].ToString(format)).Append("\t|");
 			}
 			return sb.ToString();
 		}
@@ -39,22 +60,12 @@ namespace MathematicsX
 			return ToString("");
 		}
 
-		public Mtx Clone()
+		public Matrix Clone()
 		{
-			return new Mtx(_r, _c, _v.Clone() as double[]);
-		}
-		
-		public double GetValue(int row, int column)
-		{
-			return _v[_c * (row - 1) + (column - 1)];
-		}
-		public Mtx SetValue(int row, int column, double value)
-		{
-			_v[_c * (row - 1) + (column - 1)] = value;
-			return this;
+			return new Matrix(_r, _c, _v.Clone() as double[]);
 		}
 
-		public Mtx Scale(double value)
+		public Matrix Scale(double value)
 		{
 			for (int i = 0; i < _v.Length; i++)
 			{
@@ -63,7 +74,7 @@ namespace MathematicsX
 			return this;
 		}
 
-		public Mtx Add(Mtx mtx)
+		public Matrix Add(Matrix mtx)
 		{
 			int r2 = mtx._r;
 			int c2 = mtx._c;
@@ -76,7 +87,7 @@ namespace MathematicsX
 			return this;
 		}
 
-		public Mtx Sub(Mtx mtx)
+		public Matrix Sub(Matrix mtx)
 		{
 			int r2 = mtx._r;
 			int c2 = mtx._c;
@@ -89,7 +100,7 @@ namespace MathematicsX
 			return this;
 		}
 		
-		public static Mtx Mul(Mtx lhs, Mtx rhs)
+		public static Matrix Mul(Matrix lhs, Matrix rhs)
 		{
 			int r1 = lhs._r;
 			int c1 = lhs._c;
@@ -111,10 +122,10 @@ namespace MathematicsX
 					nv[c2 * j + i] = value;
 				}
 			}
-			return new Mtx(r1, c2, nv);
+			return new Matrix(r1, c2, nv);
 		}
 
-		public static Mtx Permutate(Mtx mtx)
+		public static Matrix Permutate(Matrix mtx)
 		{
 			int r = mtx._r;
 			int c = mtx._c;
@@ -129,7 +140,7 @@ namespace MathematicsX
 					k++;
 				}
 			}
-			return new Mtx(c, r, nv);
+			return new Matrix(c, r, nv);
 		}
 
 	}

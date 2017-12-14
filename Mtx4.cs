@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public struct Mtx4
+	public struct Mtx4 : IMatrix
 	{
 		public double v00;
 		public double v01;
@@ -25,10 +25,11 @@ namespace MathematicsX
 		public double v32;
 		public double v33;
 
-		public double this[int index]
+		public double this[int r, int c]
 		{
 			get
 			{
+				int index = 4 * r + c;
 				switch (index)
 				{
 					case 0: return v00;
@@ -56,6 +57,7 @@ namespace MathematicsX
 			}
 			set
 			{
+				int index = 4 * r + c;
 				switch (index)
 				{
 					case 0: v00 = value; break;
@@ -82,7 +84,10 @@ namespace MathematicsX
 				}
 			}
 		}
-		public bool isNaN
+		public int row { get { return 4; } }
+		public int column { get { return 4; } }
+
+		public bool isNaM
 		{
 			get
 			{

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public struct Mtx3
+	public struct Mtx3 : IMatrix
 	{
 		public double v00;
 		public double v01;
@@ -17,48 +17,53 @@ namespace MathematicsX
 		public double v21;
 		public double v22;
 
-		public double this[int index]
+		public double this[int r, int c]
 		{
 			get
 			{
+				int index = 3 * r + c;
 				switch (index)
 				{
 					case 0: return v00;
 					case 1: return v01;
 					case 2: return v02;
-					
+
 					case 4: return v10;
 					case 5: return v11;
 					case 6: return v12;
-					
+
 					case 8: return v20;
 					case 9: return v21;
 					case 10: return v22;
-					
+
 					default: throw new Exception("The index is out of range!");
 				}
 			}
 			set
 			{
+				int index = 3 * r + c;
 				switch (index)
 				{
 					case 0: v00 = value; break;
 					case 1: v01 = value; break;
 					case 2: v02 = value; break;
-					
+
 					case 4: v10 = value; break;
 					case 5: v11 = value; break;
 					case 6: v12 = value; break;
-					
+
 					case 8: v20 = value; break;
 					case 9: v21 = value; break;
 					case 10: v22 = value; break;
-					
+
 					default: throw new Exception("The index is out of range!");
 				}
 			}
 		}
-		public bool isNaN
+		public int row { get { return 3; } }
+		public int column { get { return 3; } }
+
+		public bool isNaM
 		{
 			get
 			{

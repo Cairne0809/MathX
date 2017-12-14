@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public struct Vec2
+	public struct Vec2 : IVector
 	{
 		public double x;
 		public double y;
@@ -23,9 +23,11 @@ namespace MathematicsX
 				else throw new Exception("The index is out of range!");
             }
 		}
+		public int dimension { get { return 2; } set { } }
 		public bool isNaV { get { return double.IsNaN(x) || double.IsNaN(y); } }
 		public double sqrMagnitude { get { return x * x + y * y; } }
 		public double magnitude { get { return Math.Sqrt(x * x + y * y); } }
+		public Vec2 abs { get { return new Vec2(Math.Abs(x), Math.Abs(y)); } }
 
 		public Vec2 normalized
 		{
@@ -37,7 +39,7 @@ namespace MathematicsX
 					div = Math.Sqrt(div);
 					return new Vec2(x / div, y / div);
 				}
-				return this;
+				return new Vec2();
 			}
 		}
 
@@ -147,7 +149,7 @@ namespace MathematicsX
 			double x2 = rhs.x, y2 = rhs.y;
 			double m1 = Math.Sqrt(x1 * x1 + y1 * y1);
 			double m2 = Math.Sqrt(x2 * x2 + y2 * y2);
-			if (m1 == 0 || m2 == 0) return double.NaN;
+			if (m1 == 0 || m2 == 0) return MathX.HalfPI;
 			double dot = x1 * x2 + y1 * y2;
 			double cos = dot / m1 / m2;
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);

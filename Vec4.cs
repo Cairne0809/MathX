@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public struct Vec4
+	public struct Vec4 : IVector
 	{
 		public double x;
 		public double y;
@@ -29,9 +29,11 @@ namespace MathematicsX
 				else throw new Exception("The index is out of range!");
 			}
 		}
+		public int dimension { get { return 4; } set { } }
 		public bool isNaV { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z) || double.IsNaN(w); } }
 		public double sqrMagnitude { get { return x * x + y * y + z * z + w * w; } }
 		public double magnitude { get { return Math.Sqrt(x * x + y * y + z * z + w * w); } }
+		public Vec4 abs { get { return new Vec4(Math.Abs(x), Math.Abs(y), Math.Abs(z), Math.Abs(w)); } }
 
 		public Vec4 normalized
 		{
@@ -43,7 +45,7 @@ namespace MathematicsX
 					div = Math.Sqrt(div);
 					return new Vec4(x / div, y / div, z / div, w / div);
 				}
-				return this;
+				return new Vec4();
 			}
 		}
 
@@ -162,7 +164,7 @@ namespace MathematicsX
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z, w2 = rhs.w;
 			double m1 = Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1);
 			double m2 = Math.Sqrt(x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2);
-			if (m1 == 0 || m2 == 0) return double.NaN;
+			if (m1 == 0 || m2 == 0) return MathX.HalfPI;
 			double dot = x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2;
 			double cos = dot / m1 / m2;
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);

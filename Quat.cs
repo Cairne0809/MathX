@@ -163,28 +163,31 @@ namespace MathematicsX
 			return angle;
 		}
 
-		public static Vec3 ToEuler(Quat quat)
+		public static Vec3 ToEuler(double x, double y, double z, double w)
 		{
-			double qx = quat.x, qy = quat.y, qz = quat.z, qw = quat.w;
-			double sm = qx * qx + qy * qy + qz * qz + qw * qw;
+			double sm = x * x + y * y + z * z + w * w;
 			if (sm == 0) return new Vec3();
 			double mag = Math.Sqrt(sm);
-			qx /= mag;
-			qy /= mag;
-			qz /= mag;
-			qw /= mag;
-			double vx = Math.Atan2(2.0 * (qx * qw - qy * qz), 1.0 - 2.0 * (qx * qx + qz * qz));
-			double vy = Math.Atan2(2.0 * (qy * qw - qx * qz), 1.0 - 2.0 * (qy * qy + qz * qz));
-			double sin = 2.0 * (qx * qy + qz * qw);
+			x /= mag;
+			y /= mag;
+			z /= mag;
+			w /= mag;
+			double vx = Math.Atan2(2.0 * (x * w - y * z), 1.0 - 2.0 * (x * x + z * z));
+			double vy = Math.Atan2(2.0 * (y * w - x * z), 1.0 - 2.0 * (y * y + z * z));
+			double sin = 2.0 * (x * y + z * w);
 			double vz = Math.Asin(sin > 1 ? 1 : sin < -1 ? -1 : sin);
 			return new Vec3(vx, vy, vz);
 		}
-
-		public static Quat FromEuler(Vec3 euler)
+		public static Vec3 ToEuler(Quat q)
 		{
-			double hx = euler.x / 2.0;
-			double hy = euler.y / 2.0;
-			double hz = euler.z / 2.0;
+			return ToEuler(q.x, q.y, q.z, q.w);
+		}
+
+		public static Quat FromEuler(double x, double y, double z)
+		{
+			double hx = x / 2.0;
+			double hy = y / 2.0;
+			double hz = z / 2.0;
 			double c1 = Math.Cos(hx);
 			double c2 = Math.Cos(hy);
 			double c3 = Math.Cos(hz);
@@ -196,6 +199,10 @@ namespace MathematicsX
 			double qz = c1 * c2 * s3 - s1 * s2 * c3;
 			double qw = c1 * c2 * c3 - s1 * s2 * s3;
 			return new Quat(qx, qy, qz, qw);
+		}
+		public static Quat FromEuler(Vec3 euler)
+		{
+			return FromEuler(euler.x, euler.y, euler.z);
 		}
 
 		public static Quat AxisAngle(Vec3 axis, double angle)
