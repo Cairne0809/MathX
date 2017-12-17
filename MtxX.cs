@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public class Matrix : IMatrix
+	public class MtxX : IMatrix
 	{
 		int _r;
 		int _c;
@@ -34,7 +34,7 @@ namespace MathematicsX
 			}
 		}
 
-		public Matrix(int row, int column, params double[] v)
+		public MtxX(int row, int column, params double[] v)
 		{
 			_r = row;
 			_c = column;
@@ -60,12 +60,12 @@ namespace MathematicsX
 			return ToString("");
 		}
 
-		public Matrix Clone()
+		public MtxX Clone()
 		{
-			return new Matrix(_r, _c, _v.Clone() as double[]);
+			return new MtxX(_r, _c, _v.Clone() as double[]);
 		}
 
-		public Matrix Scale(double value)
+		public MtxX Scale(double value)
 		{
 			for (int i = 0; i < _v.Length; i++)
 			{
@@ -74,7 +74,7 @@ namespace MathematicsX
 			return this;
 		}
 
-		public Matrix Add(Matrix mtx)
+		public MtxX Add(MtxX mtx)
 		{
 			int r2 = mtx._r;
 			int c2 = mtx._c;
@@ -87,7 +87,7 @@ namespace MathematicsX
 			return this;
 		}
 
-		public Matrix Sub(Matrix mtx)
+		public MtxX Sub(MtxX mtx)
 		{
 			int r2 = mtx._r;
 			int c2 = mtx._c;
@@ -100,7 +100,7 @@ namespace MathematicsX
 			return this;
 		}
 		
-		public static Matrix Mul(Matrix lhs, Matrix rhs)
+		public static MtxX Mul(MtxX lhs, MtxX rhs)
 		{
 			int r1 = lhs._r;
 			int c1 = lhs._c;
@@ -122,10 +122,10 @@ namespace MathematicsX
 					nv[c2 * j + i] = value;
 				}
 			}
-			return new Matrix(r1, c2, nv);
+			return new MtxX(r1, c2, nv);
 		}
 
-		public static Matrix Permutate(Matrix mtx)
+		public static MtxX Permutate(MtxX mtx)
 		{
 			int r = mtx._r;
 			int c = mtx._c;
@@ -140,7 +140,7 @@ namespace MathematicsX
 					k++;
 				}
 			}
-			return new Matrix(c, r, nv);
+			return new MtxX(c, r, nv);
 		}
 
 	}

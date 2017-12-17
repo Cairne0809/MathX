@@ -219,6 +219,12 @@ namespace MathematicsX
 			return new Quat(qx, qy, qz, qw);
 		}
 
+		public static Quat GetRandom()
+		{
+			double a = MathX.GetRandom(-MathX.DoublePI, MathX.DoublePI);
+			return AxisAngle(Vec3.GetRandom(), a);
+		}
+
 		public static Quat zero { get { return new Quat(); } }
 		public static Quat identity { get { return new Quat(0, 0, 0, 1); } }
 		public static Quat NaQ { get { return new Quat(double.NaN, double.NaN, double.NaN, double.NaN); } }

@@ -182,6 +182,14 @@ namespace MathematicsX
 			return pjt + pjt - src;
 		}
 
+		public static Vec2 GetRandom()
+		{
+			double theta = MathX.DoublePI * MathX.GetRandom();
+			double x = Math.Sin(theta);
+			double y = Math.Cos(theta);
+			return new Vec2(x, y);
+		}
+
 		public static Vec2 zero { get { return new Vec2(); } }
 		public static Vec2 one { get { return new Vec2(1, 1); } }
 		public static Vec2 right { get { return new Vec2(1, 0); } }

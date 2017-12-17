@@ -9,6 +9,7 @@ namespace MathematicsX
 		public const double HalfPI = 0.5 * PI;
 		public const double Rad2Deg = 180 / PI;
 		public const double Deg2Rad = PI / 180;
+		public static readonly double MaxValue = Math.Sqrt(double.MaxValue);
 
 		/// <summary>
 		/// The accuracy is related to the number of significant digit.
@@ -16,10 +17,20 @@ namespace MathematicsX
 		/// Default value: 1e-14
 		/// </summary>
 		public static double accuracy = 1e-14;
-		
-		public static double Sqr(double value)
+
+		static Random random = new Random();
+
+		public static double GetRandom()
 		{
-			return value * value;
+			return random.NextDouble();
+		}
+		public static double GetRandom(double min, double max)
+		{
+			return min + (max - min) * random.NextDouble();
+		}
+		public static void SetRandom(Random random)
+		{
+			MathX.random = random;
 		}
 
 		public static int Clamp(int value, int min, int max)

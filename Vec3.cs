@@ -229,6 +229,16 @@ namespace MathematicsX
 			return pjt + pjt - src;
 		}
 
+		public static Vec3 GetRandom()
+		{
+			double theta = MathX.DoublePI * MathX.GetRandom();
+			double phi = Math.Acos(MathX.GetRandom(-1, 1));
+			double x = Math.Sin(theta) * Math.Sin(phi);
+			double y = Math.Cos(theta) * Math.Sin(phi);
+			double z = Math.Cos(phi);
+			return new Vec3(x, y, z);
+		}
+
 		public static Vec3 zero { get { return new Vec3(); } }
 		public static Vec3 one { get { return new Vec3(1, 1, 1); } }
 		public static Vec3 right { get { return new Vec3(1, 0, 0); } }

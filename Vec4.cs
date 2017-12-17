@@ -188,6 +188,19 @@ namespace MathematicsX
 			return pjt + pjt - src;
 		}
 
+		public static Vec4 GetRandom()
+		{
+			//Not even
+			double theta = MathX.DoublePI * MathX.GetRandom();
+			double phi = Math.Acos(MathX.GetRandom(-1, 1));
+			double beta = Math.Acos(MathX.GetRandom(-1, 1));
+			double x = Math.Sin(theta) * Math.Sin(phi) * Math.Sin(beta);
+			double y = Math.Cos(theta) * Math.Sin(phi) * Math.Sin(beta);
+			double z = Math.Cos(phi) * Math.Sin(beta);
+			double w = Math.Cos(beta);
+			return new Vec4(x, y, z, w);
+		}
+
 		public static Vec4 zero { get { return new Vec4(); } }
 		public static Vec4 one { get { return new Vec4(1, 1, 1, 1); } }
 		public static Vec4 NaV { get { return new Vec4(double.NaN, double.NaN, double.NaN, double.NaN); } }
