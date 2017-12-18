@@ -226,7 +226,7 @@ namespace MathematicsX
 		{
 			double m1 = magnitude;
 			double m2 = v.magnitude;
-			if (m1 == 0 || m2 == 0) return MathX.HalfPI;
+			if (m1 == 0 || m2 == 0) return 0;
 			double cos = Dot(v) / m1 / m2;
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 		}

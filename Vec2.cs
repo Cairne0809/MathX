@@ -130,6 +130,16 @@ namespace MathematicsX
 			return lhs.y * rhs.x - lhs.x * rhs.y;
 		}
 
+		public static Vec2 MaxAxis(Vec2 v)
+		{
+			return Math.Abs(v.x) < Math.Abs(v.y) ? new Vec2(0, v.y) : new Vec2(v.x, 0);
+		}
+
+		public static Vec2 MinAxis(Vec2 v)
+		{
+			return Math.Abs(v.x) >= Math.Abs(v.y) ? new Vec2(0, v.y) : new Vec2(v.x, 0);
+		}
+
 		public static double SqrDistance(Vec2 lhs, Vec2 rhs)
 		{
 			double dx = lhs.x - rhs.x;
@@ -149,7 +159,7 @@ namespace MathematicsX
 			double x2 = rhs.x, y2 = rhs.y;
 			double m1 = Math.Sqrt(x1 * x1 + y1 * y1);
 			double m2 = Math.Sqrt(x2 * x2 + y2 * y2);
-			if (m1 == 0 || m2 == 0) return MathX.HalfPI;
+			if (m1 == 0 || m2 == 0) return 0;
 			double dot = x1 * x2 + y1 * y2;
 			double cos = dot / m1 / m2;
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);

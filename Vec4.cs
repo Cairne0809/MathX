@@ -141,6 +141,54 @@ namespace MathematicsX
 			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 		}
 
+		public static Vec4 MaxAxis(Vec4 v)
+		{
+			double aX = Math.Abs(v.x);
+			double aY = Math.Abs(v.y);
+			double aZ = Math.Abs(v.z);
+			double aW = Math.Abs(v.w);
+			int i = 0;
+			double max = aX;
+			if (aY > max)
+			{
+				i = 1;
+				max = aY;
+			}
+			if (aZ > max)
+			{
+				i = 2;
+				max = aZ;
+			}
+			if (aW > max) return new Vec4(0, 0, 0, v.w);
+			if (i == 2) return new Vec4(0, 0, v.z, 0);
+			if (i == 1) return new Vec4(0, v.y, 0, 0);
+			return new Vec4(v.x, 0, 0, 0);
+		}
+
+		public static Vec4 MinAxis(Vec4 v)
+		{
+			double aX = Math.Abs(v.x);
+			double aY = Math.Abs(v.y);
+			double aZ = Math.Abs(v.z);
+			double aW = Math.Abs(v.w);
+			int i = 3;
+			double min = aW;
+			if (aZ < min)
+			{
+				i = 2;
+				min = aZ;
+			}
+			if (aY < min)
+			{
+				i = 1;
+				min = aY;
+			}
+			if (aX < min) return new Vec4(v.x, 0, 0, 0);
+			if (i == 1) return new Vec4(0, v.y, 0, 0);
+			if (i == 2) return new Vec4(0, 0, v.z, 0);
+			return new Vec4(0, 0, 0, v.w);
+		}
+
 		public static double SqrDistance(Vec4 lhs, Vec4 rhs)
 		{
 			double dx = lhs.x - rhs.x;
@@ -164,7 +212,7 @@ namespace MathematicsX
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z, w2 = rhs.w;
 			double m1 = Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1);
 			double m2 = Math.Sqrt(x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2);
-			if (m1 == 0 || m2 == 0) return MathX.HalfPI;
+			if (m1 == 0 || m2 == 0) return 0;
 			double dot = x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2;
 			double cos = dot / m1 / m2;
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);

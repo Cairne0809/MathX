@@ -162,6 +162,48 @@ namespace MathematicsX
 			return mixed;
 		}
 
+		public static Vec3 MaxAxis(double x, double y, double z)
+		{
+			double aX = Math.Abs(x);
+			double aY = Math.Abs(y);
+			double aZ = Math.Abs(z);
+			int i = 0;
+			double max = aX;
+			if (aY > max)
+			{
+				i = 1;
+				max = aY;
+			}
+			if (aZ > max) return new Vec3(0, 0, z);
+			if (i == 1) return new Vec3(0, y, 0);
+			return new Vec3(x, 0, 0);
+		}
+		public static Vec3 MaxAxis(Vec3 v)
+		{
+			return MaxAxis(v);
+		}
+
+		public static Vec3 MinAxis(double x, double y, double z)
+		{
+			double aX = Math.Abs(x);
+			double aY = Math.Abs(y);
+			double aZ = Math.Abs(z);
+			int i = 2;
+			double min = aZ;
+			if (aY < min)
+			{
+				i = 1;
+				min = aY;
+			}
+			if (aX < min) return new Vec3(x, 0, 0);
+			if (i == 1) return new Vec3(0, y, 0);
+			return new Vec3(0, 0, z);
+		}
+		public static Vec3 MinAxis(Vec3 v)
+		{
+			return MinAxis(v);
+		}
+
 		public static double SqrDistance(Vec3 lhs, Vec3 rhs)
 		{
 			double dx = lhs.x - rhs.x;
@@ -183,7 +225,7 @@ namespace MathematicsX
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z;
 			double m1 = Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1);
 			double m2 = Math.Sqrt(x2 * x2 + y2 * y2 + z2 * z2);
-			if (m1 == 0 || m2 == 0) return MathX.HalfPI;
+			if (m1 == 0 || m2 == 0) return 0;
 			double dot = x1 * x2 + y1 * y2 + z1 * z2;
 			double cos = dot / m1 / m2;
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);

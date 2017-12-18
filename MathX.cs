@@ -48,6 +48,68 @@ namespace MathematicsX
 			return value;
 		}
 
+		public static double MaxAbs(double a, double b)
+		{
+			return Math.Abs(a) > Math.Abs(b) ? a : b;
+		}
+		public static double Max(double a, double b, double c)
+		{
+			double max = a;
+			if (b > max) max = b;
+			if (c > max) return c;
+			return max;
+		}
+		public static int MaxI(double a, double b, double c)
+		{
+			int index = 0;
+			double max = a;
+			if (b > max)
+			{
+				index = 1;
+				max = b;
+			}
+			if (c > max) return 2;
+			return index;
+		}
+
+		public static double MinAbs(double a, double b)
+		{
+			return Math.Abs(a) < Math.Abs(b) ? a : b;
+		}
+		public static double Min(double a, double b, double c)
+		{
+			double min = a;
+			if (b < min) min = b;
+			if (c < min) return c;
+			return min;
+		}
+		public static int MinI(double a, double b, double c)
+		{
+			int index = 0;
+			double min = a;
+			if (b < min)
+			{
+				index = 1;
+				min = b;
+			}
+			if (c < min) return 2;
+			return index;
+		}
+
+		public static double Weight(double a, double b, double value)
+		{
+			if (a == b) return 0;
+			if (value < a && value < b) return -1;
+			if (value > a && value > b) return 1;
+			return (a + b - value * 2) / (a - b);
+		}
+		public static int WeightI(double a, double b, double value)
+		{
+			if (value < a && value < b) return -1;
+			if (value > a && value > b) return 1;
+			return 0;
+		}
+
 		public static double Lerp(double a, double b, double t)
 		{
 			return a + (b - a) * t;
