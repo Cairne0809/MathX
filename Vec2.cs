@@ -127,7 +127,7 @@ namespace MathematicsX
 
 		public static double Det(Vec2 lhs, Vec2 rhs)
 		{
-			return lhs.y * rhs.x - lhs.x * rhs.y;
+			return lhs.x * rhs.y - lhs.y * rhs.x;
 		}
 
 		public static Vec2 MaxAxis(Vec2 v)
