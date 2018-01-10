@@ -123,22 +123,21 @@ namespace MathematicsX
 		{
 			return new Vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w);
 		}
-		public static Vec4 operator *(double lhs, Vec4 rhs)
-		{
-			return new Vec4(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w);
-		}
 		public static Vec4 operator *(Vec4 lhs, double rhs)
 		{
 			return new Vec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs);
+		}
+		public static Vec4 operator *(double lhs, Vec4 rhs)
+		{
+			return rhs * lhs;
 		}
 		public static Vec4 operator /(Vec4 lhs, double rhs)
 		{
 			return new Vec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs);
 		}
-
-		public static double operator *(Vec4 lhs, Vec4 rhs)
+		public static Vec4 operator /(double lhs, Vec4 rhs)
 		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+			return new Vec4(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w);
 		}
 
 		public static Vec4 MaxAxis(Vec4 v)
@@ -189,6 +188,11 @@ namespace MathematicsX
 			return new Vec4(0, 0, 0, v.w);
 		}
 
+		public static double Dot(Vec4 lhs, Vec4 rhs)
+		{
+			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+		}
+
 		public static double SqrDistance(Vec4 lhs, Vec4 rhs)
 		{
 			double dx = lhs.x - rhs.x;
@@ -210,11 +214,11 @@ namespace MathematicsX
 		{
 			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z, w1 = lhs.w;
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z, w2 = rhs.w;
-			double m1 = Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1);
-			double m2 = Math.Sqrt(x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2);
-			if (m1 == 0 || m2 == 0) return 0;
+			double sm1 = x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1;
+			double sm2 = x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2;
+			if (sm1 == 0 || sm2 == 0) return 0;
 			double dot = x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2;
-			double cos = dot / m1 / m2;
+			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 		}
 

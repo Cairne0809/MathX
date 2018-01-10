@@ -8,9 +8,9 @@ namespace MathematicsX
 {
 	public interface IMatrix
 	{
-		double this[int r, int c] { get; set; }
-		int row { get; }
+		double this[int c, int r] { get; set; }
 		int column { get; }
+		int row { get; }
 		bool isNaM { get; }
 	}
 }

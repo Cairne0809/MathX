@@ -118,25 +118,63 @@ namespace MathematicsX
 		{
 			return new Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
 		}
-		public static Vec3 operator *(double lhs, Vec3 rhs)
-		{
-			return new Vec3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z);
-		}
 		public static Vec3 operator *(Vec3 lhs, double rhs)
 		{
 			return new Vec3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs);
+		}
+		public static Vec3 operator *(double lhs, Vec3 rhs)
+		{
+			return rhs * lhs;
 		}
 		public static Vec3 operator /(Vec3 lhs, double rhs)
 		{
 			return new Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
 		}
+		public static Vec3 operator /(double lhs, Vec3 rhs)
+		{
+			return new Vec3(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z);
+		}
 
-		public static double operator *(Vec3 lhs, Vec3 rhs)
+		public static Vec3 MaxAxis(Vec3 v)
+		{
+			double aX = Math.Abs(v.x);
+			double aY = Math.Abs(v.y);
+			double aZ = Math.Abs(v.z);
+			int i = 0;
+			double max = aX;
+			if (aY > max)
+			{
+				i = 1;
+				max = aY;
+			}
+			if (aZ > max) return new Vec3(0, 0, v.z);
+			if (i == 1) return new Vec3(0, v.y, 0);
+			return new Vec3(v.x, 0, 0);
+		}
+
+		public static Vec3 MinAxis(Vec3 v)
+		{
+			double aX = Math.Abs(v.x);
+			double aY = Math.Abs(v.y);
+			double aZ = Math.Abs(v.z);
+			int i = 2;
+			double min = aZ;
+			if (aY < min)
+			{
+				i = 1;
+				min = aY;
+			}
+			if (aX < min) return new Vec3(v.x, 0, 0);
+			if (i == 1) return new Vec3(0, v.y, 0);
+			return new Vec3(0, 0, v.z);
+		}
+
+		public static double Dot(Vec3 lhs, Vec3 rhs)
 		{
 			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 		}
 
-		public static double Det(Vec3 lhs, Vec3 rhs)
+		public static double Determinant(Vec3 lhs, Vec3 rhs)
 		{
 			double x = lhs.z * rhs.y - lhs.y * rhs.z;
 			double y = lhs.x * rhs.z - lhs.z * rhs.x;
@@ -162,47 +200,6 @@ namespace MathematicsX
 			return mixed;
 		}
 
-		public static Vec3 MaxAxis(double x, double y, double z)
-		{
-			double aX = Math.Abs(x);
-			double aY = Math.Abs(y);
-			double aZ = Math.Abs(z);
-			int i = 0;
-			double max = aX;
-			if (aY > max)
-			{
-				i = 1;
-				max = aY;
-			}
-			if (aZ > max) return new Vec3(0, 0, z);
-			if (i == 1) return new Vec3(0, y, 0);
-			return new Vec3(x, 0, 0);
-		}
-		public static Vec3 MaxAxis(Vec3 v)
-		{
-			return MaxAxis(v);
-		}
-
-		public static Vec3 MinAxis(double x, double y, double z)
-		{
-			double aX = Math.Abs(x);
-			double aY = Math.Abs(y);
-			double aZ = Math.Abs(z);
-			int i = 2;
-			double min = aZ;
-			if (aY < min)
-			{
-				i = 1;
-				min = aY;
-			}
-			if (aX < min) return new Vec3(x, 0, 0);
-			if (i == 1) return new Vec3(0, y, 0);
-			return new Vec3(0, 0, z);
-		}
-		public static Vec3 MinAxis(Vec3 v)
-		{
-			return MinAxis(v);
-		}
 
 		public static double SqrDistance(Vec3 lhs, Vec3 rhs)
 		{
@@ -223,23 +220,18 @@ namespace MathematicsX
 		{
 			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z;
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z;
-			double m1 = Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1);
-			double m2 = Math.Sqrt(x2 * x2 + y2 * y2 + z2 * z2);
-			if (m1 == 0 || m2 == 0) return 0;
+			double sm1 = x1 * x1 + y1 * y1 + z1 * z1;
+			double sm2 = x2 * x2 + y2 * y2 + z2 * z2;
+			if (sm1 == 0 || sm2 == 0) return 0;
 			double dot = x1 * x2 + y1 * y2 + z1 * z2;
-			double cos = dot / m1 / m2;
+			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 		}
 
-		public static Vec3 Rotate(Vec3 src, Vec3 axis, double angle)
+		public static Vec3 Rotate(Vec3 src, double angle, Vec3 normalAxis)
 		{
 			double sx = src.x, sy = src.y, sz = src.z;
-			double ax = axis.x, ay = axis.y, az = axis.z;
-			double mag = Math.Sqrt(ax * ax + ay * ay + az * az);
-			if (mag == 0) return src;
-			ax /= mag;
-			ay /= mag;
-			az /= mag;
+			double ax = normalAxis.x, ay = normalAxis.y, az = normalAxis.z;
 			double cos = Math.Cos(angle);
 			double sin = Math.Sin(angle);
 			double vx = (ax * ax + (1.0 - ax * ax) * cos) * sx + (ax * ay * (1.0 - cos) - az * sin) * sy + (ax * az * (1.0 - cos) + ay * sin) * sz;

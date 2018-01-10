@@ -107,27 +107,21 @@ namespace MathematicsX
 		{
 			return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
 		}
-		public static Vec2 operator *(double lhs, Vec2 rhs)
-		{
-			return new Vec2(lhs * rhs.x, lhs * rhs.y);
-		}
 		public static Vec2 operator *(Vec2 lhs, double rhs)
 		{
 			return new Vec2(lhs.x * rhs, lhs.y * rhs);
+		}
+		public static Vec2 operator *(double lhs, Vec2 rhs)
+		{
+			return rhs * lhs;
 		}
 		public static Vec2 operator /(Vec2 lhs, double rhs)
 		{
 			return new Vec2(lhs.x / rhs, lhs.y / rhs);
 		}
-
-		public static double operator *(Vec2 lhs, Vec2 rhs)
+		public static Vec2 operator /(double lhs, Vec2 rhs)
 		{
-			return lhs.x * rhs.x + lhs.y * rhs.y;
-		}
-
-		public static double Det(Vec2 lhs, Vec2 rhs)
-		{
-			return lhs.y * rhs.x - lhs.x * rhs.y;
+			return new Vec2(lhs / rhs.x, lhs / rhs.y);
 		}
 
 		public static Vec2 MaxAxis(Vec2 v)
@@ -138,6 +132,16 @@ namespace MathematicsX
 		public static Vec2 MinAxis(Vec2 v)
 		{
 			return Math.Abs(v.x) >= Math.Abs(v.y) ? new Vec2(0, v.y) : new Vec2(v.x, 0);
+		}
+
+		public static double Dot(Vec2 lhs, Vec2 rhs)
+		{
+			return lhs.x * rhs.x + lhs.y * rhs.y;
+		}
+
+		public static double Determinant(Vec2 lhs, Vec2 rhs)
+		{
+			return lhs.y * rhs.x - lhs.x * rhs.y;
 		}
 
 		public static double SqrDistance(Vec2 lhs, Vec2 rhs)
@@ -157,11 +161,11 @@ namespace MathematicsX
 		{
 			double x1 = lhs.x, y1 = lhs.y;
 			double x2 = rhs.x, y2 = rhs.y;
-			double m1 = Math.Sqrt(x1 * x1 + y1 * y1);
-			double m2 = Math.Sqrt(x2 * x2 + y2 * y2);
-			if (m1 == 0 || m2 == 0) return 0;
+			double sm1 = x1 * x1 + y1 * y1;
+			double sm2 = x2 * x2 + y2 * y2;
+			if (sm1 == 0 || sm2 == 0) return 0;
 			double dot = x1 * x2 + y1 * y2;
-			double cos = dot / m1 / m2;
+			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 		}
 

@@ -94,11 +94,6 @@ namespace MathematicsX
 			}
 		}
 
-		internal VecX()
-		{
-			
-		}
-
 		public VecX(int dimension)
 		{
 			_x = new double[dimension];
@@ -190,6 +185,14 @@ namespace MathematicsX
 			}
 			return this;
 		}
+		public VecX InvDiv(double n)
+		{
+			for (int i = 0; i < _x.Length; i++)
+			{
+				_x[i] = n / _x[i];
+			}
+			return this;
+		}
 
 		public double Dot(VecX v)
 		{
@@ -255,6 +258,10 @@ namespace MathematicsX
 		public static VecX operator /(VecX lhs, double rhs)
 		{
 			return lhs.Clone().Div(rhs);
+		}
+		public static VecX operator /(double lhs, VecX rhs)
+		{
+			return rhs.Clone().InvDiv(lhs);
 		}
 
 		public static double operator *(VecX lhs, VecX rhs)

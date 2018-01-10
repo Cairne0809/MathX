@@ -5,11 +5,11 @@ namespace MathematicsX
 {
 	public class MtxX : IMatrix
 	{
-		int _r;
 		int _c;
+		int _r;
 		double[] _v;
 
-		public double this[int r, int c]
+		public double this[int c, int r]
 		{
 			get
 			{
@@ -20,8 +20,8 @@ namespace MathematicsX
 				_v[_c * r + c] = value;
 			}
 		}
-		public int row { get { return _r; } }
 		public int column { get { return _c; } }
+		public int row { get { return _r; } }
 		public bool isNaM
 		{
 			get
@@ -34,10 +34,10 @@ namespace MathematicsX
 			}
 		}
 
-		public MtxX(int row, int column, params double[] v)
+		public MtxX(int column, int row, params double[] v)
 		{
-			_r = row;
 			_c = column;
+			_r = row;
 			_v = v;
 		}
 
@@ -62,8 +62,51 @@ namespace MathematicsX
 
 		public MtxX Clone()
 		{
-			return new MtxX(_r, _c, _v.Clone() as double[]);
+			return new MtxX(_c, _r, _v.Clone() as double[]);
 		}
+
+		public VecX GetColumn(int c)
+		{
+			if (c < 0 || c >= _c) throw new Exception("The index is out of range!");
+			VecX v = new VecX(_r);
+			int vi = 0;
+			for (int i = c; i < _v.Length; i += _c)
+			{
+				v[vi++] = _v[i];
+			}
+			return v;
+		}
+		public void SetColumn(int c, VecX v)
+		{
+			if (c < 0 || c >= _c) throw new Exception("The index is out of range!");
+			int vi = 0;
+			for (int i = c; i < _v.Length; i += _c)
+			{
+				_v[i] = v[vi++];
+			}
+		}
+
+		public VecX GetRow(int r)
+		{
+			if (r < 0 || r >= _r) throw new Exception("The index is out of range!");
+			VecX v = new VecX(_c);
+			int vi = 0;
+			for (int i = r * _c; i < r * _c + _c; i++)
+			{
+				v[vi++] = _v[i];
+			}
+			return v;
+		}
+		public void SetRow(int r, VecX v)
+		{
+			if (r < 0 || r >= _r) throw new Exception("The index is out of range!");
+			int vi = 0;
+			for (int i = r * _c; i < r * _c + _c; i++)
+			{
+				_v[i] = v[vi++];
+			}
+		}
+
 
 		public MtxX Scale(double value)
 		{
@@ -76,10 +119,10 @@ namespace MathematicsX
 
 		public MtxX Add(MtxX mtx)
 		{
-			int r2 = mtx._r;
 			int c2 = mtx._c;
+			int r2 = mtx._r;
 			double[] v2 = mtx._v;
-			if (_r != r2 || _c != c2) throw new Exception("Add failed: r1 != r2 || c1 != c2");
+			if (_c != c2 || _r != r2) throw new Exception("Add failed: c1 != c2 || r1 != r2");
 			for (int i = 0; i < _v.Length; i++)
 			{
 				_v[i] += v2[i];
@@ -89,10 +132,10 @@ namespace MathematicsX
 
 		public MtxX Sub(MtxX mtx)
 		{
-			int r2 = mtx._r;
 			int c2 = mtx._c;
+			int r2 = mtx._r;
 			double[] v2 = mtx._v;
-			if (_r != r2 || _c != c2) throw new Exception("Subtract failed: r1 != r2 || c1 != c2");
+			if (_r != r2 || _c != c2) throw new Exception("Subtract failed: c1 != c2 || r1 != r2");
 			for (int i = 0; i < _v.Length; i++)
 			{
 				_v[i] -= v2[i];
@@ -102,10 +145,10 @@ namespace MathematicsX
 		
 		public static MtxX Mul(MtxX lhs, MtxX rhs)
 		{
-			int r1 = lhs._r;
 			int c1 = lhs._c;
-			int r2 = rhs._r;
+			int r1 = lhs._r;
 			int c2 = rhs._c;
+			int r2 = rhs._r;
 			if (c1 != r2) throw new Exception("Multiply failed: c1 != r2");
 			double[] v1 = lhs._v;
 			double[] v2 = rhs._v;
@@ -122,25 +165,24 @@ namespace MathematicsX
 					nv[c2 * j + i] = value;
 				}
 			}
-			return new MtxX(r1, c2, nv);
+			return new MtxX(c2, r1, nv);
 		}
 
 		public static MtxX Permutate(MtxX mtx)
 		{
-			int r = mtx._r;
 			int c = mtx._c;
+			int r = mtx._r;
 			double[] v = mtx._v;
-			double[] nv = new double[r * c];
+			double[] nv = new double[c * r];
 			int k = 0;
 			for (int i = 0; i < c; i++)
 			{
 				for (int j = 0; j < r; j++)
 				{
-					nv[k] = v[c * j + i];
-					k++;
+					nv[k++] = v[c * j + i];
 				}
 			}
-			return new MtxX(c, r, nv);
+			return new MtxX(r, c, nv);
 		}
 
 	}

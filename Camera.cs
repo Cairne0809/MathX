@@ -29,9 +29,9 @@ namespace MathematicsX
 		{
 			Vec3 screenPos = ~rotation * (point - position);
 			double div = screenPos.z - f;
-			if (div == 0)
+			if (div <= 0)
 			{
-				opt = new Vec3();
+				opt = default(Vec3);
 				return false;
 			}
 			else
@@ -50,9 +50,9 @@ namespace MathematicsX
 		{
 			Vec3 screenPos = ~rotation * (pos - position);
 			double div = screenPos.z - f;
-			if (div == 0)
+			if (div <= 0)
 			{
-				opt = 0;
+				opt = default(double);
 				return false;
 			}
 			else

@@ -187,11 +187,11 @@ namespace MathematicsX
 			Vec2 vp0 = p1 - p0;
 			Vec2 vp1 = q0 - p0;
 			Vec2 vp2 = q1 - p0;
-			if (Vec2.Det(vp0, vp1) * Vec2.Det(vp0, vp2) > 0.0) return false;
+			if (Vec2.Determinant(vp0, vp1) * Vec2.Determinant(vp0, vp2) > 0.0) return false;
 			Vec2 vq0 = q1 - q0;
 			Vec2 vq1 = p0 - q0;
 			Vec2 vq2 = p1 - q0;
-			if (Vec2.Det(vq0, vq1) * Vec2.Det(vq0, vq2) > 0.0) return false;
+			if (Vec2.Determinant(vq0, vq1) * Vec2.Determinant(vq0, vq2) > 0.0) return false;
 			return true;
 		}
 		
@@ -200,7 +200,7 @@ namespace MathematicsX
 			if (!SegmentsIntersect(p0, p1, q0, q1)) return Vec2.NaV;
 			Vec2 pv = p1 - p0;
 			Vec2 qv = q1 - q0;
-			double det = Vec2.Det(pv, qv);
+			double det = Vec2.Determinant(pv, qv);
 			double x = -(pv.x * qv.x * (q0.y - p0.y) + pv.y * qv.x * p0.x - qv.y * pv.x * q0.x) / det;
 			double y = (pv.y * qv.y * (q0.x - p0.x) + pv.x * qv.y * p0.y - qv.x * pv.y * q0.y) / det;
 			return new Vec2(x, y);
@@ -208,9 +208,9 @@ namespace MathematicsX
 
 		public static Vec3 LinePlaneIntersection(Vec3 lnP, Vec3 lnDir, Vec3 plnP, Vec3 norm)
 		{
-			double dot = lnDir * norm;
+			double dot = Vec3.Dot(lnDir, norm);
 			if (dot == 0.0) return Vec3.NaV;
-			double t = (plnP - lnP) * norm / dot;
+			double t = Vec3.Dot((plnP - lnP), norm) / dot;
 			double nx = lnP.x + lnDir.x * t;
 			double ny = lnP.y + lnDir.y * t;
 			double nz = lnP.z + lnDir.z * t;
@@ -221,11 +221,11 @@ namespace MathematicsX
 		{
 			Vec3 cp = LinePlaneIntersection(p0, p1 - p0, v0, Vec3.Cross(v0 - v1, v0 - v2));
 			if (cp.isNaV) return Vec3.NaV;
-			if ((cp - p0) * (cp - p1) > 0) return Vec3.NaV;
+			if (Vec3.Dot(cp - p0, cp - p1) > 0) return Vec3.NaV;
 			Vec3 c0 = Vec3.Cross(cp - v0, cp - v1);
 			Vec3 c1 = Vec3.Cross(cp - v1, cp - v2);
 			Vec3 c2 = Vec3.Cross(cp - v2, cp - v0);
-			if (c0 * c1 < 0 || c1 * c2 < 0 || c2 * c0 < 0) return Vec3.NaV;
+			if (Vec3.Dot(c0, c1) < 0 || Vec3.Dot(c1, c2) < 0 || Vec3.Dot(c2, c0) < 0) return Vec3.NaV;
 			return cp;
 		}
 
@@ -237,7 +237,7 @@ namespace MathematicsX
 			lnDir = lnDir.normalized;
 			Vec3 pc = center - lnP;
 			double a = lnDir.sqrMagnitude;
-			double b = pc * lnDir * -2;
+			double b = Vec3.Dot(pc, lnDir) * -2;
 			double c = pc.sqrMagnitude - radius * radius;
 			double delta = b * b - 4 * a * c;
 			if (delta > 0)
@@ -263,12 +263,12 @@ namespace MathematicsX
 		public static int SegmentSphereIntersection(Vec3 p0, Vec3 p1, Vec3 sphereCenter, double radius, out Vec3 cp0, out Vec3 cp1)
 		{
 			int count = LineSphereIntersection(p0, p1 - p0, sphereCenter, radius, out cp0, out cp1);
-			if (count == 2 && (cp1 - p0) * (cp1 - p1) > 0)
+			if (count == 2 && Vec3.Dot(cp1 - p0, cp1 - p1) > 0)
 			{
 				cp1 = Vec3.NaV;
 				count--;
 			}
-			if (count >= 1 && (cp0 - p0) * (cp0 - p1) > 0)
+			if (count >= 1 && Vec3.Dot(cp0 - p0, cp0 - p1) > 0)
 			{
 				cp0 = cp1;
 				count--;

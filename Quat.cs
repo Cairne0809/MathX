@@ -144,11 +144,6 @@ namespace MathematicsX
 			return new Vec3(vx, vy, vz);
 		}
 		
-		public static Vec3 operator *(Vec3 lhs, Quat rhs)
-		{
-			return rhs * lhs;
-		}
-
 		public static double Angle(Quat lhs, Quat rhs)
 		{
 			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z, w1 = lhs.w;
@@ -165,13 +160,6 @@ namespace MathematicsX
 
 		public static Vec3 ToEuler(double x, double y, double z, double w)
 		{
-			double sm = x * x + y * y + z * z + w * w;
-			if (sm == 0) return new Vec3();
-			double mag = Math.Sqrt(sm);
-			x /= mag;
-			y /= mag;
-			z /= mag;
-			w /= mag;
 			double vx = Math.Atan2(2.0 * (x * w - y * z), 1.0 - 2.0 * (x * x + z * z));
 			double vy = Math.Atan2(2.0 * (y * w - x * z), 1.0 - 2.0 * (y * y + z * z));
 			double sin = 2.0 * (x * y + z * w);
@@ -185,9 +173,9 @@ namespace MathematicsX
 
 		public static Quat FromEuler(double x, double y, double z)
 		{
-			double hx = x / 2.0;
-			double hy = y / 2.0;
-			double hz = z / 2.0;
+			double hx = x * 0.5;
+			double hy = y * 0.5;
+			double hz = z * 0.5;
 			double c1 = Math.Cos(hx);
 			double c2 = Math.Cos(hy);
 			double c3 = Math.Cos(hz);
@@ -205,16 +193,21 @@ namespace MathematicsX
 			return FromEuler(euler.x, euler.y, euler.z);
 		}
 
-		public static Quat AxisAngle(Vec3 axis, double angle)
+		public static void ToAngleAxis(Quat q, out double angle, out Vec3 normalAxis)
 		{
-			double ax = axis.x, ay = axis.y, az = axis.z;
-			double sm = ax * ax + ay * ay + az * az;
-			if (sm == 0) return new Quat(0, 0, 0, 1);
-			angle /= 2.0;
-			double SdM = Math.Sin(angle) / Math.Sqrt(sm);
-			double qx = ax * SdM;
-			double qy = ay * SdM;
-			double qz = az * SdM;
+			double ha = Math.Acos(q.w);
+			double sin = Math.Sin(ha);
+			angle = ha * 2.0;
+			normalAxis = new Vec3(q.x / sin, q.y / sin, q.z / sin);
+		}
+		public static Quat FromAngleAxis(double angle, Vec3 normalAxis)
+		{
+			double ax = normalAxis.x, ay = normalAxis.y, az = normalAxis.z;
+			angle *= 0.5;
+			double sin = Math.Sin(angle);
+			double qx = ax * sin;
+			double qy = ay * sin;
+			double qz = az * sin;
 			double qw = Math.Cos(angle);
 			return new Quat(qx, qy, qz, qw);
 		}
@@ -222,7 +215,7 @@ namespace MathematicsX
 		public static Quat GetRandom()
 		{
 			double a = MathX.GetRandom(-MathX.DoublePI, MathX.DoublePI);
-			return AxisAngle(Vec3.GetRandom(), a);
+			return FromAngleAxis(a, Vec3.GetRandom());
 		}
 
 		public static Quat zero { get { return new Quat(); } }
