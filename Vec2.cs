@@ -141,7 +141,7 @@ namespace MathematicsX
 
 		public static double Determinant(Vec2 lhs, Vec2 rhs)
 		{
-			return lhs.y * rhs.x - lhs.x * rhs.y;
+			return lhs.x * rhs.y - lhs.y * rhs.x;
 		}
 
 		public static double SqrDistance(Vec2 lhs, Vec2 rhs)

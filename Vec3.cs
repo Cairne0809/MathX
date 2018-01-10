@@ -176,17 +176,17 @@ namespace MathematicsX
 
 		public static double Determinant(Vec3 lhs, Vec3 rhs)
 		{
-			double x = lhs.z * rhs.y - lhs.y * rhs.z;
-			double y = lhs.x * rhs.z - lhs.z * rhs.x;
-			double z = lhs.y * rhs.x - lhs.x * rhs.y;
+			double x = lhs.y * rhs.z - lhs.z * rhs.y;
+			double y = lhs.z * rhs.x - lhs.x * rhs.z;
+			double z = lhs.x * rhs.y - lhs.y * rhs.x;
 			return Math.Sqrt(x * x + y * y + z * z);
 		}
 
 		public static Vec3 Cross(Vec3 lhs, Vec3 rhs)
 		{
-			double x = lhs.z * rhs.y - lhs.y * rhs.z;
-			double y = lhs.x * rhs.z - lhs.z * rhs.x;
-			double z = lhs.y * rhs.x - lhs.x * rhs.y;
+			double x = lhs.y * rhs.z - lhs.z * rhs.y;
+			double y = lhs.z * rhs.x - lhs.x * rhs.z;
+			double z = lhs.x * rhs.y - lhs.y * rhs.x;
 			return new Vec3(x, y, z);
 		}
 
