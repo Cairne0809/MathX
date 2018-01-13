@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public struct Mtx4x4 : IMatrix
+	public struct Mat4x4 : IMatrix
 	{
 		public double v00;
 		public double v10;
@@ -73,6 +73,25 @@ namespace MathematicsX
 				}
 			}
 		}
+		public Vec4 this[int c]
+		{
+			get
+			{
+				if (c == 0) return new Vec4(v00, v01, v02, v03);
+				if (c == 1) return new Vec4(v10, v11, v12, v13);
+				if (c == 2) return new Vec4(v20, v21, v22, v23);
+				if (c == 3) return new Vec4(v30, v31, v32, v33);
+				throw new Exception("The index is out of range!");
+			}
+			set
+			{
+				if (c == 0) { v00 = value.x; v01 = value.y; v02 = value.z; v03 = value.w; }
+				else if (c == 1) { v10 = value.x; v11 = value.y; v12 = value.z; v13 = value.w; }
+				else if (c == 2) { v20 = value.x; v21 = value.y; v22 = value.z; v23 = value.w; }
+				else if (c == 3) { v30 = value.x; v31 = value.y; v32 = value.z; v33 = value.w; }
+				else throw new Exception("The index is out of range!");
+			}
+		}
 		public int column { get { return 4; } }
 		public int row { get { return 4; } }
 
@@ -135,23 +154,6 @@ namespace MathematicsX
 			return base.Equals(obj);
 		}
 
-		public Vec4 GetColumn(int c)
-		{
-			if (c == 0) return new Vec4(v00, v01, v02, v03);
-			if (c == 1) return new Vec4(v10, v11, v12, v13);
-			if (c == 2) return new Vec4(v20, v21, v22, v23);
-			if (c == 3) return new Vec4(v30, v31, v32, v33);
-			throw new Exception("The index is out of range!");
-		}
-		public void SetColumn(int c, Vec4 v)
-		{
-			if (c == 0) { v00 = v.x; v01 = v.y; v02 = v.z; v03 = v.w; }
-			if (c == 1) { v10 = v.x; v11 = v.y; v12 = v.z; v13 = v.w; }
-			if (c == 2) { v20 = v.x; v21 = v.y; v22 = v.z; v23 = v.w; }
-			if (c == 3) { v30 = v.x; v31 = v.y; v32 = v.z; v33 = v.w; }
-			throw new Exception("The index is out of range!");
-		}
-
 		public Vec4 GetRow(int r)
 		{
 			if (r == 0) return new Vec4(v00, v10, v20, v30);
@@ -163,25 +165,25 @@ namespace MathematicsX
 		public void SetRow(int r, Vec4 v)
 		{
 			if (r == 0) { v00 = v.x; v10 = v.y; v20 = v.z; v30 = v.w; }
-			if (r == 1) { v01 = v.x; v11 = v.y; v21 = v.z; v31 = v.w; }
-			if (r == 2) { v02 = v.x; v12 = v.y; v22 = v.z; v32 = v.w; }
-			if (r == 3) { v03 = v.x; v13 = v.y; v23 = v.z; v33 = v.w; }
-			throw new Exception("The index is out of range!");
+			else if (r == 1) { v01 = v.x; v11 = v.y; v21 = v.z; v31 = v.w; }
+			else if (r == 2) { v02 = v.x; v12 = v.y; v22 = v.z; v32 = v.w; }
+			else if (r == 3) { v03 = v.x; v13 = v.y; v23 = v.z; v33 = v.w; }
+			else throw new Exception("The index is out of range!");
 		}
 
 
-		public static bool operator ==(Mtx4x4 lhs, Mtx4x4 rhs)
+		public static bool operator ==(Mat4x4 lhs, Mat4x4 rhs)
 		{
 			return lhs.Equals(rhs);
 		}
-		public static bool operator !=(Mtx4x4 lhs, Mtx4x4 rhs)
+		public static bool operator !=(Mat4x4 lhs, Mat4x4 rhs)
 		{
 			return !lhs.Equals(rhs);
 		}
 
-		public static Mtx4x4 operator ~(Mtx4x4 m)
+		public static Mat4x4 operator ~(Mat4x4 m)
 		{
-			Mtx4x4 nm = new Mtx4x4();
+			Mat4x4 nm = new Mat4x4();
 			nm.v10 = m.v01;
 			nm.v20 = m.v02;
 			nm.v30 = m.v03;
@@ -197,9 +199,9 @@ namespace MathematicsX
 			return nm;
 		}
 
-		public static Mtx4x4 operator +(Mtx4x4 lhs, Mtx4x4 rhs)
+		public static Mat4x4 operator +(Mat4x4 lhs, Mat4x4 rhs)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = lhs.v00 + rhs.v00;
 			m.v10 = lhs.v10 + rhs.v10;
 			m.v20 = lhs.v20 + rhs.v20;
@@ -219,9 +221,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx4x4 operator -(Mtx4x4 lhs, Mtx4x4 rhs)
+		public static Mat4x4 operator -(Mat4x4 lhs, Mat4x4 rhs)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = lhs.v00 - rhs.v00;
 			m.v10 = lhs.v10 - rhs.v10;
 			m.v20 = lhs.v20 - rhs.v20;
@@ -241,9 +243,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx4x4 operator *(Mtx4x4 lhs, double rhs)
+		public static Mat4x4 operator *(Mat4x4 lhs, double rhs)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = lhs.v00 * rhs;
 			m.v10 = lhs.v10 * rhs;
 			m.v20 = lhs.v20 * rhs;
@@ -262,14 +264,14 @@ namespace MathematicsX
 			m.v33 = lhs.v33 * rhs;
 			return m;
 		}
-		public static Mtx4x4 operator *(double lhs, Mtx4x4 rhs)
+		public static Mat4x4 operator *(double lhs, Mat4x4 rhs)
 		{
 			return rhs * lhs;
 		}
 		
-		public static Mtx4x4 operator /(Mtx4x4 lhs, double rhs)
+		public static Mat4x4 operator /(Mat4x4 lhs, double rhs)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = lhs.v00 / rhs;
 			m.v10 = lhs.v10 / rhs;
 			m.v20 = lhs.v20 / rhs;
@@ -288,9 +290,9 @@ namespace MathematicsX
 			m.v33 = lhs.v33 / rhs;
 			return m;
 		}
-		public static Mtx4x4 operator /(double lhs, Mtx4x4 rhs)
+		public static Mat4x4 operator /(double lhs, Mat4x4 rhs)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = lhs / rhs.v00;
 			m.v10 = lhs / rhs.v10;
 			m.v20 = lhs / rhs.v20;
@@ -310,9 +312,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx4x4 operator *(Mtx4x4 lhs, Mtx4x4 rhs)
+		public static Mat4x4 operator *(Mat4x4 lhs, Mat4x4 rhs)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = lhs.v00 * rhs.v00 + lhs.v10 * rhs.v01 + lhs.v20 * rhs.v02 + lhs.v30 * rhs.v03;
 			m.v10 = lhs.v00 * rhs.v10 + lhs.v10 * rhs.v11 + lhs.v20 * rhs.v12 + lhs.v30 * rhs.v13;
 			m.v20 = lhs.v00 * rhs.v20 + lhs.v10 * rhs.v21 + lhs.v20 * rhs.v22 + lhs.v30 * rhs.v23;
@@ -332,7 +334,7 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Vec4 operator *(Mtx4x4 lhs, Vec4 rhs)
+		public static Vec4 operator *(Mat4x4 lhs, Vec4 rhs)
 		{
 			Vec4 v = new Vec4();
 			v.x = lhs.v00 * rhs.x + lhs.v10 * rhs.y + lhs.v20 * rhs.z + lhs.v30 * rhs.w;
@@ -341,7 +343,7 @@ namespace MathematicsX
 			v.w = lhs.v03 * rhs.x + lhs.v13 * rhs.y + lhs.v23 * rhs.z + lhs.v33 * rhs.w;
 			return v;
 		}
-		public static Vec3 operator *(Mtx4x4 lhs, Vec3 rhs)
+		public static Vec3 operator *(Mat4x4 lhs, Vec3 rhs)
 		{
 			Vec3 v = new Vec3();
 			v.x = lhs.v00 * rhs.x + lhs.v10 * rhs.y + lhs.v20 * rhs.z + lhs.v30;
@@ -351,9 +353,9 @@ namespace MathematicsX
 		}
 
 
-		public static Mtx4x4 Translate(Vec3 delta)
+		public static Mat4x4 Translate(Vec3 delta)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = m.v11 = m.v22 = m.v33 = 1;
 			m.v30 = delta.x;
 			m.v31 = delta.y;
@@ -361,9 +363,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx4x4 RotateX(double angle)
+		public static Mat4x4 RotateX(double angle)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v00 = m.v33 = 1;
 			double cx = Math.Cos(angle);
 			double sx = Math.Sin(angle);
@@ -373,9 +375,9 @@ namespace MathematicsX
 			m.v22 = cx;
 			return m;
 		}
-		public static Mtx4x4 RotateY(double angle)
+		public static Mat4x4 RotateY(double angle)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v11 = m.v33 = 1;
 			double cy = Math.Cos(angle);
 			double sy = Math.Sin(angle);
@@ -385,9 +387,9 @@ namespace MathematicsX
 			m.v22 = cy;
 			return m;
 		}
-		public static Mtx4x4 RotateZ(double angle)
+		public static Mat4x4 RotateZ(double angle)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v22 = m.v33 = 1;
 			double cz = Math.Cos(angle);
 			double sz = Math.Sin(angle);
@@ -398,9 +400,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx4x4 RotateZYX(Vec3 euler)
+		public static Mat4x4 RotateZYX(Vec3 euler)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v33 = 1;
 			double cx = Math.Cos(euler.x);
 			double sx = Math.Sin(euler.x);
@@ -419,9 +421,9 @@ namespace MathematicsX
 			m.v22 = cx * cy;
 			return m;
 		}
-		public static Mtx4x4 RotateYXZ(Vec3 euler)
+		public static Mat4x4 RotateYXZ(Vec3 euler)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v33 = 1;
 			double cz = Math.Cos(euler.z);
 			double sz = Math.Sin(euler.z);
@@ -441,13 +443,13 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx4x4 Rotate(Vec3 euler)
+		public static Mat4x4 Rotate(Vec3 euler)
 		{
 			return RotateYXZ(euler);
 		}
-		public static Mtx4x4 Rotate(double angle, Vec3 normalAxis)
+		public static Mat4x4 Rotate(double angle, Vec3 normalAxis)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v33 = 1;
 			double ax = normalAxis.x, ay = normalAxis.y, az = normalAxis.z;
 			double cos = Math.Cos(angle);
@@ -463,7 +465,7 @@ namespace MathematicsX
 			m.v22 = az * az + (1.0 - az * az) * cos;
 			return m;
 		}
-		public static Mtx4x4 Rotate(Quat rotation)
+		public static Mat4x4 Rotate(Quat rotation)
 		{
 			double angle;
 			Vec3 normalAxis;
@@ -471,9 +473,9 @@ namespace MathematicsX
 			return Rotate(angle, normalAxis);
 		}
 
-		public static Mtx4x4 Scale(Vec3 scale)
+		public static Mat4x4 Scale(Vec3 scale)
 		{
-			Mtx4x4 m = new Mtx4x4();
+			Mat4x4 m = new Mat4x4();
 			m.v33 = 1;
 			m.v00 = scale.x;
 			m.v11 = scale.y;
@@ -481,24 +483,24 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx4x4 TRzyxS(Vec3 delta, Vec3 euler, Vec3 scale)
+		public static Mat4x4 TRzyxS(Vec3 delta, Vec3 euler, Vec3 scale)
 		{
 			return Translate(delta) * RotateZYX(euler) * Scale(scale);
 		}
-		public static Mtx4x4 TRyxzS(Vec3 delta, Vec3 euler, Vec3 scale)
+		public static Mat4x4 TRyxzS(Vec3 delta, Vec3 euler, Vec3 scale)
 		{
 			return Translate(delta) * RotateYXZ(euler) * Scale(scale);
 		}
 
-		public static Mtx4x4 TRS(Vec3 delta, Vec3 euler, Vec3 scale)
+		public static Mat4x4 TRS(Vec3 delta, Vec3 euler, Vec3 scale)
 		{
 			return Translate(delta) * Rotate(euler) * Scale(scale);
 		}
-		public static Mtx4x4 TRS(Vec3 delta, double angle, Vec3 normalAxis, Vec3 scale)
+		public static Mat4x4 TRS(Vec3 delta, double angle, Vec3 normalAxis, Vec3 scale)
 		{
 			return Translate(delta) * Rotate(angle, normalAxis) * Scale(scale);
 		}
-		public static Mtx4x4 TRS(Vec3 delta, Quat rotation, Vec3 scale)
+		public static Mat4x4 TRS(Vec3 delta, Quat rotation, Vec3 scale)
 		{
 			return Translate(delta) * Rotate(rotation) * Scale(scale);
 		}

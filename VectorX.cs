@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public class VecX : IVector
+	public class VectorX : IVector
 	{
 		double[] _x;
 
@@ -62,11 +62,11 @@ namespace MathematicsX
 				return Math.Sqrt(sum);
 			}
 		}
-		public VecX abs
+		public VectorX abs
 		{
 			get
 			{
-				VecX nv = new VecX(_x.Length);
+				VectorX nv = new VectorX(_x.Length);
 				for (int i = 0; i < _x.Length; i++)
 				{
 					nv[i] = Math.Abs(_x[i]);
@@ -75,13 +75,13 @@ namespace MathematicsX
 			}
 		}
 
-		public VecX normalized
+		public VectorX normalized
 		{
 			get
 			{
 				double div = sqrMagnitude;
-				if (div == 1) return new VecX(_x, true);
-				VecX nv = new VecX(_x.Length);
+				if (div == 1) return new VectorX(_x, true);
+				VectorX nv = new VectorX(_x.Length);
 				if (div > 0)
 				{
 					div = Math.Sqrt(div);
@@ -94,11 +94,11 @@ namespace MathematicsX
 			}
 		}
 
-		public VecX(int dimension)
+		public VectorX(int dimension)
 		{
 			_x = new double[dimension];
 		}
-		public VecX(double[] X, bool doCopy)
+		public VectorX(double[] X, bool doCopy)
 		{
 			if (doCopy)
 			{
@@ -111,9 +111,9 @@ namespace MathematicsX
 			}
 		}
 
-		public VecX Clone()
+		public VectorX Clone()
 		{
-			return new VecX(_x, true);
+			return new VectorX(_x, true);
 		}
 
 		public string ToString(string format)
@@ -133,7 +133,7 @@ namespace MathematicsX
 			return ToString("");
 		}
 
-		public bool ValueEquals(VecX v)
+		public bool ValueEquals(VectorX v)
 		{
 			if (_x.Length != v._x.Length) return false;
 			for (int i = 0; i < _x.Length; i++)
@@ -145,7 +145,7 @@ namespace MathematicsX
 		}
 
 
-		public VecX Neg()
+		public VectorX Neg()
 		{
 			for (int i = 0; i < _x.Length; i++)
 			{
@@ -153,7 +153,7 @@ namespace MathematicsX
 			}
 			return this;
 		}
-		public VecX Add(VecX v)
+		public VectorX Add(VectorX v)
 		{
 			for (int i = 0; i < _x.Length; i++)
 			{
@@ -161,7 +161,7 @@ namespace MathematicsX
 			}
 			return this;
 		}
-		public VecX Sub(VecX v)
+		public VectorX Sub(VectorX v)
 		{
 			for (int i = 0; i < _x.Length; i++)
 			{
@@ -169,7 +169,7 @@ namespace MathematicsX
 			}
 			return this;
 		}
-		public VecX Mul(double n)
+		public VectorX Mul(double n)
 		{
 			for (int i = 0; i < _x.Length; i++)
 			{
@@ -177,7 +177,7 @@ namespace MathematicsX
 			}
 			return this;
 		}
-		public VecX Div(double n)
+		public VectorX Div(double n)
 		{
 			for (int i = 0; i < _x.Length; i++)
 			{
@@ -185,7 +185,7 @@ namespace MathematicsX
 			}
 			return this;
 		}
-		public VecX InvDiv(double n)
+		public VectorX InvDiv(double n)
 		{
 			for (int i = 0; i < _x.Length; i++)
 			{
@@ -194,7 +194,7 @@ namespace MathematicsX
 			return this;
 		}
 
-		public double Dot(VecX v)
+		public double Dot(VectorX v)
 		{
 			double sum = 0;
 			for (int i = 0; i < _x.Length; i++)
@@ -204,7 +204,7 @@ namespace MathematicsX
 			return sum;
 		}
 
-		public double SqrDistance(VecX v)
+		public double SqrDistance(VectorX v)
 		{
 			double sum = 0;
 			for (int i = 0; i < _x.Length; i++)
@@ -214,7 +214,7 @@ namespace MathematicsX
 			}
 			return sum;
 		}
-		public double Distance(VecX v)
+		public double Distance(VectorX v)
 		{
 			double sum = 0;
 			for (int i = 0; i < _x.Length; i++)
@@ -225,7 +225,7 @@ namespace MathematicsX
 			return Math.Sqrt(sum);
 		}
 
-		public double Angle(VecX v)
+		public double Angle(VectorX v)
 		{
 			double m1 = magnitude;
 			double m2 = v.magnitude;
@@ -235,55 +235,55 @@ namespace MathematicsX
 		}
 
 
-		public static VecX operator -(VecX v)
+		public static VectorX operator -(VectorX v)
 		{
 			return v.Clone().Neg();
 		}
-		public static VecX operator +(VecX lhs, VecX rhs)
+		public static VectorX operator +(VectorX lhs, VectorX rhs)
 		{
 			return lhs.Clone().Add(rhs);
 		}
-		public static VecX operator -(VecX lhs, VecX rhs)
+		public static VectorX operator -(VectorX lhs, VectorX rhs)
 		{
 			return lhs.Clone().Sub(rhs);
 		}
-		public static VecX operator *(double lhs, VecX rhs)
+		public static VectorX operator *(double lhs, VectorX rhs)
 		{
 			return rhs.Clone().Mul(lhs);
 		}
-		public static VecX operator *(VecX lhs, double rhs)
+		public static VectorX operator *(VectorX lhs, double rhs)
 		{
 			return lhs.Clone().Mul(rhs);
 		}
-		public static VecX operator /(VecX lhs, double rhs)
+		public static VectorX operator /(VectorX lhs, double rhs)
 		{
 			return lhs.Clone().Div(rhs);
 		}
-		public static VecX operator /(double lhs, VecX rhs)
+		public static VectorX operator /(double lhs, VectorX rhs)
 		{
 			return rhs.Clone().InvDiv(lhs);
 		}
 
-		public static double operator *(VecX lhs, VecX rhs)
+		public static double operator *(VectorX lhs, VectorX rhs)
 		{
 			return lhs.Dot(rhs);
 		}
 
-		public static double SqrDistance(VecX lhs, VecX rhs)
+		public static double SqrDistance(VectorX lhs, VectorX rhs)
 		{
 			return lhs.SqrDistance(rhs);
 		}
-		public static double Distance(VecX lhs, VecX rhs)
+		public static double Distance(VectorX lhs, VectorX rhs)
 		{
 			return lhs.Distance(rhs);
 		}
 
-		public static double Angle(VecX lhs, VecX rhs)
+		public static double Angle(VectorX lhs, VectorX rhs)
 		{
 			return lhs.Angle(rhs);
 		}
 
-		public static VecX Project(VecX src, VecX dst)
+		public static VectorX Project(VectorX src, VectorX dst)
 		{
 			double sqrMag = dst.sqrMagnitude;
 			if (sqrMag > 0)
@@ -291,12 +291,12 @@ namespace MathematicsX
 				double DdSM = src.Dot(dst) / sqrMag;
 				return dst.Clone().Mul(DdSM);
 			}
-			return new VecX(src.dimension);
+			return new VectorX(src.dimension);
 		}
 
-		public static VecX Mirror(VecX src, VecX axis)
+		public static VectorX Mirror(VectorX src, VectorX axis)
 		{
-			VecX pjt = Project(src, axis);
+			VectorX pjt = Project(src, axis);
 			return pjt.Add(pjt).Sub(src);
 		}
 

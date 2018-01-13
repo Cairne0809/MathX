@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public struct Mtx3x3 : IMatrix
+	public struct Mat3x3 : IMatrix
 	{
 		public double v00;
 		public double v10;
@@ -50,6 +50,23 @@ namespace MathematicsX
 					case 8: v22 = value; break;
 					default: throw new Exception("The index is out of range!");
 				}
+			}
+		}
+		public Vec3 this[int c]
+		{
+			get
+			{
+				if (c == 0) return new Vec3(v00, v01, v02);
+				if (c == 1) return new Vec3(v10, v11, v12);
+				if (c == 2) return new Vec3(v20, v21, v22);
+				throw new Exception("The index is out of range!");
+			}
+			set
+			{
+				if (c == 0) { v00 = value.x; v01 = value.y; v02 = value.z; }
+				else if (c == 1) { v10 = value.x; v11 = value.y; v12 = value.z; }
+				else if (c == 2) { v20 = value.x; v21 = value.y; v22 = value.z; }
+				else throw new Exception("The index is out of range!");
 			}
 		}
 		public int column { get { return 3; } }
@@ -100,21 +117,6 @@ namespace MathematicsX
 			return base.Equals(obj);
 		}
 
-		public Vec3 GetColumn(int c)
-		{
-			if (c == 0) return new Vec3(v00, v01, v02);
-			if (c == 1) return new Vec3(v10, v11, v12);
-			if (c == 2) return new Vec3(v20, v21, v22);
-			throw new Exception("The index is out of range!");
-		}
-		public void SetColumn(int c, Vec3 v)
-		{
-			if (c == 0) { v00 = v.x; v01 = v.y; v02 = v.z; }
-			if (c == 1) { v10 = v.x; v11 = v.y; v12 = v.z; }
-			if (c == 2) { v20 = v.x; v21 = v.y; v22 = v.z; }
-			throw new Exception("The index is out of range!");
-		}
-
 		public Vec3 GetRow(int r)
 		{
 			if (r == 0) return new Vec3(v00, v10, v20);
@@ -125,24 +127,24 @@ namespace MathematicsX
 		public void SetRow(int r, Vec3 v)
 		{
 			if (r == 0) { v00 = v.x; v10 = v.y; v20 = v.z; }
-			if (r == 1) { v01 = v.x; v11 = v.y; v21 = v.z; }
-			if (r == 2) { v02 = v.x; v12 = v.y; v22 = v.z; }
-			throw new Exception("The index is out of range!");
+			else if (r == 1) { v01 = v.x; v11 = v.y; v21 = v.z; }
+			else if (r == 2) { v02 = v.x; v12 = v.y; v22 = v.z; }
+			else throw new Exception("The index is out of range!");
 		}
 
 
-		public static bool operator ==(Mtx3x3 lhs, Mtx3x3 rhs)
+		public static bool operator ==(Mat3x3 lhs, Mat3x3 rhs)
 		{
 			return lhs.Equals(rhs);
 		}
-		public static bool operator !=(Mtx3x3 lhs, Mtx3x3 rhs)
+		public static bool operator !=(Mat3x3 lhs, Mat3x3 rhs)
 		{
 			return !lhs.Equals(rhs);
 		}
 
-		public static Mtx3x3 operator ~(Mtx3x3 m)
+		public static Mat3x3 operator ~(Mat3x3 m)
 		{
-			Mtx3x3 nm = new Mtx3x3();
+			Mat3x3 nm = new Mat3x3();
 			nm.v10 = m.v01;
 			nm.v20 = m.v02;
 			nm.v01 = m.v10;
@@ -152,9 +154,9 @@ namespace MathematicsX
 			return nm;
 		}
 
-		public static Mtx3x3 operator +(Mtx3x3 lhs, Mtx3x3 rhs)
+		public static Mat3x3 operator +(Mat3x3 lhs, Mat3x3 rhs)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v00 = lhs.v00 + rhs.v00;
 			m.v10 = lhs.v10 + rhs.v10;
 			m.v20 = lhs.v20 + rhs.v20;
@@ -167,9 +169,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx3x3 operator -(Mtx3x3 lhs, Mtx3x3 rhs)
+		public static Mat3x3 operator -(Mat3x3 lhs, Mat3x3 rhs)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v00 = lhs.v00 - rhs.v00;
 			m.v10 = lhs.v10 - rhs.v10;
 			m.v20 = lhs.v20 - rhs.v20;
@@ -182,9 +184,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx3x3 operator *(Mtx3x3 lhs, double rhs)
+		public static Mat3x3 operator *(Mat3x3 lhs, double rhs)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v00 = lhs.v00 * rhs;
 			m.v10 = lhs.v10 * rhs;
 			m.v20 = lhs.v20 * rhs;
@@ -196,14 +198,14 @@ namespace MathematicsX
 			m.v22 = lhs.v22 * rhs;
 			return m;
 		}
-		public static Mtx3x3 operator *(double lhs, Mtx3x3 rhs)
+		public static Mat3x3 operator *(double lhs, Mat3x3 rhs)
 		{
 			return rhs * lhs;
 		}
 
-		public static Mtx3x3 operator /(Mtx3x3 lhs, double rhs)
+		public static Mat3x3 operator /(Mat3x3 lhs, double rhs)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v00 = lhs.v00 / rhs;
 			m.v10 = lhs.v10 / rhs;
 			m.v20 = lhs.v20 / rhs;
@@ -215,9 +217,9 @@ namespace MathematicsX
 			m.v22 = lhs.v22 / rhs;
 			return m;
 		}
-		public static Mtx3x3 operator /(double lhs, Mtx3x3 rhs)
+		public static Mat3x3 operator /(double lhs, Mat3x3 rhs)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v00 = lhs / rhs.v00;
 			m.v10 = lhs / rhs.v10;
 			m.v20 = lhs / rhs.v20;
@@ -230,9 +232,9 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Mtx3x3 operator *(Mtx3x3 lhs, Mtx3x3 rhs)
+		public static Mat3x3 operator *(Mat3x3 lhs, Mat3x3 rhs)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v00 = lhs.v00 * rhs.v00 + lhs.v10 * rhs.v01 + lhs.v20 * rhs.v02;
 			m.v10 = lhs.v00 * rhs.v10 + lhs.v10 * rhs.v11 + lhs.v20 * rhs.v12;
 			m.v20 = lhs.v00 * rhs.v20 + lhs.v10 * rhs.v21 + lhs.v20 * rhs.v22;
@@ -245,7 +247,7 @@ namespace MathematicsX
 			return m;
 		}
 
-		public static Vec3 operator *(Mtx3x3 lhs, Vec3 rhs)
+		public static Vec3 operator *(Mat3x3 lhs, Vec3 rhs)
 		{
 			Vec3 v = new Vec3();
 			v.x = lhs.v00 * rhs.x + lhs.v10 * rhs.y + lhs.v20 * rhs.z;
@@ -253,7 +255,7 @@ namespace MathematicsX
 			v.z = lhs.v02 * rhs.x + lhs.v12 * rhs.y + lhs.v22 * rhs.z;
 			return v;
 		}
-		public static Vec2 operator *(Mtx3x3 lhs, Vec2 rhs)
+		public static Vec2 operator *(Mat3x3 lhs, Vec2 rhs)
 		{
 			Vec2 v = new Vec2();
 			v.x = lhs.v00 * rhs.x + lhs.v10 * rhs.y + lhs.v20;
@@ -262,37 +264,38 @@ namespace MathematicsX
 		}
 
 
-		public static Mtx3x3 Translate(Vec2 delta)
+		public static Mat3x3 Translate(Vec2 delta)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v00 = m.v11 = m.v22 = 1;
 			m.v20 = delta.x;
 			m.v21 = delta.y;
 			return m;
 		}
 
-		public static Mtx3x3 Rotate(double angle)
+		public static Mat3x3 Rotate(double angle)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v22 = 1;
 			double sin = Math.Sin(angle);
 			double cos = Math.Cos(angle);
-			m.v00 = m.v11 = cos;
+			m.v00 = cos;
 			m.v10 = -sin;
 			m.v01 = sin;
+			m.v11 = cos;
 			return m;
 		}
 
-		public static Mtx3x3 Scale(Vec2 scale)
+		public static Mat3x3 Scale(Vec2 scale)
 		{
-			Mtx3x3 m = new Mtx3x3();
+			Mat3x3 m = new Mat3x3();
 			m.v22 = 1;
 			m.v00 = scale.x;
 			m.v11 = scale.y;
 			return m;
 		}
 
-		public static Mtx3x3 TRS(Vec2 delta, double angle, Vec2 scale)
+		public static Mat3x3 TRS(Vec2 delta, double angle, Vec2 scale)
 		{
 			return Translate(delta) * Rotate(angle) * Scale(scale);
 		}

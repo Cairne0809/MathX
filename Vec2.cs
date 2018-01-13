@@ -39,7 +39,7 @@ namespace MathematicsX
 					div = Math.Sqrt(div);
 					return new Vec2(x / div, y / div);
 				}
-				return new Vec2();
+				return this;
 			}
 		}
 

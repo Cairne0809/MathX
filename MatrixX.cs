@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
-	public class MtxX : IMatrix
+	public class MatrixX : IMatrix
 	{
 		int _c;
 		int _r;
@@ -34,7 +34,7 @@ namespace MathematicsX
 			}
 		}
 
-		public MtxX(int column, int row, params double[] v)
+		public MatrixX(int column, int row, params double[] v)
 		{
 			_c = column;
 			_r = row;
@@ -60,15 +60,15 @@ namespace MathematicsX
 			return ToString("");
 		}
 
-		public MtxX Clone()
+		public MatrixX Clone()
 		{
-			return new MtxX(_c, _r, _v.Clone() as double[]);
+			return new MatrixX(_c, _r, _v.Clone() as double[]);
 		}
 
-		public VecX GetColumn(int c)
+		public VectorX GetColumn(int c)
 		{
 			if (c < 0 || c >= _c) throw new Exception("The index is out of range!");
-			VecX v = new VecX(_r);
+			VectorX v = new VectorX(_r);
 			int vi = 0;
 			for (int i = c; i < _v.Length; i += _c)
 			{
@@ -76,7 +76,7 @@ namespace MathematicsX
 			}
 			return v;
 		}
-		public void SetColumn(int c, VecX v)
+		public void SetColumn(int c, VectorX v)
 		{
 			if (c < 0 || c >= _c) throw new Exception("The index is out of range!");
 			int vi = 0;
@@ -86,10 +86,10 @@ namespace MathematicsX
 			}
 		}
 
-		public VecX GetRow(int r)
+		public VectorX GetRow(int r)
 		{
 			if (r < 0 || r >= _r) throw new Exception("The index is out of range!");
-			VecX v = new VecX(_c);
+			VectorX v = new VectorX(_c);
 			int vi = 0;
 			for (int i = r * _c; i < r * _c + _c; i++)
 			{
@@ -97,7 +97,7 @@ namespace MathematicsX
 			}
 			return v;
 		}
-		public void SetRow(int r, VecX v)
+		public void SetRow(int r, VectorX v)
 		{
 			if (r < 0 || r >= _r) throw new Exception("The index is out of range!");
 			int vi = 0;
@@ -108,7 +108,7 @@ namespace MathematicsX
 		}
 
 
-		public MtxX Scale(double value)
+		public MatrixX Scale(double value)
 		{
 			for (int i = 0; i < _v.Length; i++)
 			{
@@ -117,7 +117,7 @@ namespace MathematicsX
 			return this;
 		}
 
-		public MtxX Add(MtxX mtx)
+		public MatrixX Add(MatrixX mtx)
 		{
 			int c2 = mtx._c;
 			int r2 = mtx._r;
@@ -130,7 +130,7 @@ namespace MathematicsX
 			return this;
 		}
 
-		public MtxX Sub(MtxX mtx)
+		public MatrixX Sub(MatrixX mtx)
 		{
 			int c2 = mtx._c;
 			int r2 = mtx._r;
@@ -143,7 +143,7 @@ namespace MathematicsX
 			return this;
 		}
 		
-		public static MtxX Mul(MtxX lhs, MtxX rhs)
+		public static MatrixX Mul(MatrixX lhs, MatrixX rhs)
 		{
 			int c1 = lhs._c;
 			int r1 = lhs._r;
@@ -165,10 +165,10 @@ namespace MathematicsX
 					nv[c2 * j + i] = value;
 				}
 			}
-			return new MtxX(c2, r1, nv);
+			return new MatrixX(c2, r1, nv);
 		}
 
-		public static MtxX Permutate(MtxX mtx)
+		public static MatrixX Permutate(MatrixX mtx)
 		{
 			int c = mtx._c;
 			int r = mtx._r;
@@ -182,7 +182,7 @@ namespace MathematicsX
 					nv[k++] = v[c * j + i];
 				}
 			}
-			return new MtxX(r, c, nv);
+			return new MatrixX(r, c, nv);
 		}
 
 	}

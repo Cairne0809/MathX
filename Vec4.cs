@@ -45,7 +45,7 @@ namespace MathematicsX
 					div = Math.Sqrt(div);
 					return new Vec4(x / div, y / div, z / div, w / div);
 				}
-				return new Vec4();
+				return this;
 			}
 		}
 
