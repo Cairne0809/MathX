@@ -6,33 +6,31 @@ using System.Threading.Tasks;
 
 namespace MathematicsX
 {
-	public struct AxisAlignedBox<T> where T : IVector
+	public struct AxisAlignedBox<T> where T : IVector, new()
 	{
 		public T center;
 		public T extends;
 
-		public T max
-		{
-			get
-			{
-				T nv = Activator.CreateInstance<T>();
-				nv.dimension = extends.dimension;
-				for (int i = 0; i < nv.dimension; i++)
-				{
-					nv[i] = center[i] + Math.Abs(extends[i]);
-				}
-				return nv;
-			}
-		}
 		public T min
 		{
 			get
 			{
-				T nv = Activator.CreateInstance<T>();
-				nv.dimension = extends.dimension;
+				T nv = new T();
 				for (int i = 0; i < nv.dimension; i++)
 				{
 					nv[i] = center[i] - Math.Abs(extends[i]);
+				}
+				return nv;
+			}
+		}
+		public T max
+		{
+			get
+			{
+				T nv = new T();
+				for (int i = 0; i < nv.dimension; i++)
+				{
+					nv[i] = center[i] + Math.Abs(extends[i]);
 				}
 				return nv;
 			}
@@ -43,5 +41,6 @@ namespace MathematicsX
 			this.center = center;
 			this.extends = extends;
 		}
+
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace MathematicsX
 {
-	public struct Segment<T> where T : IVector
+	public struct Segment<T> where T : IVector, new()
 	{
 		public T p0;
 		public T p1;
@@ -28,5 +28,30 @@ namespace MathematicsX
 			this.p0 = p0;
 			this.p1 = p1;
 		}
+
+		public void MinMax(out T min, out T max)
+		{
+			min = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				min[i] = p1[i] < min[i] ? p1[i] : p0[i];
+			}
+			max = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				max[i] = p1[i] >= max[i] ? p1[i] : p0[i];
+			}
+		}
+
+		public T Center()
+		{
+			T v = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				v[i] = (p0[i] + p1[i]) / 2;
+			}
+			return v;
+		}
+
 	}
 }

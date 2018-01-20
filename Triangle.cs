@@ -2,7 +2,7 @@
 
 namespace MathematicsX
 {
-	public struct Triangle<T> where T : IVector
+	public struct Triangle<T> where T : IVector, new()
 	{
 		public T p0;
 		public T p1;
@@ -32,5 +32,34 @@ namespace MathematicsX
 			this.p1 = p1;
 			this.p2 = p2;
 		}
+
+		public void MinMax(out T min, out T max)
+		{
+			min = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				min[i] = p0[i];
+				if (p1[i] < min[i]) min[i] = p1[i];
+				if (p2[i] < min[i]) min[i] = p2[i];
+			}
+			max = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				max[i] = p0[i];
+				if (p1[i] >= max[i]) max[i] = p1[i];
+				if (p2[i] >= max[i]) max[i] = p2[i];
+			}
+		}
+
+		public T Center()
+		{
+			T v = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				v[i] = (p0[i] + p1[i] + p2[i]) / 3;
+			}
+			return v;
+		}
+
 	}
 }

@@ -10,6 +10,97 @@ namespace MathematicsX
 		public double z;
 		public double w;
 
+		public Vec2 xy { get { return new Vec2(x, y); } set { x = value.x; y = value.y; } }
+		public Vec2 xz { get { return new Vec2(x, z); } set { x = value.x; z = value.y; } }
+		public Vec2 xw { get { return new Vec2(x, w); } set { x = value.x; w = value.y; } }
+		public Vec2 yx { get { return new Vec2(y, x); } set { y = value.x; x = value.y; } }
+		public Vec2 yz { get { return new Vec2(y, z); } set { y = value.x; z = value.y; } }
+		public Vec2 yw { get { return new Vec2(y, w); } set { y = value.x; w = value.y; } }
+		public Vec2 zx { get { return new Vec2(z, x); } set { z = value.x; x = value.y; } }
+		public Vec2 zy { get { return new Vec2(z, y); } set { z = value.x; y = value.y; } }
+		public Vec2 zw { get { return new Vec2(z, w); } set { z = value.x; w = value.y; } }
+		public Vec2 wx { get { return new Vec2(w, x); } set { w = value.x; x = value.y; } }
+		public Vec2 wy { get { return new Vec2(w, y); } set { w = value.x; y = value.y; } }
+		public Vec2 wz { get { return new Vec2(w, z); } set { w = value.x; z = value.y; } }
+
+		public Vec3 xyz { get { return new Vec3(x, y, z); } set { x = value.x; y = value.y; z = value.z; } }
+		public Vec3 xyw { get { return new Vec3(x, y, w); } set { x = value.x; y = value.y; w = value.z; } }
+		public Vec3 xzy { get { return new Vec3(x, z, y); } set { x = value.x; z = value.y; y = value.z; } }
+		public Vec3 xzw { get { return new Vec3(x, z, w); } set { x = value.x; z = value.y; w = value.z; } }
+		public Vec3 xwy { get { return new Vec3(x, w, y); } set { x = value.x; w = value.y; y = value.z; } }
+		public Vec3 xwz { get { return new Vec3(x, w, z); } set { x = value.x; w = value.y; z = value.z; } }
+		public Vec3 yxz { get { return new Vec3(y, x, z); } set { y = value.x; x = value.y; z = value.z; } }
+		public Vec3 yxw { get { return new Vec3(y, x, w); } set { y = value.x; x = value.y; w = value.z; } }
+		public Vec3 yzx { get { return new Vec3(y, z, x); } set { y = value.x; z = value.y; x = value.z; } }
+		public Vec3 yzw { get { return new Vec3(y, z, w); } set { y = value.x; z = value.y; w = value.z; } }
+		public Vec3 ywx { get { return new Vec3(y, w, x); } set { y = value.x; w = value.y; x = value.z; } }
+		public Vec3 ywz { get { return new Vec3(y, w, z); } set { y = value.x; w = value.y; z = value.z; } }
+		public Vec3 zxy { get { return new Vec3(z, x, y); } set { z = value.x; x = value.y; y = value.z; } }
+		public Vec3 zxw { get { return new Vec3(z, x, w); } set { z = value.x; x = value.y; w = value.z; } }
+		public Vec3 zyx { get { return new Vec3(z, y, x); } set { z = value.x; y = value.y; x = value.z; } }
+		public Vec3 zyw { get { return new Vec3(z, y, w); } set { z = value.x; y = value.y; w = value.z; } }
+		public Vec3 zwx { get { return new Vec3(z, w, x); } set { z = value.x; w = value.y; x = value.z; } }
+		public Vec3 zwy { get { return new Vec3(z, w, y); } set { z = value.x; w = value.y; y = value.z; } }
+		public Vec3 wxy { get { return new Vec3(w, x, y); } set { w = value.x; x = value.y; y = value.z; } }
+		public Vec3 wxz { get { return new Vec3(w, x, z); } set { w = value.x; x = value.y; z = value.z; } }
+		public Vec3 wyx { get { return new Vec3(w, y, x); } set { w = value.x; y = value.y; x = value.z; } }
+		public Vec3 wyz { get { return new Vec3(w, y, z); } set { w = value.x; y = value.y; z = value.z; } }
+		public Vec3 wzx { get { return new Vec3(w, z, x); } set { w = value.x; z = value.y; x = value.z; } }
+		public Vec3 wzy { get { return new Vec3(w, z, y); } set { w = value.x; z = value.y; y = value.z; } }
+
+		public Vec4 xyzw { get { return new Vec4(x, y, z, w); } set { x = value.x; y = value.y; z = value.z; w = value.w; } }
+		public Vec4 xywz { get { return new Vec4(x, y, w, z); } set { x = value.x; y = value.y; w = value.z; z = value.w; } }
+		public Vec4 xzyw { get { return new Vec4(x, z, y, w); } set { x = value.x; z = value.y; y = value.z; w = value.w; } }
+		public Vec4 xzwy { get { return new Vec4(x, z, w, y); } set { x = value.x; z = value.y; w = value.z; y = value.w; } }
+		public Vec4 xwyz { get { return new Vec4(x, w, y, z); } set { x = value.x; w = value.y; y = value.z; z = value.w; } }
+		public Vec4 xwzy { get { return new Vec4(x, w, z, y); } set { x = value.x; w = value.y; z = value.z; y = value.w; } }
+		public Vec4 yxzw { get { return new Vec4(y, x, z, w); } set { y = value.x; x = value.y; z = value.z; w = value.w; } }
+		public Vec4 yxwz { get { return new Vec4(y, x, w, z); } set { y = value.x; x = value.y; w = value.z; z = value.w; } }
+		public Vec4 yzxw { get { return new Vec4(y, z, x, w); } set { y = value.x; z = value.y; x = value.z; w = value.w; } }
+		public Vec4 yzwx { get { return new Vec4(y, z, w, x); } set { y = value.x; z = value.y; w = value.z; x = value.w; } }
+		public Vec4 ywxz { get { return new Vec4(y, w, x, z); } set { y = value.x; w = value.y; x = value.z; z = value.w; } }
+		public Vec4 ywzx { get { return new Vec4(y, w, z, x); } set { y = value.x; w = value.y; z = value.z; x = value.w; } }
+		public Vec4 zxyw { get { return new Vec4(z, x, y, w); } set { z = value.x; x = value.y; y = value.z; w = value.w; } }
+		public Vec4 zxwy { get { return new Vec4(z, x, w, y); } set { z = value.x; x = value.y; w = value.z; y = value.w; } }
+		public Vec4 zyxw { get { return new Vec4(z, y, x, w); } set { z = value.x; y = value.y; x = value.z; w = value.w; } }
+		public Vec4 zywx { get { return new Vec4(z, y, w, x); } set { z = value.x; y = value.y; w = value.z; x = value.w; } }
+		public Vec4 zwxy { get { return new Vec4(z, w, x, y); } set { z = value.x; w = value.y; x = value.z; y = value.w; } }
+		public Vec4 zwyx { get { return new Vec4(z, w, y, x); } set { z = value.x; w = value.y; y = value.z; x = value.w; } }
+		public Vec4 wxyz { get { return new Vec4(w, x, y, z); } set { w = value.x; x = value.y; y = value.z; z = value.w; } }
+		public Vec4 wxzy { get { return new Vec4(w, x, z, y); } set { w = value.x; x = value.y; z = value.z; y = value.w; } }
+		public Vec4 wyxz { get { return new Vec4(w, y, x, z); } set { w = value.x; y = value.y; x = value.z; z = value.w; } }
+		public Vec4 wyzx { get { return new Vec4(w, y, z, x); } set { w = value.x; y = value.y; z = value.z; x = value.w; } }
+		public Vec4 wzxy { get { return new Vec4(w, z, x, y); } set { w = value.x; z = value.y; x = value.z; y = value.w; } }
+		public Vec4 wzyx { get { return new Vec4(w, z, y, x); } set { w = value.x; z = value.y; y = value.z; x = value.w; } }
+
+		public Vec2 s2(string swizzle)
+		{
+			if (swizzle.Length < 2) throw new Exception("The swizzle.Length is not enough!");
+			Vec2 nv = new Vec2();
+			nv.x = swizzle[0] == 'w' ? w : this[swizzle[0] - 120];
+			nv.y = swizzle[1] == 'w' ? w : this[swizzle[1] - 120];
+			return nv;
+		}
+		public Vec3 s3(string swizzle)
+		{
+			if (swizzle.Length < 3) throw new Exception("The swizzle.Length is not enough!");
+			Vec3 nv = new Vec3();
+			nv.x = swizzle[0] == 'w' ? w : this[swizzle[0] - 120];
+			nv.y = swizzle[1] == 'w' ? w : this[swizzle[1] - 120];
+			nv.z = swizzle[2] == 'w' ? w : this[swizzle[2] - 120];
+			return nv;
+		}
+		public Vec4 s4(string swizzle)
+		{
+			if (swizzle.Length < 4) throw new Exception("The swizzle.Length is not enough!");
+			Vec4 nv = new Vec4();
+			nv.x = swizzle[0] == 'w' ? w : this[swizzle[0] - 120];
+			nv.y = swizzle[1] == 'w' ? w : this[swizzle[1] - 120];
+			nv.z = swizzle[2] == 'w' ? w : this[swizzle[2] - 120];
+			nv.w = swizzle[3] == 'w' ? w : this[swizzle[3] - 120];
+			return nv;
+		}
+		
 		public double this[int index]
 		{
 			get
@@ -29,25 +120,7 @@ namespace MathematicsX
 				else throw new Exception("The index is out of range!");
 			}
 		}
-		public int dimension { get { return 4; } set { } }
-		public bool isNaV { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z) || double.IsNaN(w); } }
-		public double sqrMagnitude { get { return x * x + y * y + z * z + w * w; } }
-		public double magnitude { get { return Math.Sqrt(x * x + y * y + z * z + w * w); } }
-		public Vec4 abs { get { return new Vec4(Math.Abs(x), Math.Abs(y), Math.Abs(z), Math.Abs(w)); } }
-
-		public Vec4 normalized
-		{
-			get
-			{
-				double div = x * x + y * y + z * z + w * w;
-				if (div > 0 && div != 1)
-				{
-					div = Math.Sqrt(div);
-					return new Vec4(x / div, y / div, z / div, w / div);
-				}
-				return this;
-			}
-		}
+		public int dimension { get { return 4; } }
 
 		public Vec4(double x, double y, double z, double w)
 		{
@@ -55,6 +128,55 @@ namespace MathematicsX
 			this.y = y;
 			this.z = z;
 			this.w = w;
+		}
+		public Vec4(Vec2 xy, double z, double w)
+		{
+			this.x = xy.x;
+			this.y = xy.y;
+			this.z = z;
+			this.w = w;
+		}
+		public Vec4(double x, Vec2 yz, double w)
+		{
+			this.x = x;
+			this.y = yz.x;
+			this.z = yz.y;
+			this.w = w;
+		}
+		public Vec4(double x, double y, Vec2 zw)
+		{
+			this.x = x;
+			this.y = y;
+			this.z = zw.x;
+			this.w = zw.y;
+		}
+		public Vec4(Vec2 xy, Vec2 zw)
+		{
+			this.x = xy.x;
+			this.y = xy.y;
+			this.z = zw.x;
+			this.w = zw.y;
+		}
+		public Vec4(Vec3 xyz, double w)
+		{
+			this.x = xyz.x;
+			this.y = xyz.y;
+			this.z = xyz.z;
+			this.w = w;
+		}
+		public Vec4(double x, Vec3 yzw)
+		{
+			this.x = x;
+			this.y = yzw.x;
+			this.z = yzw.y;
+			this.w = yzw.z;
+		}
+		public Vec4(Vec4 xyzw)
+		{
+			this.x = xyzw.x;
+			this.y = xyzw.x;
+			this.z = xyzw.y;
+			this.w = xyzw.z;
 		}
 
 		public string ToString(string format)
@@ -67,18 +189,9 @@ namespace MathematicsX
 				.Append(w.ToString(format)).Append(")");
 			return sb.ToString();
 		}
-		public override string ToString()
-		{
-			return ToString("");
-		}
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+		public override string ToString() { return ToString(""); }
+		public override int GetHashCode() { return base.GetHashCode(); }
+		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Vec4 v)
 		{
 			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
@@ -89,156 +202,23 @@ namespace MathematicsX
 		}
 
 
-		public static implicit operator Vec4(Vec2 v)
-		{
-			return new Vec4(v.x, v.y, 0, 0);
-		}
-		public static implicit operator Vec4(Vec3 v)
-		{
-			return new Vec4(v.x, v.y, v.z, 0);
-		}
-		public static explicit operator Vec4(Quat q)
-		{
-			return new Vec4(q.x, q.y, q.z, q.w);
-		}
+		public static implicit operator Vec4(double v) { return new Vec4(v, 0, 0, 0); }
+		public static implicit operator Vec4(Vec2 v) { return new Vec4(v.x, v.y, 0, 0); }
+		public static implicit operator Vec4(Vec3 v) { return new Vec4(v.x, v.y, v.z, 0); }
+		public static explicit operator Vec4(Quat q) { return new Vec4(q.x, q.y, q.z, q.w); }
 
-		public static bool operator ==(Vec4 lhs, Vec4 rhs)
-		{
-			return lhs.ValueEquals(rhs);
-		}
-		public static bool operator !=(Vec4 lhs, Vec4 rhs)
-		{
-			return !lhs.ValueEquals(rhs);
-		}
+		public static bool operator ==(Vec4 lhs, Vec4 rhs) { return lhs.ValueEquals(rhs); }
+		public static bool operator !=(Vec4 lhs, Vec4 rhs) { return !lhs.ValueEquals(rhs); }
 
-		public static Vec4 operator -(Vec4 v)
-		{
-			return new Vec4(-v.x, -v.y, -v.z, -v.w);
-		}
-		public static Vec4 operator +(Vec4 lhs, Vec4 rhs)
-		{
-			return new Vec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w);
-		}
-		public static Vec4 operator -(Vec4 lhs, Vec4 rhs)
-		{
-			return new Vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w);
-		}
-		public static Vec4 operator *(Vec4 lhs, double rhs)
-		{
-			return new Vec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs);
-		}
-		public static Vec4 operator *(double lhs, Vec4 rhs)
-		{
-			return rhs * lhs;
-		}
-		public static Vec4 operator /(Vec4 lhs, double rhs)
-		{
-			return new Vec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs);
-		}
-		public static Vec4 operator /(double lhs, Vec4 rhs)
-		{
-			return new Vec4(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w);
-		}
-
-		public static Vec4 MaxAxis(Vec4 v)
-		{
-			double aX = Math.Abs(v.x);
-			double aY = Math.Abs(v.y);
-			double aZ = Math.Abs(v.z);
-			double aW = Math.Abs(v.w);
-			int i = 0;
-			double max = aX;
-			if (aY > max)
-			{
-				i = 1;
-				max = aY;
-			}
-			if (aZ > max)
-			{
-				i = 2;
-				max = aZ;
-			}
-			if (aW > max) return new Vec4(0, 0, 0, v.w);
-			if (i == 2) return new Vec4(0, 0, v.z, 0);
-			if (i == 1) return new Vec4(0, v.y, 0, 0);
-			return new Vec4(v.x, 0, 0, 0);
-		}
-
-		public static Vec4 MinAxis(Vec4 v)
-		{
-			double aX = Math.Abs(v.x);
-			double aY = Math.Abs(v.y);
-			double aZ = Math.Abs(v.z);
-			double aW = Math.Abs(v.w);
-			int i = 3;
-			double min = aW;
-			if (aZ < min)
-			{
-				i = 2;
-				min = aZ;
-			}
-			if (aY < min)
-			{
-				i = 1;
-				min = aY;
-			}
-			if (aX < min) return new Vec4(v.x, 0, 0, 0);
-			if (i == 1) return new Vec4(0, v.y, 0, 0);
-			if (i == 2) return new Vec4(0, 0, v.z, 0);
-			return new Vec4(0, 0, 0, v.w);
-		}
-
-		public static double Dot(Vec4 lhs, Vec4 rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
-		}
-
-		public static double SqrDistance(Vec4 lhs, Vec4 rhs)
-		{
-			double dx = lhs.x - rhs.x;
-			double dy = lhs.y - rhs.y;
-			double dz = lhs.z - rhs.z;
-			double dw = lhs.w - rhs.w;
-			return dx * dx + dy * dy + dz * dz + dw * dw;
-		}
-		public static double Distance(Vec4 lhs, Vec4 rhs)
-		{
-			double dx = lhs.x - rhs.x;
-			double dy = lhs.y - rhs.y;
-			double dz = lhs.z - rhs.z;
-			double dw = lhs.w - rhs.w;
-			return Math.Sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
-		}
-
-		public static double Angle(Vec4 lhs, Vec4 rhs)
-		{
-			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z, w1 = lhs.w;
-			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z, w2 = rhs.w;
-			double sm1 = x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1;
-			double sm2 = x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2;
-			if (sm1 == 0 || sm2 == 0) return 0;
-			double dot = x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2;
-			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
-			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
-		}
-
-		public static Vec4 Project(Vec4 src, Vec4 dst)
-		{
-			double x = dst.x, y = dst.y, z = dst.z, w = dst.w;
-			double sqrMag = x * x + y * y + z * z + w * w;
-			if (sqrMag > 0)
-			{
-				double DdSM = (src.x * x + src.y * y + src.z * z + src.w * w) / sqrMag;
-				return new Vec4(x * DdSM, y * DdSM, z * DdSM, w * DdSM);
-			}
-			return new Vec4();
-		}
-
-		public static Vec4 Mirror(Vec4 src, Vec4 axis)
-		{
-			Vec4 pjt = Project(src, axis);
-			return pjt + pjt - src;
-		}
+		public static Vec4 operator -(Vec4 v) { return new Vec4(-v.x, -v.y, -v.z, -v.w); }
+		public static Vec4 operator +(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
+		public static Vec4 operator -(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
+		public static Vec4 operator *(double lhs, Vec4 rhs) { return new Vec4(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w); }
+		public static Vec4 operator *(Vec4 lhs, double rhs) { return new Vec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
+		public static Vec4 operator *(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
+		public static Vec4 operator /(double lhs, Vec4 rhs) { return new Vec4(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w); }
+		public static Vec4 operator /(Vec4 lhs, double rhs) { return new Vec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
+		public static Vec4 operator /(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
 
 		public static Vec4 GetRandom()
 		{

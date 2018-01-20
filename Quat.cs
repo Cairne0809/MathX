@@ -29,23 +29,6 @@ namespace MathematicsX
 				else throw new Exception("The index is out of range!");
 			}
 		}
-		public bool isNaQ { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z) || double.IsNaN(w); } }
-		public double sqrMagnitude { get { return x * x + y * y + z * z + w * w; } }
-		public double magnitude { get { return Math.Sqrt(x * x + y * y + z * z + w * w); } }
-
-		public Quat normalized
-		{
-			get
-			{
-				double div = x * x + y * y + z * z + w * w;
-				if (div > 0 && div != 1)
-				{
-					div = Math.Sqrt(div);
-					return new Quat(x / div, y / div, z / div, w / div);
-				}
-				return this;
-			}
-		}
 
 		public Quat(double x, double y, double z, double w)
 		{
@@ -53,6 +36,20 @@ namespace MathematicsX
 			this.y = y;
 			this.z = z;
 			this.w = w;
+		}
+		public Quat(Vec3 v, double w)
+		{
+			this.x = v.x;
+			this.y = v.y;
+			this.z = v.z;
+			this.w = w;
+		}
+		public Quat(Quat q)
+		{
+			this.x = q.x;
+			this.y = q.y;
+			this.z = q.z;
+			this.w = q.w;
 		}
 
 		public string ToString(string format)
@@ -65,18 +62,9 @@ namespace MathematicsX
 				.Append(w.ToString(format)).Append(")");
 			return sb.ToString();
 		}
-		public override string ToString()
-		{
-			return ToString("");
-		}
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+		public override string ToString() { return ToString(""); }
+		public override int GetHashCode() { return base.GetHashCode(); }
+		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Quat q)
 		{
 			bool bx = Math.Abs(x - q.x) <= MathX.accuracy;
@@ -87,23 +75,11 @@ namespace MathematicsX
 		}
 
 
-		public static explicit operator Quat(Vec3 v)
-		{
-			return new Quat(v.x, v.y, v.z, 0);
-		}
-		public static explicit operator Quat(Vec4 v)
-		{
-			return new Quat(v.x, v.y, v.z, v.w);
-		}
+		public static explicit operator Quat(Vec3 v) { return new Quat(v.x, v.y, v.z, 0); }
+		public static explicit operator Quat(Vec4 v) { return new Quat(v.x, v.y, v.z, v.w); }
 
-		public static bool operator ==(Quat lhs, Quat rhs)
-		{
-			return lhs.ValueEquals(rhs);
-		}
-		public static bool operator !=(Quat lhs, Quat rhs)
-		{
-			return !lhs.ValueEquals(rhs);
-		}
+		public static bool operator ==(Quat lhs, Quat rhs) { return lhs.ValueEquals(rhs); }
+		public static bool operator !=(Quat lhs, Quat rhs) { return !lhs.ValueEquals(rhs); }
 
 		/// <summary>
 		/// Conjugate: ~Q = (-x, -y, -z, w)
@@ -113,8 +89,12 @@ namespace MathematicsX
 			return new Quat(-q.x, -q.y, -q.z, q.w);
 		}
 
+		public static Quat operator *(double lhs, Quat rhs) { return new Quat(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w); }
+		public static Quat operator *(Quat lhs, double rhs) { return new Quat(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
+		public static Quat operator /(Quat lhs, double rhs) { return new Quat(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
+
 		/// <summary>
-		/// Q1 * Q2 = (w1 * V2 + w2 * V1 + V1 x V2, w1 * w2 - V1 * V2)
+		/// Q1 * Q2 = (w1 * V2 + w2 * V1 + V1 x V2, w1 * w2 - V1 • V2)
 		/// </summary>
 		public static Quat operator *(Quat lhs, Quat rhs)
 		{
@@ -143,25 +123,36 @@ namespace MathematicsX
 			double vz = nw * z1 - nx * y1 + ny * x1 + nz * w1;
 			return new Vec3(vx, vy, vz);
 		}
-		
+
+		public static bool isNaQ(Quat q) { return double.IsNaN(q.x) || double.IsNaN(q.y) || double.IsNaN(q.z) || double.IsNaN(q.w); }
+
+		public static double SqrLength(Quat q) { return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w; }
+		public static double Length(Quat q) { return Math.Sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w); }
+
+		public static Quat Normalize(Quat q)
+		{
+			double len = SqrLength(q);
+			if (len > 0 && len != 1) return q / Math.Sqrt(len);
+			return new Quat(q);
+		}
+
+		public static double Dot(Quat lhs, Quat rhs)
+		{
+			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+		}
+
 		public static double Angle(Quat lhs, Quat rhs)
 		{
-			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z, w1 = lhs.w;
-			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z, w2 = rhs.w;
-			double dot = x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2;
-			double sm1 = x1 * x1 + y1 * y1 + z1 * z1 + w1 * w1;
-			double sm2 = x2 * x2 + y2 * y2 + z2 * z2 + w2 * w2;
-			if (sm1 == 0 || sm2 == 0) return 0;
-			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
-			double angle = 2.0 * Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
+			double cos = Dot(lhs, rhs);
+			double angle = 2 * Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 			if (angle > MathX.PI) angle = MathX.DoublePI - angle;
 			return angle;
 		}
 
 		public static Vec3 ToEuler(double x, double y, double z, double w)
 		{
-			double vx = Math.Atan2(2.0 * (x * w - y * z), 1.0 - 2.0 * (x * x + z * z));
-			double vy = Math.Atan2(2.0 * (y * w - x * z), 1.0 - 2.0 * (y * y + z * z));
+			double vx = Math.Atan2(2 * (x * w - y * z), 1 - 2 * (x * x + z * z));
+			double vy = Math.Atan2(2 * (y * w - x * z), 1 - 2 * (y * y + z * z));
 			double sin = 2.0 * (x * y + z * w);
 			double vz = Math.Asin(sin > 1 ? 1 : sin < -1 ? -1 : sin);
 			return new Vec3(vx, vy, vz);
@@ -193,23 +184,19 @@ namespace MathematicsX
 			return FromEuler(euler.x, euler.y, euler.z);
 		}
 
-		public static void ToAngleAxis(Quat q, out double angle, out Vec3 normalAxis)
+		public static void ToAngleAxis(Quat q, out double angle, out Vec3 normAxis)
 		{
 			double ha = Math.Acos(q.w);
 			double sin = Math.Sin(ha);
 			angle = ha * 2.0;
-			normalAxis = new Vec3(q.x / sin, q.y / sin, q.z / sin);
+			normAxis = new Vec3(q.x, q.y, q.z) / sin;
 		}
-		public static Quat FromAngleAxis(double angle, Vec3 normalAxis)
+		public static Quat FromAngleAxis(double angle, Vec3 normAxis)
 		{
-			double ax = normalAxis.x, ay = normalAxis.y, az = normalAxis.z;
 			angle *= 0.5;
-			double sin = Math.Sin(angle);
-			double qx = ax * sin;
-			double qy = ay * sin;
-			double qz = az * sin;
+			Vec3 qv = Math.Sin(angle) * normAxis;
 			double qw = Math.Cos(angle);
-			return new Quat(qx, qy, qz, qw);
+			return new Quat(qv, qw);
 		}
 
 		public static Quat GetRandom()

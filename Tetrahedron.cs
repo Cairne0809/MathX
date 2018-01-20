@@ -2,7 +2,7 @@
 
 namespace MathematicsX
 {
-	public struct Tetrahedron<T> where T : IVector
+	public struct Tetrahedron<T> where T : IVector, new()
 	{
 		public T p0;
 		public T p1;
@@ -36,5 +36,36 @@ namespace MathematicsX
 			this.p2 = p2;
 			this.p3 = p3;
 		}
+
+		public void MinMax(out T min, out T max)
+		{
+			min = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				min[i] = p0[i];
+				if (p1[i] < min[i]) min[i] = p1[i];
+				if (p2[i] < min[i]) min[i] = p2[i];
+				if (p3[i] < min[i]) min[i] = p3[i];
+			}
+			max = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				max[i] = p0[i];
+				if (p1[i] >= max[i]) max[i] = p1[i];
+				if (p2[i] >= max[i]) max[i] = p2[i];
+				if (p3[i] >= max[i]) max[i] = p3[i];
+			}
+		}
+
+		public T Center()
+		{
+			T v = new T();
+			for (int i = 0; i < p0.dimension; i++)
+			{
+				v[i] = (p0[i] + p1[i] + p2[i] + p3[i]) / 4;
+			}
+			return v;
+		}
+
 	}
 }

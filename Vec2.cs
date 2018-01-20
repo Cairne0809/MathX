@@ -8,6 +8,18 @@ namespace MathematicsX
 		public double x;
 		public double y;
 
+		public Vec2 xy { get { return new Vec2(x, y); } set { x = value.x; y = value.y; } }
+		public Vec2 yx { get { return new Vec2(y, x); } set { y = value.x; x = value.y; } }
+
+		public Vec2 s2(string swizzle)
+		{
+			if (swizzle.Length < 2) throw new Exception("The swizzle.Length is not enough!");
+			Vec2 nv = new Vec2();
+			nv.x = this[swizzle[0] - 120];
+			nv.y = this[swizzle[1] - 120];
+			return nv;
+		}
+
 		public double this[int index]
 		{
 			get
@@ -23,30 +35,17 @@ namespace MathematicsX
 				else throw new Exception("The index is out of range!");
             }
 		}
-		public int dimension { get { return 2; } set { } }
-		public bool isNaV { get { return double.IsNaN(x) || double.IsNaN(y); } }
-		public double sqrMagnitude { get { return x * x + y * y; } }
-		public double magnitude { get { return Math.Sqrt(x * x + y * y); } }
-		public Vec2 abs { get { return new Vec2(Math.Abs(x), Math.Abs(y)); } }
-
-		public Vec2 normalized
-		{
-			get
-			{
-				double div = x * x + y * y;
-				if (div > 0 && div != 1)
-				{
-					div = Math.Sqrt(div);
-					return new Vec2(x / div, y / div);
-				}
-				return this;
-			}
-		}
+		public int dimension { get { return 2; } }
 
 		public Vec2(double x, double y)
 		{
 			this.x = x;
 			this.y = y;
+		}
+		public Vec2(Vec2 v)
+		{
+			this.x = v.x;
+			this.y = v.y;
 		}
 
 		public string ToString(string format)
@@ -57,18 +56,9 @@ namespace MathematicsX
 				.Append(y.ToString(format)).Append(")");
 			return sb.ToString();
 		}
-		public override string ToString()
-		{
-			return ToString("");
-		}
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+		public override string ToString() { return ToString(""); }
+		public override int GetHashCode() { return base.GetHashCode(); }
+		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Vec2 v)
 		{
 			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
@@ -77,124 +67,22 @@ namespace MathematicsX
 		}
 
 
-		public static explicit operator Vec2(Vec3 v)
-		{
-			return new Vec2(v.x, v.y);
-		}
-		public static explicit operator Vec2(Vec4 v)
-		{
-			return new Vec2(v.x, v.y);
-		}
+		public static implicit operator Vec2(double v) { return new Vec2(v, 0); }
+		public static explicit operator Vec2(Vec3 v) { return new Vec2(v.x, v.y); }
+		public static explicit operator Vec2(Vec4 v) { return new Vec2(v.x, v.y); }
 
-		public static bool operator ==(Vec2 lhs, Vec2 rhs)
-		{
-			return lhs.ValueEquals(rhs);
-		}
-		public static bool operator !=(Vec2 lhs, Vec2 rhs)
-		{
-			return !lhs.ValueEquals(rhs);
-		}
+		public static bool operator ==(Vec2 lhs, Vec2 rhs) { return lhs.ValueEquals(rhs); }
+		public static bool operator !=(Vec2 lhs, Vec2 rhs) { return !lhs.ValueEquals(rhs); }
 
-		public static Vec2 operator -(Vec2 v)
-		{
-			return new Vec2(-v.x, -v.y);
-		}
-		public static Vec2 operator +(Vec2 lhs, Vec2 rhs)
-		{
-			return new Vec2(lhs.x + rhs.x, lhs.y + rhs.y);
-		}
-		public static Vec2 operator -(Vec2 lhs, Vec2 rhs)
-		{
-			return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
-		}
-		public static Vec2 operator *(Vec2 lhs, double rhs)
-		{
-			return new Vec2(lhs.x * rhs, lhs.y * rhs);
-		}
-		public static Vec2 operator *(double lhs, Vec2 rhs)
-		{
-			return rhs * lhs;
-		}
-		public static Vec2 operator /(Vec2 lhs, double rhs)
-		{
-			return new Vec2(lhs.x / rhs, lhs.y / rhs);
-		}
-		public static Vec2 operator /(double lhs, Vec2 rhs)
-		{
-			return new Vec2(lhs / rhs.x, lhs / rhs.y);
-		}
-
-		public static Vec2 MaxAxis(Vec2 v)
-		{
-			return Math.Abs(v.x) < Math.Abs(v.y) ? new Vec2(0, v.y) : new Vec2(v.x, 0);
-		}
-
-		public static Vec2 MinAxis(Vec2 v)
-		{
-			return Math.Abs(v.x) >= Math.Abs(v.y) ? new Vec2(0, v.y) : new Vec2(v.x, 0);
-		}
-
-		public static double Dot(Vec2 lhs, Vec2 rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y;
-		}
-
-		public static double Determinant(Vec2 lhs, Vec2 rhs)
-		{
-			return lhs.x * rhs.y - lhs.y * rhs.x;
-		}
-
-		public static double SqrDistance(Vec2 lhs, Vec2 rhs)
-		{
-			double dx = lhs.x - rhs.x;
-			double dy = lhs.y - rhs.y;
-			return dx * dx + dy * dy;
-		}
-		public static double Distance(Vec2 lhs, Vec2 rhs)
-		{
-			double dx = lhs.x - rhs.x;
-			double dy = lhs.y - rhs.y;
-			return Math.Sqrt(dx * dx + dy * dy);
-		}
-
-		public static double Angle(Vec2 lhs, Vec2 rhs)
-		{
-			double x1 = lhs.x, y1 = lhs.y;
-			double x2 = rhs.x, y2 = rhs.y;
-			double sm1 = x1 * x1 + y1 * y1;
-			double sm2 = x2 * x2 + y2 * y2;
-			if (sm1 == 0 || sm2 == 0) return 0;
-			double dot = x1 * x2 + y1 * y2;
-			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
-			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
-		}
-
-		public static Vec2 Rotate(Vec2 src, double angle)
-		{
-			double cos = Math.Cos(angle);
-			double sin = Math.Sin(angle);
-			double vx = cos * src.x - sin * src.y;
-			double vy = sin * src.x + cos * src.y;
-			return new Vec2(vx, vy);
-		}
-
-		public static Vec2 Project(Vec2 src, Vec2 dst)
-		{
-			double x = dst.x, y = dst.y;
-			double sqrMag = x * x + y * y;
-			if (sqrMag > 0)
-			{
-				double DdSM = (src.x * x + src.y * y) / sqrMag;
-				return new Vec2(x * DdSM, y * DdSM);
-			}
-			return new Vec2();
-		}
-
-		public static Vec2 Mirror(Vec2 src, Vec2 axis)
-		{
-			Vec2 pjt = Project(src, axis);
-			return pjt + pjt - src;
-		}
+		public static Vec2 operator -(Vec2 v) { return new Vec2(-v.x, -v.y); }
+		public static Vec2 operator +(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x + rhs.x, lhs.y + rhs.y); }
+		public static Vec2 operator -(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y); }
+		public static Vec2 operator *(double lhs, Vec2 rhs) { return new Vec2(lhs * rhs.x, lhs * rhs.y); }
+		public static Vec2 operator *(Vec2 lhs, double rhs) { return new Vec2(lhs.x * rhs, lhs.y * rhs); }
+		public static Vec2 operator *(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x * rhs.x, lhs.y * rhs.y); }
+		public static Vec2 operator /(double lhs, Vec2 rhs) { return new Vec2(lhs / rhs.x, lhs / rhs.y); }
+		public static Vec2 operator /(Vec2 lhs, double rhs) { return new Vec2(lhs.x / rhs, lhs.y / rhs); }
+		public static Vec2 operator /(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x / rhs.x, lhs.y / rhs.y); }
 
 		public static Vec2 GetRandom()
 		{

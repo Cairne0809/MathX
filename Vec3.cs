@@ -9,6 +9,38 @@ namespace MathematicsX
 		public double y;
 		public double z;
 
+		public Vec2 xy { get { return new Vec2(x, y); } set { x = value.x; y = value.y; } }
+		public Vec2 xz { get { return new Vec2(x, z); } set { x = value.x; z = value.y; } }
+		public Vec2 yx { get { return new Vec2(y, x); } set { y = value.x; x = value.y; } }
+		public Vec2 yz { get { return new Vec2(y, z); } set { y = value.x; z = value.y; } }
+		public Vec2 zx { get { return new Vec2(z, x); } set { z = value.x; x = value.y; } }
+		public Vec2 zy { get { return new Vec2(z, y); } set { z = value.x; y = value.y; } }
+
+		public Vec3 xyz { get { return new Vec3(x, y, z); } set { x = value.x; y = value.y; z = value.z; } }
+		public Vec3 xzy { get { return new Vec3(x, z, y); } set { x = value.x; z = value.y; y = value.z; } }
+		public Vec3 yxz { get { return new Vec3(y, x, z); } set { y = value.x; x = value.y; z = value.z; } }
+		public Vec3 yzx { get { return new Vec3(y, z, x); } set { y = value.x; z = value.y; x = value.z; } }
+		public Vec3 zxy { get { return new Vec3(z, x, y); } set { z = value.x; x = value.y; y = value.z; } }
+		public Vec3 zyx { get { return new Vec3(z, y, x); } set { z = value.x; y = value.y; x = value.z; } }
+
+		public Vec2 s2(string swizzle)
+		{
+			if (swizzle.Length < 2) throw new Exception("The swizzle.Length is not enough!");
+			Vec2 nv = new Vec2();
+			nv.x = this[swizzle[0] - 120];
+			nv.y = this[swizzle[1] - 120];
+			return nv;
+		}
+		public Vec3 s3(string swizzle)
+		{
+			if (swizzle.Length < 3) throw new Exception("The swizzle.Length is not enough!");
+			Vec3 nv = new Vec3();
+			nv.x = this[swizzle[0] - 120];
+			nv.y = this[swizzle[1] - 120];
+			nv.z = this[swizzle[2] - 120];
+			return nv;
+		}
+
 		public double this[int index]
 		{
 			get
@@ -26,26 +58,7 @@ namespace MathematicsX
 				else throw new Exception("The index is out of range!");
 			}
 		}
-		public int dimension { get { return 3; } set { } }
-		public bool isNaV { get { return double.IsNaN(x) || double.IsNaN(y) || double.IsNaN(z); } }
-		public double sqrMagnitude { get { return x * x + y * y + z * z; } }
-		public double magnitude { get { return Math.Sqrt(x * x + y * y + z * z); } }
-		public Vec3 abs { get { return new Vec3(Math.Abs(x), Math.Abs(y), Math.Abs(z)); } }
-
-		public Vec3 normalized
-		{
-			get
-			{
-				double div = x * x + y * y + z * z;
-				if (div > 0 && div != 1)
-				{
-					div = Math.Sqrt(div);
-					return new Vec3(x / div, y / div, z / div);
-				}
-				return this;
-			}
-		}
-		
+		public int dimension { get { return 3; } }
 
 		public Vec3(double x, double y, double z)
 		{
@@ -53,7 +66,25 @@ namespace MathematicsX
 			this.y = y;
 			this.z = z;
 		}
-
+		public Vec3(Vec2 xy, double z)
+		{
+			this.x = xy.x;
+			this.y = xy.y;
+			this.z = z;
+		}
+		public Vec3(double x, Vec2 yz)
+		{
+			this.x = x;
+			this.y = yz.x;
+			this.z = yz.y;
+		}
+		public Vec3(Vec3 xyz)
+		{
+			this.x = xyz.x;
+			this.y = xyz.y;
+			this.z = xyz.z;
+		}
+		
 		public string ToString(string format)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -63,18 +94,9 @@ namespace MathematicsX
 				.Append(z.ToString(format)).Append(")");
 			return sb.ToString();
 		}
-		public override string ToString()
-		{
-			return ToString("");
-		}
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+		public override string ToString() { return ToString(""); }
+		public override int GetHashCode() { return base.GetHashCode(); }
+		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Vec3 v)
 		{
 			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
@@ -84,184 +106,23 @@ namespace MathematicsX
 		}
 
 
-		public static implicit operator Vec3(Vec2 v)
-		{
-			return new Vec3(v.x, v.y, 0);
-		}
-		public static explicit operator Vec3(Vec4 v)
-		{
-			return new Vec3(v.x, v.y, v.z);
-		}
-		public static explicit operator Vec3(Quat q)
-		{
-			return new Vec3(q.x, q.y, q.z);
-		}
+		public static implicit operator Vec3(double v) { return new Vec3(v, 0, 0); }
+		public static implicit operator Vec3(Vec2 v) { return new Vec3(v.x, v.y, 0); }
+		public static explicit operator Vec3(Vec4 v) { return new Vec3(v.x, v.y, v.z); }
+		public static explicit operator Vec3(Quat q) { return new Vec3(q.x, q.y, q.z); }
 
-		public static bool operator ==(Vec3 lhs, Vec3 rhs)
-		{
-			return lhs.ValueEquals(rhs);
-		}
-		public static bool operator !=(Vec3 lhs, Vec3 rhs)
-		{
-			return !lhs.ValueEquals(rhs);
-		}
+		public static bool operator ==(Vec3 lhs, Vec3 rhs) { return lhs.ValueEquals(rhs); }
+		public static bool operator !=(Vec3 lhs, Vec3 rhs) { return !lhs.ValueEquals(rhs); }
 
-		public static Vec3 operator -(Vec3 v)
-		{
-			return new Vec3(-v.x, -v.y, -v.z);
-		}
-		public static Vec3 operator +(Vec3 lhs, Vec3 rhs)
-		{
-			return new Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
-		}
-		public static Vec3 operator -(Vec3 lhs, Vec3 rhs)
-		{
-			return new Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
-		}
-		public static Vec3 operator *(Vec3 lhs, double rhs)
-		{
-			return new Vec3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs);
-		}
-		public static Vec3 operator *(double lhs, Vec3 rhs)
-		{
-			return rhs * lhs;
-		}
-		public static Vec3 operator /(Vec3 lhs, double rhs)
-		{
-			return new Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
-		}
-		public static Vec3 operator /(double lhs, Vec3 rhs)
-		{
-			return new Vec3(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z);
-		}
-
-		public static Vec3 MaxAxis(Vec3 v)
-		{
-			double aX = Math.Abs(v.x);
-			double aY = Math.Abs(v.y);
-			double aZ = Math.Abs(v.z);
-			int i = 0;
-			double max = aX;
-			if (aY > max)
-			{
-				i = 1;
-				max = aY;
-			}
-			if (aZ > max) return new Vec3(0, 0, v.z);
-			if (i == 1) return new Vec3(0, v.y, 0);
-			return new Vec3(v.x, 0, 0);
-		}
-
-		public static Vec3 MinAxis(Vec3 v)
-		{
-			double aX = Math.Abs(v.x);
-			double aY = Math.Abs(v.y);
-			double aZ = Math.Abs(v.z);
-			int i = 2;
-			double min = aZ;
-			if (aY < min)
-			{
-				i = 1;
-				min = aY;
-			}
-			if (aX < min) return new Vec3(v.x, 0, 0);
-			if (i == 1) return new Vec3(0, v.y, 0);
-			return new Vec3(0, 0, v.z);
-		}
-
-		public static double Dot(Vec3 lhs, Vec3 rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
-		}
-
-		public static double Determinant(Vec3 lhs, Vec3 rhs)
-		{
-			double x = lhs.y * rhs.z - lhs.z * rhs.y;
-			double y = lhs.z * rhs.x - lhs.x * rhs.z;
-			double z = lhs.x * rhs.y - lhs.y * rhs.x;
-			return Math.Sqrt(x * x + y * y + z * z);
-		}
-
-		public static Vec3 Cross(Vec3 lhs, Vec3 rhs)
-		{
-			double x = lhs.y * rhs.z - lhs.z * rhs.y;
-			double y = lhs.z * rhs.x - lhs.x * rhs.z;
-			double z = lhs.x * rhs.y - lhs.y * rhs.x;
-			return new Vec3(x, y, z);
-		}
-
-		public static double Mixed(Vec3 v1, Vec3 v2, Vec3 v3)
-		{
-			double x1 = v1.x, y1 = v1.y, z1 = v1.z;
-			double x2 = v2.x, y2 = v2.y, z2 = v2.z;
-			double x3 = v3.x, y3 = v3.y, z3 = v3.z;
-			double mixed = x1 * y2 * z3 + y1 * z2 * x3 + z1 * x2 * y3
-				 - z1 * y2 * x3 - y1 * x2 * z3 - x1 * z2 * y3;
-			return mixed;
-		}
-
-
-		public static double SqrDistance(Vec3 lhs, Vec3 rhs)
-		{
-			double dx = lhs.x - rhs.x;
-			double dy = lhs.y - rhs.y;
-			double dz = lhs.z - rhs.z;
-			return dx * dx + dy * dy + dz * dz;
-		}
-		public static double Distance(Vec3 lhs, Vec3 rhs)
-		{
-			double dx = lhs.x - rhs.x;
-			double dy = lhs.y - rhs.y;
-			double dz = lhs.z - rhs.z;
-			return Math.Sqrt(dx * dx + dy * dy + dz * dz);
-		}
-
-		public static double Angle(Vec3 lhs, Vec3 rhs)
-		{
-			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z;
-			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z;
-			double sm1 = x1 * x1 + y1 * y1 + z1 * z1;
-			double sm2 = x2 * x2 + y2 * y2 + z2 * z2;
-			if (sm1 == 0 || sm2 == 0) return 0;
-			double dot = x1 * x2 + y1 * y2 + z1 * z2;
-			double cos = dot / Math.Sqrt(sm1) / Math.Sqrt(sm2);
-			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
-		}
-
-		public static Vec3 Rotate(Vec3 src, double angle, Vec3 normalAxis)
-		{
-			double sx = src.x, sy = src.y, sz = src.z;
-			double ax = normalAxis.x, ay = normalAxis.y, az = normalAxis.z;
-			double cos = Math.Cos(angle);
-			double sin = Math.Sin(angle);
-			double vx = (ax * ax + (1.0 - ax * ax) * cos) * sx + (ax * ay * (1.0 - cos) - az * sin) * sy + (ax * az * (1.0 - cos) + ay * sin) * sz;
-			double vy = (ay * ax * (1.0 - cos) + az * sin) * sx + (ay * ay + (1.0 - ay * ay) * cos) * sy + (ay * az * (1.0 - cos) - ax * sin) * sz;
-			double vz = (az * ax * (1.0 - cos) - ay * sin) * sx + (az * ay * (1.0 - cos) + ax * sin) * sy + (az * az + (1.0 - az * az) * cos) * sz;
-			return new Vec3(vx, vy, vz);
-		}
-
-		public static Vec3 Project(Vec3 src, Vec3 dst)
-		{
-			double x = dst.x, y = dst.y, z = dst.z;
-			double sqrMag = x * x + y * y + z * z;
-			if (sqrMag > 0)
-			{
-				double DdSM = (src.x * x + src.y * y + src.z * z) / sqrMag;
-				return new Vec3(x * DdSM, y * DdSM, z * DdSM);
-			}
-			return new Vec3();
-		}
-
-		public static Vec3 ProjectOnPlane(Vec3 src, Vec3 norm)
-		{
-			return Project(src, Cross(Cross(norm, src), norm));
-		}
-
-		public static Vec3 Mirror(Vec3 src, Vec3 axis)
-		{
-			Vec3 pjt = Project(src, axis);
-			return pjt + pjt - src;
-		}
+		public static Vec3 operator -(Vec3 v) { return new Vec3(-v.x, -v.y, -v.z); }
+		public static Vec3 operator +(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z); }
+		public static Vec3 operator -(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z); }
+		public static Vec3 operator *(double lhs, Vec3 rhs) { return new Vec3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z); }
+		public static Vec3 operator *(Vec3 lhs, double rhs) { return new Vec3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs); }
+		public static Vec3 operator *(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z); }
+		public static Vec3 operator /(double lhs, Vec3 rhs) { return new Vec3(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z); }
+		public static Vec3 operator /(Vec3 lhs, double rhs) { return new Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs); }
+		public static Vec3 operator /(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z); }
 
 		public static Vec3 GetRandom()
 		{

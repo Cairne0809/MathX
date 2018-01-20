@@ -16,7 +16,7 @@ namespace MathematicsX
 
 		public void RotateAround(Vec3 target, Quat rotation)
 		{
-			double dist = Vec3.Distance(position, target);
+			double dist = VecX.Distance(position, target);
 			this.rotation *= rotation;
 			position = this.rotation * new Vec3(0, 0, -dist) + target;
 		}
