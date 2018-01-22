@@ -3,8 +3,11 @@ using System.Text;
 
 namespace MathematicsX
 {
+	[Serializable]
 	public struct Vec3 : IVector
 	{
+		public int dimension { get { return 3; } }
+
 		public double x;
 		public double y;
 		public double z;
@@ -23,43 +26,22 @@ namespace MathematicsX
 		public Vec3 zxy { get { return new Vec3(z, x, y); } set { z = value.x; x = value.y; y = value.z; } }
 		public Vec3 zyx { get { return new Vec3(z, y, x); } set { z = value.x; y = value.y; x = value.z; } }
 
-		public Vec2 s2(string swizzle)
-		{
-			if (swizzle.Length < 2) throw new Exception("The swizzle.Length is not enough!");
-			Vec2 nv = new Vec2();
-			nv.x = this[swizzle[0] - 120];
-			nv.y = this[swizzle[1] - 120];
-			return nv;
-		}
-		public Vec3 s3(string swizzle)
-		{
-			if (swizzle.Length < 3) throw new Exception("The swizzle.Length is not enough!");
-			Vec3 nv = new Vec3();
-			nv.x = this[swizzle[0] - 120];
-			nv.y = this[swizzle[1] - 120];
-			nv.z = this[swizzle[2] - 120];
-			return nv;
-		}
-
-		public double this[int index]
+		public unsafe double this[int index]
 		{
 			get
 			{
-				if (index == 0) return x;
-				else if (index == 1) return y;
-				else if (index == 2) return z;
-				else throw new Exception("The index is out of range!");
+				if (index >= 0 && index < 3)
+					fixed (double* ptr = &x) return *(ptr + index);
+				else throw new IndexOutOfRangeException();
 			}
 			set
 			{
-				if (index == 0) x = value;
-				else if (index == 1) y = value;
-				else if (index == 2) z = value;
-				else throw new Exception("The index is out of range!");
+				if (index >= 0 && index < 3)
+					fixed (double* ptr = &x) *(ptr + index) = value;
+				else throw new IndexOutOfRangeException();
 			}
 		}
-		public int dimension { get { return 3; } }
-
+		
 		public Vec3(double x, double y, double z)
 		{
 			this.x = x;
@@ -84,6 +66,22 @@ namespace MathematicsX
 			this.y = xyz.y;
 			this.z = xyz.z;
 		}
+
+		public Vec2 S2(string swizzle)
+		{
+			Vec2 nv = new Vec2();
+			nv.x = this[swizzle[0] - 120];
+			nv.y = this[swizzle[1] - 120];
+			return nv;
+		}
+		public Vec3 S3(string swizzle)
+		{
+			Vec3 nv = new Vec3();
+			nv.x = this[swizzle[0] - 120];
+			nv.y = this[swizzle[1] - 120];
+			nv.z = this[swizzle[2] - 120];
+			return nv;
+		}
 		
 		public string ToString(string format)
 		{
@@ -106,7 +104,6 @@ namespace MathematicsX
 		}
 
 
-		public static implicit operator Vec3(double v) { return new Vec3(v, 0, 0); }
 		public static implicit operator Vec3(Vec2 v) { return new Vec3(v.x, v.y, 0); }
 		public static explicit operator Vec3(Vec4 v) { return new Vec3(v.x, v.y, v.z); }
 		public static explicit operator Vec3(Quat q) { return new Vec3(q.x, q.y, q.z); }
@@ -115,11 +112,19 @@ namespace MathematicsX
 		public static bool operator !=(Vec3 lhs, Vec3 rhs) { return !lhs.ValueEquals(rhs); }
 
 		public static Vec3 operator -(Vec3 v) { return new Vec3(-v.x, -v.y, -v.z); }
+
+		public static Vec3 operator +(double lhs, Vec3 rhs) { return new Vec3(lhs + rhs.x, lhs + rhs.y, lhs + rhs.z); }
+		public static Vec3 operator +(Vec3 lhs, double rhs) { return new Vec3(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs); }
 		public static Vec3 operator +(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z); }
+
+		public static Vec3 operator -(double lhs, Vec3 rhs) { return new Vec3(lhs - rhs.x, lhs - rhs.y, lhs - rhs.z); }
+		public static Vec3 operator -(Vec3 lhs, double rhs) { return new Vec3(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs); }
 		public static Vec3 operator -(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z); }
+
 		public static Vec3 operator *(double lhs, Vec3 rhs) { return new Vec3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z); }
 		public static Vec3 operator *(Vec3 lhs, double rhs) { return new Vec3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs); }
 		public static Vec3 operator *(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z); }
+
 		public static Vec3 operator /(double lhs, Vec3 rhs) { return new Vec3(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z); }
 		public static Vec3 operator /(Vec3 lhs, double rhs) { return new Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs); }
 		public static Vec3 operator /(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z); }

@@ -8,7 +8,7 @@ namespace MathematicsX
 {
 	public interface IVector
 	{
-		double this[int index] { get; set; }
 		int dimension { get; }
+		double this[int index] { get; set; }
 	}
 }

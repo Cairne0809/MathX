@@ -80,13 +80,8 @@ namespace MathematicsX
 		public static double Dot(Vec4 lhs, Vec4 rhs) { return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w; }
 
 		public static double Determinant(Vec2 lhs, Vec2 rhs) { return lhs.x * rhs.y - lhs.y * rhs.x; }
-		public static double Determinant(Vec3 lhs, Vec3 rhs)
-		{
-			double x = lhs.y * rhs.z - lhs.z * rhs.y;
-			double y = lhs.z * rhs.x - lhs.x * rhs.z;
-			double z = lhs.x * rhs.y - lhs.y * rhs.x;
-			return Math.Sqrt(x * x + y * y + z * z);
-		}
+		public static double Determinant(Vec3 v0, Vec3 v1, Vec3 v2) { return Mat3x3.Determinant(new Mat3x3(v0, v1, v2)); }
+		public static double Determinant(Vec4 v0, Vec4 v1, Vec4 v2, Vec4 v3) { return Mat4x4.Determinant(new Mat4x4(v0, v1, v2, v3)); }
 
 		public static Vec3 Cross(Vec3 lhs, Vec3 rhs)
 		{
@@ -94,15 +89,6 @@ namespace MathematicsX
 			double y = lhs.z * rhs.x - lhs.x * rhs.z;
 			double z = lhs.x * rhs.y - lhs.y * rhs.x;
 			return new Vec3(x, y, z);
-		}
-		public static double Mixed(Vec3 v1, Vec3 v2, Vec3 v3)
-		{
-			double x1 = v1.x, y1 = v1.y, z1 = v1.z;
-			double x2 = v2.x, y2 = v2.y, z2 = v2.z;
-			double x3 = v3.x, y3 = v3.y, z3 = v3.z;
-			double mixed = x1 * y2 * z3 + y1 * z2 * x3 + z1 * x2 * y3
-				 - z1 * y2 * x3 - y1 * x2 * z3 - x1 * z2 * y3;
-			return mixed;
 		}
 
 		public static double SqrDistance(Vec2 lhs, Vec2 rhs) { return SqrLength(lhs - rhs); }
@@ -113,19 +99,19 @@ namespace MathematicsX
 		public static double Distance(Vec3 lhs, Vec3 rhs) { return Length(lhs - rhs); }
 		public static double Distance(Vec4 lhs, Vec4 rhs) { return Length(lhs - rhs); }
 
-		public static double Angle(Vec2 normLhs, Vec2 normRhs)
+		public static double Angle(Vec2 lhsNorm, Vec2 rhsNorm)
 		{
-			double cos = Dot(normLhs, normRhs);
+			double cos = Dot(lhsNorm, rhsNorm);
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 		}
-		public static double Angle(Vec3 normLhs, Vec3 normRhs)
+		public static double Angle(Vec3 lhsNorm, Vec3 rhsNorm)
 		{
-			double cos = Dot(normLhs, normRhs);
+			double cos = Dot(lhsNorm, rhsNorm);
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 		}
-		public static double Angle(Vec4 normLhs, Vec4 normRhs)
+		public static double Angle(Vec4 lhsNorm, Vec4 rhsNorm)
 		{
-			double cos = Dot(normLhs, normRhs);
+			double cos = Dot(lhsNorm, rhsNorm);
 			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
 		}
 
@@ -137,10 +123,10 @@ namespace MathematicsX
 			double vy = sin * src.x + cos * src.y;
 			return new Vec2(vx, vy);
 		}
-		public static Vec3 Rotate(Vec3 src, double angle, Vec3 normAxis)
+		public static Vec3 Rotate(Vec3 src, double angle, Vec3 axisNorm)
 		{
 			double sx = src.x, sy = src.y, sz = src.z;
-			double ax = normAxis.x, ay = normAxis.y, az = normAxis.z;
+			double ax = axisNorm.x, ay = axisNorm.y, az = axisNorm.z;
 			double cos = Math.Cos(angle);
 			double sin = Math.Sin(angle);
 			double vx = (ax * ax + (1 - ax * ax) * cos) * sx + (ax * ay * (1 - cos) - az * sin) * sy + (ax * az * (1 - cos) + ay * sin) * sz;
@@ -149,19 +135,41 @@ namespace MathematicsX
 			return new Vec3(vx, vy, vz);
 		}
 
-		public static Vec2 Project(Vec2 src, Vec2 normDst) { return Dot(src, normDst) * normDst; }
-		public static Vec3 Project(Vec3 src, Vec3 normDst) { return Dot(src, normDst) * normDst; }
-		public static Vec4 Project(Vec4 src, Vec4 normDst) { return Dot(src, normDst) * normDst; }
+		public static Vec2 Project(Vec2 src, Vec2 dstNorm) { return Dot(src, dstNorm) * dstNorm; }
+		public static Vec3 Project(Vec3 src, Vec3 dstNorm) { return Dot(src, dstNorm) * dstNorm; }
+		public static Vec4 Project(Vec4 src, Vec4 dstNorm) { return Dot(src, dstNorm) * dstNorm; }
 
 		public static Vec3 ProjectOnPlane(Vec3 src, Vec3 norm) { return Project(src, Cross(Cross(norm, src), norm)); }
 
-		public static Vec2 Mirror(Vec2 src, Vec2 normAxis) { return 2 * Project(src, normAxis) - src; }
-		public static Vec3 Mirror(Vec3 src, Vec3 normAxis) { return 2 * Project(src, normAxis) - src; }
-		public static Vec4 Mirror(Vec4 src, Vec4 normAxis) { return 2 * Project(src, normAxis) - src; }
+		public static Vec2 Mirror(Vec2 src, Vec2 axisNorm) { return 2 * Project(src, axisNorm) - src; }
+		public static Vec3 Mirror(Vec3 src, Vec3 axisNorm) { return 2 * Project(src, axisNorm) - src; }
+		public static Vec4 Mirror(Vec4 src, Vec4 axisNorm) { return 2 * Project(src, axisNorm) - src; }
 
-		public static Vec2 Reflect(Vec2 src, Vec2 normAxis) { return src - 2 * Project(src, normAxis); }
-		public static Vec3 Reflect(Vec3 src, Vec3 normAxis) { return src - 2 * Project(src, normAxis); }
-		public static Vec4 Reflect(Vec4 src, Vec4 normAxis) { return src - 2 * Project(src, normAxis); }
+		public static Vec2 Reflect(Vec2 src, Vec2 axisNorm) { return src - 2 * Project(src, axisNorm); }
+		public static Vec3 Reflect(Vec3 src, Vec3 axisNorm) { return src - 2 * Project(src, axisNorm); }
+		public static Vec4 Reflect(Vec4 src, Vec4 axisNorm) { return src - 2 * Project(src, axisNorm); }
+
+		public static Vec2 Refract(Vec2 src, Vec2 axisNorm, double eta)
+		{
+			double dot = Dot(src, axisNorm);
+			double k = 1 - eta * eta * (1 - dot * dot);
+			if (k >= 0) return eta * src - (eta * dot + Math.Sqrt(k)) * axisNorm;
+			return new Vec2();
+		}
+		public static Vec3 Refract(Vec3 src, Vec3 axisNorm, double eta)
+		{
+			double dot = Dot(src, axisNorm);
+			double k = 1 - eta * eta * (1 - dot * dot);
+			if (k >= 0) return eta * src - (eta * dot + Math.Sqrt(k)) * axisNorm;
+			return new Vec3();
+		}
+		public static Vec4 Refract(Vec4 src, Vec4 axisNorm, double eta)
+		{
+			double dot = Dot(src, axisNorm);
+			double k = 1 - eta * eta * (1 - dot * dot);
+			if (k >= 0) return eta * src - (eta * dot + Math.Sqrt(k)) * axisNorm;
+			return new Vec4();
+		}
 
 		public static Vec2 Lerp(Vec2 a, Vec2 b, double t) { return a + t * (b - a); }
 		public static Vec3 Lerp(Vec3 a, Vec3 b, double t) { return a + t * (b - a); }

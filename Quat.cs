@@ -3,6 +3,7 @@ using System.Text;
 
 namespace MathematicsX
 {
+	[Serializable]
 	public struct Quat
 	{
 		public double x;
@@ -81,17 +82,15 @@ namespace MathematicsX
 		public static bool operator ==(Quat lhs, Quat rhs) { return lhs.ValueEquals(rhs); }
 		public static bool operator !=(Quat lhs, Quat rhs) { return !lhs.ValueEquals(rhs); }
 
+		public static bool IsNaQ(Quat q) { return double.IsNaN(q.x) || double.IsNaN(q.y) || double.IsNaN(q.z) || double.IsNaN(q.w); }
+
 		/// <summary>
-		/// Conjugate: ~Q = (-x, -y, -z, w)
+		/// Conjugate: -Q = (-x, -y, -z, w)
 		/// </summary>
-		public static Quat operator ~(Quat q)
+		public static Quat operator -(Quat q)
 		{
 			return new Quat(-q.x, -q.y, -q.z, q.w);
 		}
-
-		public static Quat operator *(double lhs, Quat rhs) { return new Quat(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w); }
-		public static Quat operator *(Quat lhs, double rhs) { return new Quat(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
-		public static Quat operator /(Quat lhs, double rhs) { return new Quat(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
 
 		/// <summary>
 		/// Q1 * Q2 = (w1 * V2 + w2 * V1 + V1 x V2, w1 * w2 - V1 • V2)
@@ -108,7 +107,7 @@ namespace MathematicsX
 		}
 
 		/// <summary>
-		/// Q * V = Q * Qv * ~Q
+		/// Rotate: Q * V = Q * Qv * -Q
 		/// </summary>
 		public static Vec3 operator *(Quat lhs, Vec3 rhs)
 		{
@@ -124,15 +123,17 @@ namespace MathematicsX
 			return new Vec3(vx, vy, vz);
 		}
 
-		public static bool isNaQ(Quat q) { return double.IsNaN(q.x) || double.IsNaN(q.y) || double.IsNaN(q.z) || double.IsNaN(q.w); }
-
 		public static double SqrLength(Quat q) { return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w; }
 		public static double Length(Quat q) { return Math.Sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w); }
 
 		public static Quat Normalize(Quat q)
 		{
 			double len = SqrLength(q);
-			if (len > 0 && len != 1) return q / Math.Sqrt(len);
+			if (len > 0 && len != 1)
+			{
+				len = Math.Sqrt(len);
+				return new Quat(q.x / len, q.y / len, q.z / len, q.w / len);
+			}
 			return new Quat(q);
 		}
 
@@ -179,22 +180,22 @@ namespace MathematicsX
 			double qw = c1 * c2 * c3 - s1 * s2 * s3;
 			return new Quat(qx, qy, qz, qw);
 		}
-		public static Quat FromEuler(Vec3 euler)
+		public static Quat FromEuler(Vec3 v)
 		{
-			return FromEuler(euler.x, euler.y, euler.z);
+			return FromEuler(v.x, v.y, v.z);
 		}
 
-		public static void ToAngleAxis(Quat q, out double angle, out Vec3 normAxis)
+		public static void ToAngleAxis(Quat q, out double angle, out Vec3 axisNorm)
 		{
 			double ha = Math.Acos(q.w);
 			double sin = Math.Sin(ha);
-			angle = ha * 2.0;
-			normAxis = new Vec3(q.x, q.y, q.z) / sin;
+			angle = ha + ha;
+			axisNorm = new Vec3(q.x, q.y, q.z) / sin;
 		}
-		public static Quat FromAngleAxis(double angle, Vec3 normAxis)
+		public static Quat FromAngleAxis(double angle, Vec3 axisNorm)
 		{
 			angle *= 0.5;
-			Vec3 qv = Math.Sin(angle) * normAxis;
+			Vec3 qv = Math.Sin(angle) * axisNorm;
 			double qw = Math.Cos(angle);
 			return new Quat(qv, qw);
 		}

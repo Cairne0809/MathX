@@ -3,8 +3,11 @@ using System.Text;
 
 namespace MathematicsX
 {
+	[Serializable]
 	public struct Vec4 : IVector
 	{
+		public int dimension { get { return 4; } }
+
 		public double x;
 		public double y;
 		public double z;
@@ -72,55 +75,22 @@ namespace MathematicsX
 		public Vec4 wyzx { get { return new Vec4(w, y, z, x); } set { w = value.x; y = value.y; z = value.z; x = value.w; } }
 		public Vec4 wzxy { get { return new Vec4(w, z, x, y); } set { w = value.x; z = value.y; x = value.z; y = value.w; } }
 		public Vec4 wzyx { get { return new Vec4(w, z, y, x); } set { w = value.x; z = value.y; y = value.z; x = value.w; } }
-
-		public Vec2 s2(string swizzle)
-		{
-			if (swizzle.Length < 2) throw new Exception("The swizzle.Length is not enough!");
-			Vec2 nv = new Vec2();
-			nv.x = swizzle[0] == 'w' ? w : this[swizzle[0] - 120];
-			nv.y = swizzle[1] == 'w' ? w : this[swizzle[1] - 120];
-			return nv;
-		}
-		public Vec3 s3(string swizzle)
-		{
-			if (swizzle.Length < 3) throw new Exception("The swizzle.Length is not enough!");
-			Vec3 nv = new Vec3();
-			nv.x = swizzle[0] == 'w' ? w : this[swizzle[0] - 120];
-			nv.y = swizzle[1] == 'w' ? w : this[swizzle[1] - 120];
-			nv.z = swizzle[2] == 'w' ? w : this[swizzle[2] - 120];
-			return nv;
-		}
-		public Vec4 s4(string swizzle)
-		{
-			if (swizzle.Length < 4) throw new Exception("The swizzle.Length is not enough!");
-			Vec4 nv = new Vec4();
-			nv.x = swizzle[0] == 'w' ? w : this[swizzle[0] - 120];
-			nv.y = swizzle[1] == 'w' ? w : this[swizzle[1] - 120];
-			nv.z = swizzle[2] == 'w' ? w : this[swizzle[2] - 120];
-			nv.w = swizzle[3] == 'w' ? w : this[swizzle[3] - 120];
-			return nv;
-		}
 		
-		public double this[int index]
+		public unsafe double this[int index]
 		{
 			get
 			{
-				if (index == 0) return x;
-				else if (index == 1) return y;
-				else if (index == 2) return z;
-				else if (index == 3) return w;
-				else throw new Exception("The index is out of range!");
+				if (index >= 0 && index < 4)
+					fixed (double* ptr = &x) return *(ptr + index);
+				else throw new IndexOutOfRangeException();
 			}
 			set
 			{
-				if (index == 0) x = value;
-				else if (index == 1) y = value;
-				else if (index == 2) z = value;
-				else if (index == 3) w = value;
-				else throw new Exception("The index is out of range!");
+				if (index >= 0 && index < 4)
+					fixed (double* ptr = &x) *(ptr + index) = value;
+				else throw new IndexOutOfRangeException();
 			}
 		}
-		public int dimension { get { return 4; } }
 
 		public Vec4(double x, double y, double z, double w)
 		{
@@ -179,6 +149,31 @@ namespace MathematicsX
 			this.w = xyzw.z;
 		}
 
+		public Vec2 S2(string swizzle)
+		{
+			Vec2 nv = new Vec2();
+			nv.x = this[(swizzle[0] - 116) % 4];
+			nv.y = this[(swizzle[1] - 116) % 4];
+			return nv;
+		}
+		public Vec3 S3(string swizzle)
+		{
+			Vec3 nv = new Vec3();
+			nv.x = this[(swizzle[0] - 116) % 4];
+			nv.y = this[(swizzle[1] - 116) % 4];
+			nv.z = this[(swizzle[2] - 116) % 4];
+			return nv;
+		}
+		public Vec4 S4(string swizzle)
+		{
+			Vec4 nv = new Vec4();
+			nv.x = this[(swizzle[0] - 116) % 4];
+			nv.y = this[(swizzle[1] - 116) % 4];
+			nv.z = this[(swizzle[2] - 116) % 4];
+			nv.w = this[(swizzle[3] - 116) % 4];
+			return nv;
+		}
+
 		public string ToString(string format)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -202,7 +197,6 @@ namespace MathematicsX
 		}
 
 
-		public static implicit operator Vec4(double v) { return new Vec4(v, 0, 0, 0); }
 		public static implicit operator Vec4(Vec2 v) { return new Vec4(v.x, v.y, 0, 0); }
 		public static implicit operator Vec4(Vec3 v) { return new Vec4(v.x, v.y, v.z, 0); }
 		public static explicit operator Vec4(Quat q) { return new Vec4(q.x, q.y, q.z, q.w); }
@@ -211,11 +205,19 @@ namespace MathematicsX
 		public static bool operator !=(Vec4 lhs, Vec4 rhs) { return !lhs.ValueEquals(rhs); }
 
 		public static Vec4 operator -(Vec4 v) { return new Vec4(-v.x, -v.y, -v.z, -v.w); }
+
+		public static Vec4 operator +(double lhs, Vec4 rhs) { return new Vec4(lhs + rhs.x, lhs + rhs.y, lhs + rhs.z, lhs + rhs.w); }
+		public static Vec4 operator +(Vec4 lhs, double rhs) { return new Vec4(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs, lhs.w + rhs); }
 		public static Vec4 operator +(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
+
+		public static Vec4 operator -(double lhs, Vec4 rhs) { return new Vec4(lhs - rhs.x, lhs - rhs.y, lhs - rhs.z, lhs - rhs.w); }
+		public static Vec4 operator -(Vec4 lhs, double rhs) { return new Vec4(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs, lhs.w - rhs); }
 		public static Vec4 operator -(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
+
 		public static Vec4 operator *(double lhs, Vec4 rhs) { return new Vec4(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w); }
 		public static Vec4 operator *(Vec4 lhs, double rhs) { return new Vec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
 		public static Vec4 operator *(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
+
 		public static Vec4 operator /(double lhs, Vec4 rhs) { return new Vec4(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w); }
 		public static Vec4 operator /(Vec4 lhs, double rhs) { return new Vec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
 		public static Vec4 operator /(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
