@@ -130,15 +130,6 @@ namespace MathematicsX
 				|| double.IsNaN(m.m20) || double.IsNaN(m.m21) || double.IsNaN(m.m22);
 		}
 
-		public static Mat3x3 operator ~(Mat3x3 m)
-		{
-			Mat3x3 nm = new Mat3x3();
-			nm.m00 = m.m00; nm.m01 = m.m10; nm.m02 = m.m20;
-			nm.m10 = m.m01; nm.m11 = m.m11; nm.m12 = m.m21;
-			nm.m20 = m.m02; nm.m21 = m.m12; nm.m22 = m.m22;
-			return nm;
-		}
-
 		public static Mat3x3 operator *(Mat3x3 lhs, Mat3x3 rhs)
 		{
 			Mat3x3 m = new Mat3x3();
@@ -170,6 +161,15 @@ namespace MathematicsX
 			return v;
 		}
 
+		public static Mat3x3 Transpose(Mat3x3 m)
+		{
+			Mat3x3 nm = new Mat3x3();
+			nm.m00 = m.m00; nm.m01 = m.m10; nm.m02 = m.m20;
+			nm.m10 = m.m01; nm.m11 = m.m11; nm.m12 = m.m21;
+			nm.m20 = m.m02; nm.m21 = m.m12; nm.m22 = m.m22;
+			return nm;
+		}
+
 		public static double Determinant(Mat3x3 m)
 		{
 			return m.m00 * m.m11 * m.m22 - m.m00 * m.m12 * m.m21
@@ -179,33 +179,28 @@ namespace MathematicsX
 
 		public static Mat3x3 Translate(Vec2 delta)
 		{
-			Mat3x3 m = new Mat3x3();
-			m.m00 = m.m11 = m.m22 = 1;
-			m.m02 = delta.x;
-			m.m12 = delta.y;
-			return m;
+			return new Mat3x3(
+				1, 0, delta.x,
+				0, 1, delta.y,
+				0, 0, 1);
 		}
 
 		public static Mat3x3 Rotate(double angle)
 		{
-			Mat3x3 m = new Mat3x3();
-			m.m22 = 1;
-			double sin = Math.Sin(angle);
 			double cos = Math.Cos(angle);
-			m.m00 = cos;
-			m.m01 = -sin;
-			m.m10 = sin;
-			m.m11 = cos;
-			return m;
+			double sin = Math.Sin(angle);
+			return new Mat3x3(
+				cos, -sin, 0,
+				sin, cos, 0,
+				0, 0, 1);
 		}
 
 		public static Mat3x3 Scale(Vec2 scale)
 		{
-			Mat3x3 m = new Mat3x3();
-			m.m22 = 1;
-			m.m00 = scale.x;
-			m.m11 = scale.y;
-			return m;
+			return new Mat3x3(
+				scale.x, 0, 0,
+				0, scale.y, 0,
+				0, 0, 1);
 		}
 
 		public static Mat3x3 TRS(Vec2 delta, double angle, Vec2 scale)

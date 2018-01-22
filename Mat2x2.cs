@@ -98,14 +98,6 @@ namespace MathematicsX
 				|| double.IsNaN(m.m10) || double.IsNaN(m.m11);
 		}
 
-		public static Mat2x2 operator ~(Mat2x2 m)
-		{
-			Mat2x2 nm = new Mat2x2();
-			nm.m00 = m.m00; nm.m01 = m.m10;
-			nm.m10 = m.m01; nm.m11 = m.m11;
-			return nm;
-		}
-
 		public static Mat2x2 operator *(Mat2x2 lhs, Mat2x2 rhs)
 		{
 			Mat2x2 m = new Mat2x2();
@@ -124,6 +116,14 @@ namespace MathematicsX
 			return v;
 		}
 
+		public static Mat2x2 Transpose(Mat2x2 m)
+		{
+			Mat2x2 nm = new Mat2x2();
+			nm.m00 = m.m00; nm.m01 = m.m10;
+			nm.m10 = m.m01; nm.m11 = m.m11;
+			return nm;
+		}
+
 		public static double Determinant(Mat2x2 m)
 		{
 			return m.m00 * m.m11 - m.m01 * m.m10;
@@ -131,22 +131,18 @@ namespace MathematicsX
 
 		public static Mat2x2 Rotate(double angle)
 		{
-			Mat2x2 m = new Mat2x2();
-			double sin = Math.Sin(angle);
 			double cos = Math.Cos(angle);
-			m.m00 = cos;
-			m.m01 = -sin;
-			m.m10 = sin;
-			m.m11 = cos;
-			return m;
+			double sin = Math.Sin(angle);
+			return new Mat2x2(
+				cos, -sin,
+				sin, cos);
 		}
 
 		public static Mat2x2 Scale(Vec2 scale)
 		{
-			Mat2x2 m = new Mat2x2();
-			m.m00 = scale.x;
-			m.m11 = scale.y;
-			return m;
+			return new Mat2x2(
+				scale.x, 0,
+				0, scale.y);
 		}
 
 		public static Mat2x2 zero { get { return new Mat2x2(); } }

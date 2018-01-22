@@ -27,7 +27,7 @@ namespace MathematicsX
 
 		public bool WorldToScreen(Vec3 point, out Vec3 opt)
 		{
-			Vec3 screenPos = -rotation * (point - position);
+			Vec3 screenPos = ~rotation * (point - position);
 			double div = screenPos.z - f;
 			if (div <= 0)
 			{
@@ -48,7 +48,7 @@ namespace MathematicsX
 
 		public bool WorldToScreen(double length, Vec3 pos, out double opt)
 		{
-			Vec3 screenPos = -rotation * (pos - position);
+			Vec3 screenPos = ~rotation * (pos - position);
 			double div = screenPos.z - f;
 			if (div <= 0)
 			{

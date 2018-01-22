@@ -126,12 +126,14 @@ namespace MathematicsX
 		public static Vec3 Rotate(Vec3 src, double angle, Vec3 axisNorm)
 		{
 			double sx = src.x, sy = src.y, sz = src.z;
-			double ax = axisNorm.x, ay = axisNorm.y, az = axisNorm.z;
+			double x = axisNorm.x, y = axisNorm.y, z = axisNorm.z;
+			double xx = x * x, yy = y * y, zz = z * z;
+			double xy = x * y, yz = y * z, xz = x * z;
 			double cos = Math.Cos(angle);
 			double sin = Math.Sin(angle);
-			double vx = (ax * ax + (1 - ax * ax) * cos) * sx + (ax * ay * (1 - cos) - az * sin) * sy + (ax * az * (1 - cos) + ay * sin) * sz;
-			double vy = (ay * ax * (1 - cos) + az * sin) * sx + (ay * ay + (1 - ay * ay) * cos) * sy + (ay * az * (1 - cos) - ax * sin) * sz;
-			double vz = (az * ax * (1 - cos) - ay * sin) * sx + (az * ay * (1 - cos) + ax * sin) * sy + (az * az + (1 - az * az) * cos) * sz;
+			double vx = (xx + (1 - xx) * cos) * sx + (xy * (1 - cos) - z * sin) * sy + (xz * (1 - cos) + y * sin) * sz;
+			double vy = (xy * (1 - cos) + z * sin) * sx + (yy + (1 - yy) * cos) * sy + (yz * (1 - cos) - x * sin) * sz;
+			double vz = (xz * (1 - cos) - y * sin) * sx + (yz * (1 - cos) + x * sin) * sy + (zz + (1 - zz) * cos) * sz;
 			return new Vec3(vx, vy, vz);
 		}
 

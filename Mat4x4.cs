@@ -149,19 +149,6 @@ namespace MathematicsX
 				|| double.IsNaN(m.m30) || double.IsNaN(m.m31) || double.IsNaN(m.m32) || double.IsNaN(m.m33);
 		}
 
-		/// <summary>
-		/// Transpose
-		/// </summary>
-		public static Mat4x4 operator ~(Mat4x4 m)
-		{
-			Mat4x4 nm = new Mat4x4();
-			nm.m00 = m.m00; nm.m01 = m.m10; nm.m02 = m.m20; nm.m03 = m.m30;
-			nm.m10 = m.m01; nm.m11 = m.m11; nm.m12 = m.m21; nm.m13 = m.m31;
-			nm.m20 = m.m02; nm.m21 = m.m12; nm.m22 = m.m22; nm.m23 = m.m32;
-			nm.m30 = m.m03; nm.m31 = m.m13; nm.m32 = m.m23; nm.m33 = m.m33;
-			return nm;
-		}
-
 		public static Mat4x4 operator *(Mat4x4 lhs, Mat4x4 rhs)
 		{
 			Mat4x4 m = new Mat4x4();
@@ -202,6 +189,16 @@ namespace MathematicsX
 			return v;
 		}
 
+		public static Mat4x4 Transpose(Mat4x4 m)
+		{
+			Mat4x4 nm = new Mat4x4();
+			nm.m00 = m.m00; nm.m01 = m.m10; nm.m02 = m.m20; nm.m03 = m.m30;
+			nm.m10 = m.m01; nm.m11 = m.m11; nm.m12 = m.m21; nm.m13 = m.m31;
+			nm.m20 = m.m02; nm.m21 = m.m12; nm.m22 = m.m22; nm.m23 = m.m32;
+			nm.m30 = m.m03; nm.m31 = m.m13; nm.m32 = m.m23; nm.m33 = m.m33;
+			return nm;
+		}
+
 		public static double Determinant(Mat4x4 m)
 		{
 			return m.m00 * m.m11 * m.m22 * m.m33 - m.m00 * m.m13 * m.m22 * m.m31 + m.m01 * m.m10 * m.m23 * m.m32 - m.m01 * m.m12 * m.m23 * m.m30
@@ -214,49 +211,42 @@ namespace MathematicsX
 
 		public static Mat4x4 Translate(Vec3 delta)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m00 = m.m11 = m.m22 = m.m33 = 1;
-			m.m03 = delta.x;
-			m.m13 = delta.y;
-			m.m23 = delta.z;
-			return m;
+			return new Mat4x4(
+				1, 0, 0, delta.x,
+				0, 1, 0, delta.y,
+				0, 0, 1, delta.z,
+				0, 0, 0, 1);
 		}
 
 		public static Mat4x4 RotateX(double angle)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m00 = m.m33 = 1;
-			double cx = Math.Cos(angle);
-			double sx = Math.Sin(angle);
-			m.m11 = cx;
-			m.m12 = -sx;
-			m.m21 = sx;
-			m.m22 = cx;
-			return m;
+			double cos = Math.Cos(angle);
+			double sin = Math.Sin(angle);
+			return new Mat4x4(
+				1, 0,   0,    0,
+				0, cos, -sin, 0,
+				0, sin, cos,  0,
+				0, 0, 0, 1);
 		}
 		public static Mat4x4 RotateY(double angle)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m11 = m.m33 = 1;
-			double cy = Math.Cos(angle);
-			double sy = Math.Sin(angle);
-			m.m00 = cy;
-			m.m02 = sy;
-			m.m20 = -sy;
-			m.m22 = cy;
-			return m;
+			double cos = Math.Cos(angle);
+			double sin = Math.Sin(angle);
+			return new Mat4x4(
+				cos,  0, sin, 0,
+				0,    1, 0,   0,
+				-sin, 0, cos, 0,
+				0, 0, 0, 1);
 		}
 		public static Mat4x4 RotateZ(double angle)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m22 = m.m33 = 1;
-			double cz = Math.Cos(angle);
-			double sz = Math.Sin(angle);
-			m.m00 = cz;
-			m.m01 = -sz;
-			m.m10 = sz;
-			m.m11 = cz;
-			return m;
+			double cos = Math.Cos(angle);
+			double sin = Math.Sin(angle);
+			return new Mat4x4(
+				cos, -sin, 0, 0,
+				sin, cos,  0, 0,
+				0,   0,    1, 0,
+				0, 0, 0, 1);
 		}
 
 		/// <summary>
@@ -264,59 +254,39 @@ namespace MathematicsX
 		/// </summary>
 		public static Mat4x4 Rotate(Vec3 euler)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m33 = 1;
-			double cz = Math.Cos(euler.z);
-			double sz = Math.Sin(euler.z);
-			double cx = Math.Cos(euler.x);
-			double sx = Math.Sin(euler.x);
-			double cy = Math.Cos(euler.y);
-			double sy = Math.Sin(euler.y);
-			m.m00 = cy * cz + sx * sy * sz;
-			m.m01 = -cy * sz + sx * sy * cz;
-			m.m02 = cx * sy;
-			m.m10 = cx * sz;
-			m.m11 = cx * cz;
-			m.m12 = -sx;
-			m.m20 = -sy * cz + sx * cy * sz;
-			m.m21 = sy * sz + sx * cy * cz;
-			m.m22 = cx * cy;
-			return m;
+			double cosz = Math.Cos(euler.z);
+			double sinz = Math.Sin(euler.z);
+			double cosx = Math.Cos(euler.x);
+			double sinx = Math.Sin(euler.x);
+			double cosy = Math.Cos(euler.y);
+			double siny = Math.Sin(euler.y);
+			return new Mat4x4(
+				cosy * cosz + sinx * siny * sinz,  -cosy * sinz + sinx * siny * cosz, cosx * siny, 0,
+				cosx * sinz,                       cosx * cosz,                       -sinx,       0,
+				-siny * cosz + sinx * cosy * sinz, siny * sinz + sinx * cosy * cosz,  cosx * cosy, 0,
+				0, 0, 0, 1);
 		}
 		public static Mat4x4 Rotate(double angle, Vec3 axisNorm)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m33 = 1;
-			double ax = axisNorm.x, ay = axisNorm.y, az = axisNorm.z;
+			double x = axisNorm.x, y = axisNorm.y, z = axisNorm.z;
+			double xx = x * x, yy = y * y, zz = z * z;
+			double xy = x * y, yz = y * z, xz = x * z;
 			double cos = Math.Cos(angle);
 			double sin = Math.Sin(angle);
-			m.m00 = ax * ax + (1 - ax * ax) * cos;
-			m.m01 = ax * ay * (1 - cos) - az * sin;
-			m.m02 = ax * az * (1 - cos) + ay * sin;
-			m.m10 = ay * ax * (1 - cos) + az * sin;
-			m.m11 = ay * ay + (1 - ay * ay) * cos;
-			m.m12 = ay * az * (1 - cos) - ax * sin;
-			m.m20 = az * ax * (1 - cos) - ay * sin;
-			m.m21 = az * ay * (1 - cos) + ax * sin;
-			m.m22 = az * az + (1 - az * az) * cos;
-			return m;
-		}
-		public static Mat4x4 Rotate(Quat rotation)
-		{
-			double angle;
-			Vec3 axisNorm;
-			Quat.ToAngleAxis(rotation, out angle, out axisNorm);
-			return Rotate(angle, axisNorm);
+			return new Mat4x4(
+				xx + (1 - xx) * cos, xy * (1 - cos) - z * sin, xz * (1 - cos) + y * sin, 0,
+				xy * (1 - cos) + z * sin, yy + (1 - yy) * cos, yz * (1 - cos) - x * sin, 0,
+				xz * (1 - cos) - y * sin, yz * (1 - cos) + x * sin, zz + (1 - zz) * cos, 0,
+				0, 0, 0, 1);
 		}
 
 		public static Mat4x4 Scale(Vec3 scale)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m33 = 1;
-			m.m00 = scale.x;
-			m.m11 = scale.y;
-			m.m22 = scale.z;
-			return m;
+			return new Mat4x4(
+				scale.x, 0, 0, 0,
+				0, scale.y, 0, 0,
+				0, 0, scale.z, 0,
+				0, 0, 0, 1);
 		}
 
 		public static Mat4x4 TRS(Vec3 delta, Vec3 euler, Vec3 scale)
@@ -329,7 +299,7 @@ namespace MathematicsX
 		}
 		public static Mat4x4 TRS(Vec3 delta, Quat rotation, Vec3 scale)
 		{
-			return Translate(delta) * Rotate(rotation) * Scale(scale);
+			return Translate(delta) * Quat.ToMat4x4(rotation) * Scale(scale);
 		}
 
 		public static Mat4x4 zero { get { return new Mat4x4(); } }
