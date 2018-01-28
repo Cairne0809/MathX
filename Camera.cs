@@ -1,18 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MathematicsX
 {
 	public class Camera
 	{
+		double m_halfFOV = 22.5 * MathX.Deg2Rad;
+		double m_halfW = 100;
+		double m_halfH = 100;
+
 		public Vec3 position = Vec3.zero;
 		public Quat rotation = Quat.identity;
-		public double f = 10;
-		public double screenWidth = 100;
-		public double screenHeight = 100;
+
+		public double fieldOfView
+		{
+			get { return m_halfFOV * 2 * MathX.Rad2Deg; }
+			set { m_halfFOV = MathX.Clamp(value, 1, 179) * 0.5 * MathX.Deg2Rad; }
+		}
+		public double screenWidth
+		{
+			get { return m_halfW * 2; }
+			set { m_halfW = Math.Abs(value) * 0.5; }
+		}
+		public double screenHeight
+		{
+			get { return m_halfH * 2; }
+			set { m_halfH = Math.Abs(value) * 0.5; }
+		}
 
 		public void RotateAround(Vec3 target, Quat rotation)
 		{
@@ -25,40 +38,39 @@ namespace MathematicsX
 			RotateAround(target, Quat.FromEuler(euler));
 		}
 
-		public bool WorldToScreen(Vec3 point, out Vec3 opt)
+		public bool WorldToScreen(Vec3 point, out Vec3 result)
 		{
 			Vec3 screenPos = ~rotation * (point - position);
-			double div = screenPos.z - f;
-			if (div <= 0)
+			double tan = Math.Tan(m_halfFOV);
+			double mul = tan * screenPos.z;
+			if (mul > 0)
 			{
-				opt = default(Vec3);
-				return false;
+				Vec2 halfWH = new Vec2(m_halfW, m_halfH);
+				screenPos.xy = halfWH.y / mul * screenPos.xy + halfWH;
+				result = screenPos;
+				return true;
 			}
 			else
 			{
-				double mul = f / div;
-				screenPos.x *= mul;
-				screenPos.y *= mul;
-				screenPos.x += screenWidth / 2;
-				screenPos.y += screenHeight / 2;
-				opt = screenPos;
-				return true;
+				result = default(Vec3);
+				return false;
 			}
 		}
 
-		public bool WorldToScreen(double length, Vec3 pos, out double opt)
+		public bool WorldToScreen(double length, Vec3 pos, out double result)
 		{
 			Vec3 screenPos = ~rotation * (pos - position);
-			double div = screenPos.z - f;
-			if (div <= 0)
+			double tan = Math.Tan(m_halfFOV);
+			double mul = tan * screenPos.z;
+			if (mul > 0)
 			{
-				opt = default(double);
-				return false;
+				result = length / mul * m_halfH;
+				return true;
 			}
 			else
 			{
-				opt = length * f / div;
-				return true;
+				result = default(double);
+				return false;
 			}
 		}
 

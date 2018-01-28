@@ -6,6 +6,9 @@ namespace MathematicsX
 	[Serializable]
 	public struct Mat3x3 : IMatrix
 	{
+		public int row { get { return 3; } }
+		public int column { get { return 3; } }
+
 		public double m00;
 		public double m01;
 		public double m02;
@@ -31,7 +34,7 @@ namespace MathematicsX
 				else throw new IndexOutOfRangeException();
 			}
 		}
-		public unsafe double this[int row, int column]
+		public double this[int row, int column]
 		{
 			get { return this[3 * row + column]; }
 			set { this[3 * row + column] = value; }
@@ -57,6 +60,12 @@ namespace MathematicsX
 			this.m10 = column0.y; this.m11 = column1.y; this.m12 = column2.y;
 			this.m20 = column0.z; this.m21 = column1.z; this.m22 = column2.z;
 		}
+		public Mat3x3(Mat3x3 m)
+		{
+			this.m00 = m.m00; this.m01 = m.m01; this.m02 = m.m02;
+			this.m10 = m.m10; this.m11 = m.m11; this.m12 = m.m12;
+			this.m20 = m.m20; this.m21 = m.m21; this.m22 = m.m22;
+		}
 
 		public string ToString(string format)
 		{
@@ -76,6 +85,18 @@ namespace MathematicsX
 		public override string ToString() { return ToString(""); }
 		public override int GetHashCode() { return base.GetHashCode(); }
 		public override bool Equals(object obj) { return base.Equals(obj); }
+		public bool ValueEquals(Mat3x3 m)
+		{
+			return Math.Abs(m00 - m.m00) <= MathX.Tolerance
+				&& Math.Abs(m01 - m.m01) <= MathX.Tolerance
+				&& Math.Abs(m02 - m.m02) <= MathX.Tolerance
+				&& Math.Abs(m10 - m.m10) <= MathX.Tolerance
+				&& Math.Abs(m11 - m.m11) <= MathX.Tolerance
+				&& Math.Abs(m12 - m.m12) <= MathX.Tolerance
+				&& Math.Abs(m20 - m.m20) <= MathX.Tolerance
+				&& Math.Abs(m21 - m.m21) <= MathX.Tolerance
+				&& Math.Abs(m22 - m.m22) <= MathX.Tolerance;
+		}
 
 		public unsafe Vec3 GetRow(int index)
 		{
@@ -83,7 +104,7 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = 3 * index + ptr;
-					return new Vec3(*(p++), *(p++), *(p++));
+					return new Vec3(*(p++), *(p++), *p);
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -93,7 +114,7 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = 3 * index + ptr;
-					*(p++) = row.x; *(p++) = row.y; *(p++) = row.z;
+					*(p++) = row.x; *(p++) = row.y; *p = row.z;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -120,8 +141,8 @@ namespace MathematicsX
 		}
 
 
-		public static bool operator ==(Mat3x3 lhs, Mat3x3 rhs) { return lhs.Equals(rhs); }
-		public static bool operator !=(Mat3x3 lhs, Mat3x3 rhs) { return !lhs.Equals(rhs); }
+		public static bool operator ==(Mat3x3 lhs, Mat3x3 rhs) { return lhs.ValueEquals(rhs); }
+		public static bool operator !=(Mat3x3 lhs, Mat3x3 rhs) { return !lhs.ValueEquals(rhs); }
 
 		public static bool IsNaM(Mat3x3 m)
 		{
@@ -132,38 +153,38 @@ namespace MathematicsX
 
 		public static Mat3x3 operator *(Mat3x3 lhs, Mat3x3 rhs)
 		{
-			Mat3x3 m = new Mat3x3();
-			m.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10 + lhs.m02 * rhs.m20;
-			m.m01 = lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11 + lhs.m02 * rhs.m21;
-			m.m02 = lhs.m00 * rhs.m02 + lhs.m01 * rhs.m12 + lhs.m02 * rhs.m22;
-			m.m10 = lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10 + lhs.m12 * rhs.m20;
-			m.m11 = lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11 + lhs.m12 * rhs.m21;
-			m.m12 = lhs.m10 * rhs.m02 + lhs.m11 * rhs.m12 + lhs.m12 * rhs.m22;
-			m.m20 = lhs.m20 * rhs.m00 + lhs.m21 * rhs.m10 + lhs.m22 * rhs.m20;
-			m.m21 = lhs.m20 * rhs.m01 + lhs.m21 * rhs.m11 + lhs.m22 * rhs.m21;
-			m.m22 = lhs.m20 * rhs.m02 + lhs.m21 * rhs.m12 + lhs.m22 * rhs.m22;
-			return m;
+			Mat3x3 nm;
+			nm.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10 + lhs.m02 * rhs.m20;
+			nm.m01 = lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11 + lhs.m02 * rhs.m21;
+			nm.m02 = lhs.m00 * rhs.m02 + lhs.m01 * rhs.m12 + lhs.m02 * rhs.m22;
+			nm.m10 = lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10 + lhs.m12 * rhs.m20;
+			nm.m11 = lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11 + lhs.m12 * rhs.m21;
+			nm.m12 = lhs.m10 * rhs.m02 + lhs.m11 * rhs.m12 + lhs.m12 * rhs.m22;
+			nm.m20 = lhs.m20 * rhs.m00 + lhs.m21 * rhs.m10 + lhs.m22 * rhs.m20;
+			nm.m21 = lhs.m20 * rhs.m01 + lhs.m21 * rhs.m11 + lhs.m22 * rhs.m21;
+			nm.m22 = lhs.m20 * rhs.m02 + lhs.m21 * rhs.m12 + lhs.m22 * rhs.m22;
+			return nm;
 		}
 
 		public static Vec3 operator *(Mat3x3 lhs, Vec3 rhs)
 		{
-			Vec3 v = new Vec3();
-			v.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02 * rhs.z;
-			v.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12 * rhs.z;
-			v.z = lhs.m20 * rhs.x + lhs.m21 * rhs.y + lhs.m22 * rhs.z;
-			return v;
+			Vec3 nv;
+			nv.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02 * rhs.z;
+			nv.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12 * rhs.z;
+			nv.z = lhs.m20 * rhs.x + lhs.m21 * rhs.y + lhs.m22 * rhs.z;
+			return nv;
 		}
 		public static Vec2 operator *(Mat3x3 lhs, Vec2 rhs)
 		{
-			Vec2 v = new Vec2();
-			v.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02;
-			v.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12;
-			return v;
+			Vec2 nv;
+			nv.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02;
+			nv.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12;
+			return nv;
 		}
 
 		public static Mat3x3 Transpose(Mat3x3 m)
 		{
-			Mat3x3 nm = new Mat3x3();
+			Mat3x3 nm;
 			nm.m00 = m.m00; nm.m01 = m.m10; nm.m02 = m.m20;
 			nm.m10 = m.m01; nm.m11 = m.m11; nm.m12 = m.m21;
 			nm.m20 = m.m02; nm.m21 = m.m12; nm.m22 = m.m22;
@@ -208,7 +229,7 @@ namespace MathematicsX
 			return Translate(delta) * Rotate(angle) * Scale(scale);
 		}
 
-		public static Mat3x3 zero { get { return new Mat3x3(); } }
-		public static Mat3x3 identity { get { return new Mat3x3(1, 0, 0, 0, 1, 0, 0, 0, 1); } }
+		public static readonly Mat3x3 zero = new Mat3x3();
+		public static readonly Mat3x3 identity = new Mat3x3(1, 0, 0, 0, 1, 0, 0, 0, 1);
 	}
 }

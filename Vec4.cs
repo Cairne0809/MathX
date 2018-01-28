@@ -151,14 +151,14 @@ namespace MathematicsX
 
 		public Vec2 S2(string swizzle)
 		{
-			Vec2 nv = new Vec2();
+			Vec2 nv;
 			nv.x = this[(swizzle[0] - 116) % 4];
 			nv.y = this[(swizzle[1] - 116) % 4];
 			return nv;
 		}
 		public Vec3 S3(string swizzle)
 		{
-			Vec3 nv = new Vec3();
+			Vec3 nv;
 			nv.x = this[(swizzle[0] - 116) % 4];
 			nv.y = this[(swizzle[1] - 116) % 4];
 			nv.z = this[(swizzle[2] - 116) % 4];
@@ -166,7 +166,7 @@ namespace MathematicsX
 		}
 		public Vec4 S4(string swizzle)
 		{
-			Vec4 nv = new Vec4();
+			Vec4 nv;
 			nv.x = this[(swizzle[0] - 116) % 4];
 			nv.y = this[(swizzle[1] - 116) % 4];
 			nv.z = this[(swizzle[2] - 116) % 4];
@@ -189,11 +189,10 @@ namespace MathematicsX
 		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Vec4 v)
 		{
-			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
-			bool by = Math.Abs(y - v.y) <= MathX.accuracy;
-			bool bz = Math.Abs(z - v.z) <= MathX.accuracy;
-			bool bw = Math.Abs(w - v.w) <= MathX.accuracy;
-			return bx && by && bz && bw;
+			return Math.Abs(x - v.x) <= MathX.Tolerance
+				&& Math.Abs(y - v.y) <= MathX.Tolerance
+				&& Math.Abs(z - v.z) <= MathX.Tolerance
+				&& Math.Abs(w - v.w) <= MathX.Tolerance;
 		}
 
 
@@ -235,8 +234,8 @@ namespace MathematicsX
 			return new Vec4(x, y, z, w);
 		}
 
-		public static Vec4 zero { get { return new Vec4(); } }
-		public static Vec4 one { get { return new Vec4(1, 1, 1, 1); } }
-		public static Vec4 NaV { get { return new Vec4(double.NaN, double.NaN, double.NaN, double.NaN); } }
+		public static readonly Vec4 zero = new Vec4();
+		public static readonly Vec4 one = new Vec4(1, 1, 1, 1);
+		public static readonly Vec4 NaV = new Vec4(double.NaN, double.NaN, double.NaN, double.NaN);
 	}
 }

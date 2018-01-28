@@ -1,45 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MathematicsX
+﻿namespace MathematicsX
 {
-	public struct AxisAlignedBox<T> where T : IVector, new()
+	public struct AxisAlignedBox<T> where T : struct, IVector
 	{
-		public T center;
-		public T extends;
+		T m_pos;
+		T m_size;
 
-		public T min
+		public T pos
 		{
-			get
-			{
-				T nv = new T();
-				for (int i = 0; i < nv.dimension; i++)
-				{
-					nv[i] = center[i] - Math.Abs(extends[i]);
-				}
-				return nv;
-			}
+			get { return m_pos; }
+			set { m_pos = value; }
 		}
-		public T max
+		public T size
 		{
-			get
-			{
-				T nv = new T();
-				for (int i = 0; i < nv.dimension; i++)
-				{
-					nv[i] = center[i] + Math.Abs(extends[i]);
-				}
-				return nv;
-			}
+			get { return m_size; }
+			set { VecX.Abs(value, ref m_size); }
 		}
-
-		public AxisAlignedBox(T center, T extends)
+		public T min { get { return m_pos; } }
+		public T max { get { return VecX.Add(m_pos, m_size); } }
+		public T center { get { T temp = VecX.Mul(m_size, 0.5); VecX.Add(m_pos, temp, ref temp); return temp; } }
+		public T extends { get { return VecX.Mul(m_size, 0.5); } }
+		
+		public AxisAlignedBox(T pos, T size)
 		{
-			this.center = center;
-			this.extends = extends;
+			m_pos = pos;
+			m_size = size;
+			VecX.Abs(size, ref m_size);
 		}
 
 	}

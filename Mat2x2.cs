@@ -6,6 +6,9 @@ namespace MathematicsX
 	[Serializable]
 	public struct Mat2x2 : IMatrix
 	{
+		public int row { get { return 2; } }
+		public int column { get { return 2; } }
+
 		public double m00;
 		public double m01;
 		public double m10;
@@ -26,7 +29,7 @@ namespace MathematicsX
 				else throw new IndexOutOfRangeException();
 			}
 		}
-		public unsafe double this[int row, int column]
+		public double this[int row, int column]
 		{
 			get { return this[2 * row + column]; }
 			set { this[2 * row + column] = value; }
@@ -47,6 +50,11 @@ namespace MathematicsX
 			this.m00 = column0.x; this.m01 = column1.x;
 			this.m10 = column0.y; this.m11 = column1.y;
 		}
+		public Mat2x2(Mat2x2 m)
+		{
+			this.m00 = m.m00; this.m01 = m.m01;
+			this.m10 = m.m10; this.m11 = m.m11;
+		}
 
 		public string ToString(string format)
 		{
@@ -61,36 +69,55 @@ namespace MathematicsX
 		public override string ToString() { return ToString(""); }
 		public override int GetHashCode() { return base.GetHashCode(); }
 		public override bool Equals(object obj) { return base.Equals(obj); }
+		public bool ValueEquals(Mat2x2 m)
+		{
+			return Math.Abs(m00 - m.m00) <= MathX.Tolerance
+				&& Math.Abs(m01 - m.m01) <= MathX.Tolerance
+				&& Math.Abs(m10 - m.m10) <= MathX.Tolerance
+				&& Math.Abs(m11 - m.m11) <= MathX.Tolerance;
+		}
 
 		public Vec2 GetRow(int index)
 		{
-			if (index == 0) return new Vec2(m00, m01);
-			else if (index == 1) return new Vec2(m10, m11);
-			else throw new IndexOutOfRangeException();
+			switch (index)
+			{
+				case 0: return new Vec2(m00, m01);
+				case 1: return new Vec2(m10, m11);
+				default: throw new IndexOutOfRangeException();
+			}
 		}
 		public void SetRow(int index, Vec2 row)
 		{
-			if (index == 0) { m00 = row.x; m01 = row.y; }
-			else if (index == 1) { m10 = row.x; m11 = row.y; }
-			else throw new IndexOutOfRangeException();
+			switch (index)
+			{
+				case 0: m00 = row.x; m01 = row.y; break;
+				case 1: m10 = row.x; m11 = row.y; break;
+				default: throw new IndexOutOfRangeException();
+			}
 		}
 
 		public Vec2 GetColumn(int index)
 		{
-			if (index == 0) return new Vec2(m00, m10);
-			else if (index == 1) return new Vec2(m01, m11);
-			else throw new IndexOutOfRangeException();
+			switch (index)
+			{
+				case 0: return new Vec2(m00, m10);
+				case 1: return new Vec2(m01, m11);
+				default: throw new IndexOutOfRangeException();
+			}
 		}
 		public void SetColumn(int index, Vec2 column)
 		{
-			if (index == 0) { m00 = column.x; m10 = column.y; }
-			else if (index == 1) { m01 = column.x; m11 = column.y; }
-			else throw new IndexOutOfRangeException();
+			switch (index)
+			{
+				case 0: m00 = column.x; m10 = column.y; break;
+				case 1: m01 = column.x; m11 = column.y; break;
+				default: throw new IndexOutOfRangeException();
+			}
 		}
 
 
-		public static bool operator ==(Mat2x2 lhs, Mat2x2 rhs) { return lhs.Equals(rhs); }
-		public static bool operator !=(Mat2x2 lhs, Mat2x2 rhs) { return !lhs.Equals(rhs); }
+		public static bool operator ==(Mat2x2 lhs, Mat2x2 rhs) { return lhs.ValueEquals(rhs); }
+		public static bool operator !=(Mat2x2 lhs, Mat2x2 rhs) { return !lhs.ValueEquals(rhs); }
 
 		public static bool IsNaM(Mat2x2 m)
 		{
@@ -100,25 +127,25 @@ namespace MathematicsX
 
 		public static Mat2x2 operator *(Mat2x2 lhs, Mat2x2 rhs)
 		{
-			Mat2x2 m = new Mat2x2();
-			m.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10;
-			m.m01 = lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11;
-			m.m10 = lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10;
-			m.m11 = lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11;
-			return m;
+			Mat2x2 nm;
+			nm.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10;
+			nm.m01 = lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11;
+			nm.m10 = lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10;
+			nm.m11 = lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11;
+			return nm;
 		}
 
 		public static Vec2 operator *(Mat2x2 lhs, Vec2 rhs)
 		{
-			Vec2 v = new Vec2();
-			v.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y;
-			v.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y;
-			return v;
+			Vec2 nv;
+			nv.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y;
+			nv.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y;
+			return nv;
 		}
 
 		public static Mat2x2 Transpose(Mat2x2 m)
 		{
-			Mat2x2 nm = new Mat2x2();
+			Mat2x2 nm;
 			nm.m00 = m.m00; nm.m01 = m.m10;
 			nm.m10 = m.m01; nm.m11 = m.m11;
 			return nm;
@@ -145,7 +172,7 @@ namespace MathematicsX
 				0, scale.y);
 		}
 
-		public static Mat2x2 zero { get { return new Mat2x2(); } }
-		public static Mat2x2 identity { get { return new Mat2x2(1, 0, 0, 1); } }
+		public static readonly Mat2x2 zero = new Mat2x2();
+		public static readonly Mat2x2 identity = new Mat2x2(1, 0, 0, 1);
 	}
 }

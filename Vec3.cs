@@ -69,14 +69,14 @@ namespace MathematicsX
 
 		public Vec2 S2(string swizzle)
 		{
-			Vec2 nv = new Vec2();
+			Vec2 nv;
 			nv.x = this[swizzle[0] - 120];
 			nv.y = this[swizzle[1] - 120];
 			return nv;
 		}
 		public Vec3 S3(string swizzle)
 		{
-			Vec3 nv = new Vec3();
+			Vec3 nv;
 			nv.x = this[swizzle[0] - 120];
 			nv.y = this[swizzle[1] - 120];
 			nv.z = this[swizzle[2] - 120];
@@ -97,10 +97,9 @@ namespace MathematicsX
 		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Vec3 v)
 		{
-			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
-			bool by = Math.Abs(y - v.y) <= MathX.accuracy;
-			bool bz = Math.Abs(z - v.z) <= MathX.accuracy;
-			return bx && by && bz;
+			return Math.Abs(x - v.x) <= MathX.Tolerance
+				&& Math.Abs(y - v.y) <= MathX.Tolerance
+				&& Math.Abs(z - v.z) <= MathX.Tolerance;
 		}
 
 
@@ -138,12 +137,46 @@ namespace MathematicsX
 			double z = Math.Cos(phi);
 			return new Vec3(x, y, z);
 		}
+		
+		public static Vec3 Cross(Vec3 lhs, Vec3 rhs)
+		{
+			double x = lhs.y * rhs.z - lhs.z * rhs.y;
+			double y = lhs.z * rhs.x - lhs.x * rhs.z;
+			double z = lhs.x * rhs.y - lhs.y * rhs.x;
+			return new Vec3(x, y, z);
+		}
 
-		public static Vec3 zero { get { return new Vec3(); } }
-		public static Vec3 one { get { return new Vec3(1, 1, 1); } }
-		public static Vec3 right { get { return new Vec3(1, 0, 0); } }
-		public static Vec3 up { get { return new Vec3(0, 1, 0); } }
-		public static Vec3 forward { get { return new Vec3(0, 0, 1); } }
-		public static Vec3 NaV { get { return new Vec3(double.NaN, double.NaN, double.NaN); } }
+		public static double Mixed(Vec3 v0, Vec3 v1, Vec3 v2)
+		{
+			return v0.x * v1.y * v2.z - v0.x * v2.y * v1.z
+				 + v1.x * v2.y * v0.z - v1.x * v0.y * v2.z
+				 + v2.x * v0.y * v1.z - v2.x * v1.y * v0.z;
+		}
+
+		public static Vec3 ProjectOnPlane(Vec3 src, Vec3 norm)
+		{
+			return VecX.Project(src, Cross(Cross(norm, src), norm));
+		}
+
+		public static Vec3 Rotate(Vec3 src, double angle, Vec3 axisNorm)
+		{
+			double sx = src.x, sy = src.y, sz = src.z;
+			double x = axisNorm.x, y = axisNorm.y, z = axisNorm.z;
+			double xx = x * x, yy = y * y, zz = z * z;
+			double xy = x * y, yz = y * z, xz = x * z;
+			double cos = Math.Cos(angle);
+			double sin = Math.Sin(angle);
+			double vx = (xx + (1 - xx) * cos) * sx + (xy * (1 - cos) - z * sin) * sy + (xz * (1 - cos) + y * sin) * sz;
+			double vy = (xy * (1 - cos) + z * sin) * sx + (yy + (1 - yy) * cos) * sy + (yz * (1 - cos) - x * sin) * sz;
+			double vz = (xz * (1 - cos) - y * sin) * sx + (yz * (1 - cos) + x * sin) * sy + (zz + (1 - zz) * cos) * sz;
+			return new Vec3(vx, vy, vz);
+		}
+
+		public static readonly Vec3 zero = new Vec3();
+		public static readonly Vec3 one = new Vec3(1, 1, 1);
+		public static readonly Vec3 right = new Vec3(1, 0, 0);
+		public static readonly Vec3 up = new Vec3(0, 1, 0);
+		public static readonly Vec3 forward = new Vec3(0, 0, 1);
+		public static readonly Vec3 NaV = new Vec3(double.NaN, double.NaN, double.NaN);
 	}
 }

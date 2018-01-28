@@ -11,23 +11,19 @@ namespace MathematicsX
 		public double z;
 		public double w;
 
-		public double this[int index]
+		public unsafe double this[int index]
 		{
 			get
 			{
-				if (index == 0) return x;
-				else if (index == 1) return y;
-				else if (index == 2) return z;
-				else if (index == 3) return w;
-				else throw new Exception("The index is out of range!");
+				if (index >= 0 && index < 4)
+					fixed (double* ptr = &x) return *(ptr + index);
+				else throw new IndexOutOfRangeException();
 			}
 			set
 			{
-				if (index == 0) x = value;
-				else if (index == 1) y = value;
-				else if (index == 2) z = value;
-				else if (index == 3) w = value;
-				else throw new Exception("The index is out of range!");
+				if (index >= 0 && index < 4)
+					fixed (double* ptr = &x) *(ptr + index) = value;
+				else throw new IndexOutOfRangeException();
 			}
 		}
 
@@ -68,11 +64,10 @@ namespace MathematicsX
 		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Quat q)
 		{
-			bool bx = Math.Abs(x - q.x) <= MathX.accuracy;
-			bool by = Math.Abs(y - q.y) <= MathX.accuracy;
-			bool bz = Math.Abs(z - q.z) <= MathX.accuracy;
-			bool bw = Math.Abs(w - q.w) <= MathX.accuracy;
-			return bx && by && bz && bw;
+			return Math.Abs(x - q.x) <= MathX.Tolerance
+				&& Math.Abs(y - q.y) <= MathX.Tolerance
+				&& Math.Abs(z - q.z) <= MathX.Tolerance
+				&& Math.Abs(w - q.w) <= MathX.Tolerance;
 		}
 
 
@@ -95,7 +90,10 @@ namespace MathematicsX
 		/// <summary>
 		/// Conjugate: ~Q = (-x, -y, -z, w)
 		/// </summary>
-		public static Quat operator ~(Quat q) { return new Quat(-q.x, -q.y, -q.z, q.w); }
+		public static Quat operator ~(Quat q)
+		{
+			return new Quat(-q.x, -q.y, -q.z, q.w);
+		}
 
 		/// <summary>
 		/// Q1 * Q2 = (w1 * V2 + w2 * V1 + V1 x V2, w1 * w2 - V1 • V2)
@@ -208,9 +206,9 @@ namespace MathematicsX
 		public static Quat FromMat4x4(Mat4x4 m)
 		{
 			double w = Math.Sqrt(1 + m.m00 + m.m11 + m.m22);
-			double x = Math.Sqrt(1 + m.m00 - m.m11 - m.m22) * (w > 0 ^ m.m12 > m.m21 ? 1 : -1);
-			double y = Math.Sqrt(1 - m.m00 + m.m11 - m.m22) * (w > 0 ^ m.m20 > m.m02 ? 1 : -1);
-			double z = Math.Sqrt(1 - m.m00 - m.m11 + m.m22) * (w > 0 ^ m.m01 > m.m10 ? 1 : -1);
+			double x = Math.Sqrt(1 + m.m00 - m.m11 - m.m22) * (m.m12 <= m.m21 ? 1 : -1);
+			double y = Math.Sqrt(1 - m.m00 + m.m11 - m.m22) * (m.m20 <= m.m02 ? 1 : -1);
+			double z = Math.Sqrt(1 - m.m00 - m.m11 + m.m22) * (m.m01 <= m.m10 ? 1 : -1);
 			return new Quat(x, y, z, w) * 0.5;
 		}
 		public static Mat4x4 ToMat4x4(Quat q)
@@ -232,8 +230,8 @@ namespace MathematicsX
 			return FromAngleAxis(a, Vec3.GetRandom());
 		}
 
-		public static Quat zero { get { return new Quat(); } }
-		public static Quat identity { get { return new Quat(0, 0, 0, 1); } }
-		public static Quat NaQ { get { return new Quat(double.NaN, double.NaN, double.NaN, double.NaN); } }
+		public static readonly Quat zero = new Quat();
+		public static readonly Quat identity = new Quat(0, 0, 0, 1);
+		public static readonly Quat NaQ = new Quat(double.NaN, double.NaN, double.NaN, double.NaN);
 	}
 }

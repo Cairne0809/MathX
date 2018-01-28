@@ -6,6 +6,9 @@ namespace MathematicsX
 	[Serializable]
 	public struct Mat4x4 : IMatrix
 	{
+		public int row { get { return 4; } }
+		public int column { get { return 4; } }
+
 		public double m00;
 		public double m01;
 		public double m02;
@@ -38,7 +41,7 @@ namespace MathematicsX
 				else throw new IndexOutOfRangeException();
 			}
 		}
-		public unsafe double this[int row, int column]
+		public double this[int row, int column]
 		{
 			get { return this[4 * row + column]; }
 			set { this[4 * row + column] = value; }
@@ -68,7 +71,14 @@ namespace MathematicsX
 			this.m20 = column0.z; this.m21 = column1.z; this.m22 = column2.z; this.m23 = column3.z;
 			this.m30 = column0.w; this.m31 = column1.w; this.m32 = column2.w; this.m33 = column3.w;
 		}
-		
+		public Mat4x4(Mat4x4 m)
+		{
+			this.m00 = m.m00; this.m01 = m.m01; this.m02 = m.m02; this.m03 = m.m03;
+			this.m10 = m.m10; this.m11 = m.m11; this.m12 = m.m12; this.m13 = m.m13;
+			this.m20 = m.m20; this.m21 = m.m21; this.m22 = m.m22; this.m23 = m.m23;
+			this.m30 = m.m30; this.m31 = m.m31; this.m32 = m.m32; this.m33 = m.m33;
+		}
+
 		public string ToString(string format)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -94,6 +104,25 @@ namespace MathematicsX
 		public override string ToString() { return ToString(""); }
 		public override int GetHashCode() { return base.GetHashCode(); }
 		public override bool Equals(object obj) { return base.Equals(obj); }
+		public bool ValueEquals(Mat4x4 m)
+		{
+			return Math.Abs(m00 - m.m00) <= MathX.Tolerance
+				&& Math.Abs(m01 - m.m01) <= MathX.Tolerance
+				&& Math.Abs(m02 - m.m02) <= MathX.Tolerance
+				&& Math.Abs(m03 - m.m03) <= MathX.Tolerance
+				&& Math.Abs(m10 - m.m10) <= MathX.Tolerance
+				&& Math.Abs(m11 - m.m11) <= MathX.Tolerance
+				&& Math.Abs(m12 - m.m12) <= MathX.Tolerance
+				&& Math.Abs(m13 - m.m13) <= MathX.Tolerance
+				&& Math.Abs(m20 - m.m20) <= MathX.Tolerance
+				&& Math.Abs(m21 - m.m21) <= MathX.Tolerance
+				&& Math.Abs(m22 - m.m22) <= MathX.Tolerance
+				&& Math.Abs(m23 - m.m23) <= MathX.Tolerance
+				&& Math.Abs(m30 - m.m30) <= MathX.Tolerance
+				&& Math.Abs(m31 - m.m31) <= MathX.Tolerance
+				&& Math.Abs(m32 - m.m32) <= MathX.Tolerance
+				&& Math.Abs(m33 - m.m33) <= MathX.Tolerance;
+		}
 
 		public unsafe Vec4 GetRow(int index)
 		{
@@ -101,7 +130,7 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = 4 * index + ptr;
-					return new Vec4(*(p++), *(p++), *(p++), *(p++));
+					return new Vec4(*(p++), *(p++), *(p++), *p);
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -111,7 +140,7 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = 4 * index + ptr;
-					*(p++) = row.x; *(p++) = row.y; *(p++) = row.z; *(p++) = row.w;
+					*(p++) = row.x; *(p++) = row.y; *(p++) = row.z; *p = row.w;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -138,8 +167,8 @@ namespace MathematicsX
 		}
 
 
-		public static bool operator ==(Mat4x4 lhs, Mat4x4 rhs) { return lhs.Equals(rhs); }
-		public static bool operator !=(Mat4x4 lhs, Mat4x4 rhs) { return !lhs.Equals(rhs); }
+		public static bool operator ==(Mat4x4 lhs, Mat4x4 rhs) { return lhs.ValueEquals(rhs); }
+		public static bool operator !=(Mat4x4 lhs, Mat4x4 rhs) { return !lhs.ValueEquals(rhs); }
 
 		public static bool IsNaM(Mat4x4 m)
 		{
@@ -151,47 +180,47 @@ namespace MathematicsX
 
 		public static Mat4x4 operator *(Mat4x4 lhs, Mat4x4 rhs)
 		{
-			Mat4x4 m = new Mat4x4();
-			m.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10 + lhs.m02 * rhs.m20 + lhs.m03 * rhs.m30;
-			m.m01 = lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11 + lhs.m02 * rhs.m21 + lhs.m03 * rhs.m31;
-			m.m02 = lhs.m00 * rhs.m02 + lhs.m01 * rhs.m12 + lhs.m02 * rhs.m22 + lhs.m03 * rhs.m32;
-			m.m03 = lhs.m00 * rhs.m03 + lhs.m01 * rhs.m13 + lhs.m02 * rhs.m23 + lhs.m03 * rhs.m33;
-			m.m10 = lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10 + lhs.m12 * rhs.m20 + lhs.m13 * rhs.m30;
-			m.m11 = lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11 + lhs.m12 * rhs.m21 + lhs.m13 * rhs.m31;
-			m.m12 = lhs.m10 * rhs.m02 + lhs.m11 * rhs.m12 + lhs.m12 * rhs.m22 + lhs.m13 * rhs.m32;
-			m.m13 = lhs.m10 * rhs.m03 + lhs.m11 * rhs.m13 + lhs.m12 * rhs.m23 + lhs.m13 * rhs.m33;
-			m.m20 = lhs.m20 * rhs.m00 + lhs.m21 * rhs.m10 + lhs.m22 * rhs.m20 + lhs.m23 * rhs.m30;
-			m.m21 = lhs.m20 * rhs.m01 + lhs.m21 * rhs.m11 + lhs.m22 * rhs.m21 + lhs.m23 * rhs.m31;
-			m.m22 = lhs.m20 * rhs.m02 + lhs.m21 * rhs.m12 + lhs.m22 * rhs.m22 + lhs.m23 * rhs.m32;
-			m.m23 = lhs.m20 * rhs.m03 + lhs.m21 * rhs.m13 + lhs.m22 * rhs.m23 + lhs.m23 * rhs.m33;
-			m.m30 = lhs.m30 * rhs.m00 + lhs.m31 * rhs.m10 + lhs.m32 * rhs.m20 + lhs.m33 * rhs.m30;
-			m.m31 = lhs.m30 * rhs.m01 + lhs.m31 * rhs.m11 + lhs.m32 * rhs.m21 + lhs.m33 * rhs.m31;
-			m.m32 = lhs.m30 * rhs.m02 + lhs.m31 * rhs.m12 + lhs.m32 * rhs.m22 + lhs.m33 * rhs.m32;
-			m.m33 = lhs.m30 * rhs.m03 + lhs.m31 * rhs.m13 + lhs.m32 * rhs.m23 + lhs.m33 * rhs.m33;
-			return m;
+			Mat4x4 nm;
+			nm.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10 + lhs.m02 * rhs.m20 + lhs.m03 * rhs.m30;
+			nm.m01 = lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11 + lhs.m02 * rhs.m21 + lhs.m03 * rhs.m31;
+			nm.m02 = lhs.m00 * rhs.m02 + lhs.m01 * rhs.m12 + lhs.m02 * rhs.m22 + lhs.m03 * rhs.m32;
+			nm.m03 = lhs.m00 * rhs.m03 + lhs.m01 * rhs.m13 + lhs.m02 * rhs.m23 + lhs.m03 * rhs.m33;
+			nm.m10 = lhs.m10 * rhs.m00 + lhs.m11 * rhs.m10 + lhs.m12 * rhs.m20 + lhs.m13 * rhs.m30;
+			nm.m11 = lhs.m10 * rhs.m01 + lhs.m11 * rhs.m11 + lhs.m12 * rhs.m21 + lhs.m13 * rhs.m31;
+			nm.m12 = lhs.m10 * rhs.m02 + lhs.m11 * rhs.m12 + lhs.m12 * rhs.m22 + lhs.m13 * rhs.m32;
+			nm.m13 = lhs.m10 * rhs.m03 + lhs.m11 * rhs.m13 + lhs.m12 * rhs.m23 + lhs.m13 * rhs.m33;
+			nm.m20 = lhs.m20 * rhs.m00 + lhs.m21 * rhs.m10 + lhs.m22 * rhs.m20 + lhs.m23 * rhs.m30;
+			nm.m21 = lhs.m20 * rhs.m01 + lhs.m21 * rhs.m11 + lhs.m22 * rhs.m21 + lhs.m23 * rhs.m31;
+			nm.m22 = lhs.m20 * rhs.m02 + lhs.m21 * rhs.m12 + lhs.m22 * rhs.m22 + lhs.m23 * rhs.m32;
+			nm.m23 = lhs.m20 * rhs.m03 + lhs.m21 * rhs.m13 + lhs.m22 * rhs.m23 + lhs.m23 * rhs.m33;
+			nm.m30 = lhs.m30 * rhs.m00 + lhs.m31 * rhs.m10 + lhs.m32 * rhs.m20 + lhs.m33 * rhs.m30;
+			nm.m31 = lhs.m30 * rhs.m01 + lhs.m31 * rhs.m11 + lhs.m32 * rhs.m21 + lhs.m33 * rhs.m31;
+			nm.m32 = lhs.m30 * rhs.m02 + lhs.m31 * rhs.m12 + lhs.m32 * rhs.m22 + lhs.m33 * rhs.m32;
+			nm.m33 = lhs.m30 * rhs.m03 + lhs.m31 * rhs.m13 + lhs.m32 * rhs.m23 + lhs.m33 * rhs.m33;
+			return nm;
 		}
 
 		public static Vec4 operator *(Mat4x4 lhs, Vec4 rhs)
 		{
-			Vec4 v = new Vec4();
-			v.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02 * rhs.z + lhs.m03 * rhs.w;
-			v.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12 * rhs.z + lhs.m13 * rhs.w;
-			v.z = lhs.m20 * rhs.x + lhs.m21 * rhs.y + lhs.m22 * rhs.z + lhs.m23 * rhs.w;
-			v.w = lhs.m30 * rhs.x + lhs.m31 * rhs.y + lhs.m32 * rhs.z + lhs.m33 * rhs.w;
-			return v;
+			Vec4 nv;
+			nv.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02 * rhs.z + lhs.m03 * rhs.w;
+			nv.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12 * rhs.z + lhs.m13 * rhs.w;
+			nv.z = lhs.m20 * rhs.x + lhs.m21 * rhs.y + lhs.m22 * rhs.z + lhs.m23 * rhs.w;
+			nv.w = lhs.m30 * rhs.x + lhs.m31 * rhs.y + lhs.m32 * rhs.z + lhs.m33 * rhs.w;
+			return nv;
 		}
 		public static Vec3 operator *(Mat4x4 lhs, Vec3 rhs)
 		{
-			Vec3 v = new Vec3();
-			v.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02 * rhs.z + lhs.m03;
-			v.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12 * rhs.z + lhs.m13;
-			v.z = lhs.m20 * rhs.x + lhs.m21 * rhs.y + lhs.m22 * rhs.z + lhs.m23;
-			return v;
+			Vec3 nv;
+			nv.x = lhs.m00 * rhs.x + lhs.m01 * rhs.y + lhs.m02 * rhs.z + lhs.m03;
+			nv.y = lhs.m10 * rhs.x + lhs.m11 * rhs.y + lhs.m12 * rhs.z + lhs.m13;
+			nv.z = lhs.m20 * rhs.x + lhs.m21 * rhs.y + lhs.m22 * rhs.z + lhs.m23;
+			return nv;
 		}
 
 		public static Mat4x4 Transpose(Mat4x4 m)
 		{
-			Mat4x4 nm = new Mat4x4();
+			Mat4x4 nm;
 			nm.m00 = m.m00; nm.m01 = m.m10; nm.m02 = m.m20; nm.m03 = m.m30;
 			nm.m10 = m.m01; nm.m11 = m.m11; nm.m12 = m.m21; nm.m13 = m.m31;
 			nm.m20 = m.m02; nm.m21 = m.m12; nm.m22 = m.m22; nm.m23 = m.m32;
@@ -201,12 +230,18 @@ namespace MathematicsX
 
 		public static double Determinant(Mat4x4 m)
 		{
-			return m.m00 * m.m11 * m.m22 * m.m33 - m.m00 * m.m13 * m.m22 * m.m31 + m.m01 * m.m10 * m.m23 * m.m32 - m.m01 * m.m12 * m.m23 * m.m30
-				 + m.m02 * m.m13 * m.m20 * m.m31 - m.m02 * m.m11 * m.m20 * m.m33 + m.m03 * m.m12 * m.m21 * m.m30 - m.m03 * m.m10 * m.m21 * m.m32
-				 + m.m00 * m.m12 * m.m23 * m.m31 - m.m00 * m.m11 * m.m23 * m.m32 + m.m02 * m.m10 * m.m21 * m.m33 - m.m02 * m.m13 * m.m21 * m.m30
-				 + m.m03 * m.m11 * m.m20 * m.m32 - m.m03 * m.m12 * m.m20 * m.m31 + m.m01 * m.m13 * m.m22 * m.m30 - m.m01 * m.m10 * m.m22 * m.m33
-				 + m.m00 * m.m13 * m.m21 * m.m32 - m.m00 * m.m12 * m.m21 * m.m33 + m.m03 * m.m10 * m.m22 * m.m31 - m.m03 * m.m11 * m.m22 * m.m30
-				 + m.m01 * m.m12 * m.m20 * m.m33 - m.m01 * m.m13 * m.m20 * m.m32 + m.m02 * m.m11 * m.m23 * m.m30 - m.m02 * m.m10 * m.m23 * m.m31;
+			return m.m00 * m.m11 * m.m22 * m.m33 - m.m00 * m.m13 * m.m22 * m.m31
+				 + m.m01 * m.m10 * m.m23 * m.m32 - m.m01 * m.m12 * m.m23 * m.m30
+				 + m.m02 * m.m13 * m.m20 * m.m31 - m.m02 * m.m11 * m.m20 * m.m33
+				 + m.m03 * m.m12 * m.m21 * m.m30 - m.m03 * m.m10 * m.m21 * m.m32
+				 + m.m00 * m.m12 * m.m23 * m.m31 - m.m00 * m.m11 * m.m23 * m.m32
+				 + m.m02 * m.m10 * m.m21 * m.m33 - m.m02 * m.m13 * m.m21 * m.m30
+				 + m.m03 * m.m11 * m.m20 * m.m32 - m.m03 * m.m12 * m.m20 * m.m31
+				 + m.m01 * m.m13 * m.m22 * m.m30 - m.m01 * m.m10 * m.m22 * m.m33
+				 + m.m00 * m.m13 * m.m21 * m.m32 - m.m00 * m.m12 * m.m21 * m.m33
+				 + m.m03 * m.m10 * m.m22 * m.m31 - m.m03 * m.m11 * m.m22 * m.m30
+				 + m.m01 * m.m12 * m.m20 * m.m33 - m.m01 * m.m13 * m.m20 * m.m32
+				 + m.m02 * m.m11 * m.m23 * m.m30 - m.m02 * m.m10 * m.m23 * m.m31;
 		}
 
 		public static Mat4x4 Translate(Vec3 delta)
@@ -254,16 +289,16 @@ namespace MathematicsX
 		/// </summary>
 		public static Mat4x4 Rotate(Vec3 euler)
 		{
-			double cosz = Math.Cos(euler.z);
-			double sinz = Math.Sin(euler.z);
-			double cosx = Math.Cos(euler.x);
-			double sinx = Math.Sin(euler.x);
-			double cosy = Math.Cos(euler.y);
-			double siny = Math.Sin(euler.y);
+			double cz = Math.Cos(euler.z);
+			double sz = Math.Sin(euler.z);
+			double cx = Math.Cos(euler.x);
+			double sx = Math.Sin(euler.x);
+			double cy = Math.Cos(euler.y);
+			double sy = Math.Sin(euler.y);
 			return new Mat4x4(
-				cosy * cosz + sinx * siny * sinz,  -cosy * sinz + sinx * siny * cosz, cosx * siny, 0,
-				cosx * sinz,                       cosx * cosz,                       -sinx,       0,
-				-siny * cosz + sinx * cosy * sinz, siny * sinz + sinx * cosy * cosz,  cosx * cosy, 0,
+				cy * cz + sx * sy * sz,  -cy * sz + sx * sy * cz, cx * sy, 0,
+				cx * sz,                 cx * cz,                 -sx,     0,
+				-sy * cz + sx * cy * sz, sy * sz + sx * cy * cz,  cx * cy, 0,
 				0, 0, 0, 1);
 		}
 		public static Mat4x4 Rotate(double angle, Vec3 axisNorm)
@@ -302,7 +337,7 @@ namespace MathematicsX
 			return Translate(delta) * Quat.ToMat4x4(rotation) * Scale(scale);
 		}
 
-		public static Mat4x4 zero { get { return new Mat4x4(); } }
-		public static Mat4x4 identity { get { return new Mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } }
+		public static readonly Mat4x4 zero = new Mat4x4();
+		public static readonly Mat4x4 identity = new Mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	}
 }

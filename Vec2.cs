@@ -18,16 +18,22 @@ namespace MathematicsX
 		{
 			get
 			{
-				if (index == 0) return x;
-				else if (index == 1) return y;
-				else throw new IndexOutOfRangeException();
+				switch (index)
+				{
+					case 0: return x;
+					case 1: return y;
+					default: throw new IndexOutOfRangeException();
+				}
 			}
 			set
 			{
-				if (index == 0) x = value;
-				else if (index == 1) y = value;
-				else throw new IndexOutOfRangeException();
-            }
+				switch (index)
+				{
+					case 0: x = value; break;
+					case 1: y = value; break;
+					default: throw new IndexOutOfRangeException();
+				}
+			}
 		}
 		
 		public Vec2(double x, double y)
@@ -35,15 +41,15 @@ namespace MathematicsX
 			this.x = x;
 			this.y = y;
 		}
-		public Vec2(Vec2 v)
+		public Vec2(Vec2 xy)
 		{
-			this.x = v.x;
-			this.y = v.y;
+			this.x = xy.x;
+			this.y = xy.y;
 		}
 
 		public Vec2 S2(string swizzle)
 		{
-			Vec2 nv = new Vec2();
+			Vec2 nv;
 			nv.x = this[swizzle[0] - 120];
 			nv.y = this[swizzle[1] - 120];
 			return nv;
@@ -62,9 +68,8 @@ namespace MathematicsX
 		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Vec2 v)
 		{
-			bool bx = Math.Abs(x - v.x) <= MathX.accuracy;
-			bool by = Math.Abs(y - v.y) <= MathX.accuracy;
-			return bx && by;
+			return Math.Abs(x - v.x) <= MathX.Tolerance
+				&& Math.Abs(y - v.y) <= MathX.Tolerance;
 		}
 
 
@@ -91,7 +96,7 @@ namespace MathematicsX
 		public static Vec2 operator /(double lhs, Vec2 rhs) { return new Vec2(lhs / rhs.x, lhs / rhs.y); }
 		public static Vec2 operator /(Vec2 lhs, double rhs) { return new Vec2(lhs.x / rhs, lhs.y / rhs); }
 		public static Vec2 operator /(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x / rhs.x, lhs.y / rhs.y); }
-
+		
 		public static Vec2 GetRandom()
 		{
 			double theta = MathX.DoublePI * MathX.GetRandom();
@@ -100,10 +105,29 @@ namespace MathematicsX
 			return new Vec2(x, y);
 		}
 
-		public static Vec2 zero { get { return new Vec2(); } }
-		public static Vec2 one { get { return new Vec2(1, 1); } }
-		public static Vec2 right { get { return new Vec2(1, 0); } }
-		public static Vec2 up { get { return new Vec2(0, 1); } }
-		public static Vec2 NaV { get { return new Vec2(double.NaN, double.NaN); } }
+		public static double Cross(Vec2 lhs, Vec2 rhs)
+		{
+			return lhs.x * rhs.y - lhs.y * rhs.x;
+		}
+
+		public static Vec2 Skew(Vec2 v)
+		{
+			return new Vec2(-v.y, v.x);
+		}
+
+		public static Vec2 Rotate(Vec2 src, double angle)
+		{
+			double cos = Math.Cos(angle);
+			double sin = Math.Sin(angle);
+			double vx = cos * src.x - sin * src.y;
+			double vy = sin * src.x + cos * src.y;
+			return new Vec2(vx, vy);
+		}
+
+		public static readonly Vec2 zero = new Vec2();
+		public static readonly Vec2 one = new Vec2(1, 1);
+		public static readonly Vec2 right = new Vec2(1, 0);
+		public static readonly Vec2 up = new Vec2(0, 1);
+		public static readonly Vec2 NaV = new Vec2(double.NaN, double.NaN);
 	}
 }
