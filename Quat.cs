@@ -4,8 +4,10 @@ using System.Text;
 namespace MathematicsX
 {
 	[Serializable]
-	public struct Quat
+	public struct Quat : IVector
 	{
+		public int dimension { get { return 4; } }
+
 		public double x;
 		public double y;
 		public double z;
@@ -64,10 +66,27 @@ namespace MathematicsX
 		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Quat q)
 		{
-			return Math.Abs(x - q.x) <= MathX.Tolerance
-				&& Math.Abs(y - q.y) <= MathX.Tolerance
-				&& Math.Abs(z - q.z) <= MathX.Tolerance
-				&& Math.Abs(w - q.w) <= MathX.Tolerance;
+			double pt = MathX.Tolerance;
+			double nt = -pt;
+			double dx, dy, dz, dw;
+			if (w > 0 ^ q.w > 0)
+			{
+				dx = x + q.x;
+				dy = y + q.y;
+				dz = z + q.z;
+				dw = w + q.w;
+			}
+			else
+			{
+				dx = x - q.x;
+				dy = y - q.y;
+				dz = z - q.z;
+				dw = w - q.w;
+			}
+			return dx <= pt && dx >= nt
+				&& dy <= pt && dy >= nt
+				&& dz <= pt && dz >= nt
+				&& dw <= pt && dw >= nt;
 		}
 
 
@@ -76,16 +95,6 @@ namespace MathematicsX
 
 		public static bool operator ==(Quat lhs, Quat rhs) { return lhs.ValueEquals(rhs); }
 		public static bool operator !=(Quat lhs, Quat rhs) { return !lhs.ValueEquals(rhs); }
-
-		public static bool IsNaQ(Quat q) { return double.IsNaN(q.x) || double.IsNaN(q.y) || double.IsNaN(q.z) || double.IsNaN(q.w); }
-
-		public static Quat operator -(Quat q) { return new Quat(-q.x, -q.y, -q.z, -q.w); }
-		public static Quat operator +(Quat lhs, Quat rhs) { return new Quat(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
-		public static Quat operator -(Quat lhs, Quat rhs) { return new Quat(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
-		public static Quat operator *(double lhs, Quat rhs) { return new Quat(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w); }
-		public static Quat operator *(Quat lhs, double rhs) { return new Quat(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
-		public static Quat operator /(double lhs, Quat rhs) { return new Quat(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w); }
-		public static Quat operator /(Quat lhs, double rhs) { return new Quat(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
 
 		/// <summary>
 		/// Conjugate: ~Q = (-x, -y, -z, w)
@@ -125,33 +134,19 @@ namespace MathematicsX
 			double vz = nw * z1 - nx * y1 + ny * x1 + nz * w1;
 			return new Vec3(vx, vy, vz);
 		}
-
-		public static double SqrLength(Quat q) { return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w; }
-		public static double Length(Quat q) { return Math.Sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w); }
-
-		public static Quat Normalize(Quat q)
-		{
-			double len = SqrLength(q);
-			if (len > 0 && len != 1) return q / Math.Sqrt(len);
-			return new Quat(q);
-		}
-
-		public static double Dot(Quat lhs, Quat rhs)
-		{
-			return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
-		}
-
-		public static double Angle(Quat lhs, Quat rhs)
-		{
-			double cos = Dot(lhs, rhs);
-			return Math.Acos(cos < -1 ? -1 : cos > 1 ? 1 : cos);
-		}
-
+		
 		public static Quat Slerp(Quat a, Quat b, double t)
 		{
-			double theta = Angle(a, b);
+			double dot = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+			double theta = Math.Acos(dot < -1 ? -1 : dot > 1 ? 1 : dot);
 			double sin = Math.Sin(theta);
-			return Math.Sin((1 - t) * theta) / sin * a + Math.Sin(t * theta) / sin * b;
+			double aMul = Math.Sin((1 - t) * theta) / sin;
+			double bMul = Math.Sin(t * theta) / sin;
+			return new Quat(
+				aMul * a.x + bMul * b.x,
+				aMul * a.y + bMul * b.y,
+				aMul * a.z + bMul * b.z,
+				aMul * a.w + bMul * b.w);
 		}
 
 		public static Quat FromEuler(double x, double y, double z)
@@ -205,11 +200,11 @@ namespace MathematicsX
 
 		public static Quat FromMat4x4(Mat4x4 m)
 		{
-			double w = Math.Sqrt(1 + m.m00 + m.m11 + m.m22);
-			double x = Math.Sqrt(1 + m.m00 - m.m11 - m.m22) * (m.m12 <= m.m21 ? 1 : -1);
-			double y = Math.Sqrt(1 - m.m00 + m.m11 - m.m22) * (m.m20 <= m.m02 ? 1 : -1);
-			double z = Math.Sqrt(1 - m.m00 - m.m11 + m.m22) * (m.m01 <= m.m10 ? 1 : -1);
-			return new Quat(x, y, z, w) * 0.5;
+			double w = 0.5 * Math.Sqrt(1 + m.m00 + m.m11 + m.m22);
+			double x = 0.5 * Math.Sqrt(1 + m.m00 - m.m11 - m.m22) * (m.m12 <= m.m21 ? 1 : -1);
+			double y = 0.5 * Math.Sqrt(1 - m.m00 + m.m11 - m.m22) * (m.m20 <= m.m02 ? 1 : -1);
+			double z = 0.5 * Math.Sqrt(1 - m.m00 - m.m11 + m.m22) * (m.m01 <= m.m10 ? 1 : -1);
+			return new Quat(x, y, z, w);
 		}
 		public static Mat4x4 ToMat4x4(Quat q)
 		{

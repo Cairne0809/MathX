@@ -102,27 +102,6 @@ namespace MathematicsX
 			return sb.ToString();
 		}
 		public override string ToString() { return ToString(""); }
-		public override int GetHashCode() { return base.GetHashCode(); }
-		public override bool Equals(object obj) { return base.Equals(obj); }
-		public bool ValueEquals(Mat4x4 m)
-		{
-			return Math.Abs(m00 - m.m00) <= MathX.Tolerance
-				&& Math.Abs(m01 - m.m01) <= MathX.Tolerance
-				&& Math.Abs(m02 - m.m02) <= MathX.Tolerance
-				&& Math.Abs(m03 - m.m03) <= MathX.Tolerance
-				&& Math.Abs(m10 - m.m10) <= MathX.Tolerance
-				&& Math.Abs(m11 - m.m11) <= MathX.Tolerance
-				&& Math.Abs(m12 - m.m12) <= MathX.Tolerance
-				&& Math.Abs(m13 - m.m13) <= MathX.Tolerance
-				&& Math.Abs(m20 - m.m20) <= MathX.Tolerance
-				&& Math.Abs(m21 - m.m21) <= MathX.Tolerance
-				&& Math.Abs(m22 - m.m22) <= MathX.Tolerance
-				&& Math.Abs(m23 - m.m23) <= MathX.Tolerance
-				&& Math.Abs(m30 - m.m30) <= MathX.Tolerance
-				&& Math.Abs(m31 - m.m31) <= MathX.Tolerance
-				&& Math.Abs(m32 - m.m32) <= MathX.Tolerance
-				&& Math.Abs(m33 - m.m33) <= MathX.Tolerance;
-		}
 
 		public unsafe Vec4 GetRow(int index)
 		{
@@ -166,10 +145,7 @@ namespace MathematicsX
 			else throw new IndexOutOfRangeException();
 		}
 
-
-		public static bool operator ==(Mat4x4 lhs, Mat4x4 rhs) { return lhs.ValueEquals(rhs); }
-		public static bool operator !=(Mat4x4 lhs, Mat4x4 rhs) { return !lhs.ValueEquals(rhs); }
-
+		
 		public static bool IsNaM(Mat4x4 m)
 		{
 			return double.IsNaN(m.m00) || double.IsNaN(m.m01) || double.IsNaN(m.m02) || double.IsNaN(m.m03)

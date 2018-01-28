@@ -67,15 +67,6 @@ namespace MathematicsX
 			return sb.ToString();
 		}
 		public override string ToString() { return ToString(""); }
-		public override int GetHashCode() { return base.GetHashCode(); }
-		public override bool Equals(object obj) { return base.Equals(obj); }
-		public bool ValueEquals(Mat2x2 m)
-		{
-			return Math.Abs(m00 - m.m00) <= MathX.Tolerance
-				&& Math.Abs(m01 - m.m01) <= MathX.Tolerance
-				&& Math.Abs(m10 - m.m10) <= MathX.Tolerance
-				&& Math.Abs(m11 - m.m11) <= MathX.Tolerance;
-		}
 
 		public Vec2 GetRow(int index)
 		{
@@ -115,10 +106,7 @@ namespace MathematicsX
 			}
 		}
 
-
-		public static bool operator ==(Mat2x2 lhs, Mat2x2 rhs) { return lhs.ValueEquals(rhs); }
-		public static bool operator !=(Mat2x2 lhs, Mat2x2 rhs) { return !lhs.ValueEquals(rhs); }
-
+		
 		public static bool IsNaM(Mat2x2 m)
 		{
 			return double.IsNaN(m.m00) || double.IsNaN(m.m01)

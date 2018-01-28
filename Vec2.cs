@@ -68,8 +68,12 @@ namespace MathematicsX
 		public override bool Equals(object obj) { return base.Equals(obj); }
 		public bool ValueEquals(Vec2 v)
 		{
-			return Math.Abs(x - v.x) <= MathX.Tolerance
-				&& Math.Abs(y - v.y) <= MathX.Tolerance;
+			double pt = MathX.Tolerance;
+			double nt = -pt;
+			double dx = x - v.x;
+			double dy = y - v.y;
+			return dx <= pt && dx >= nt
+				&& dy <= pt && dy >= nt;
 		}
 
 

@@ -56,6 +56,8 @@ namespace MathematicsX
 			for (int i = 0; i < dim; i++)
 				result[i] = lhs[i] - rhs[i];
 		}
+		public static T Sub<T>(double lhs, T rhs) where T : struct, IVector
+		{ T nv = new T(); Sub(lhs, rhs, ref nv); return nv; }
 		public static T Sub<T>(T lhs, double rhs) where T : struct, IVector
 		{ T nv = new T(); Sub(lhs, rhs, ref nv); return nv; }
 		public static T Sub<T>(T lhs, T rhs) where T : struct, IVector
@@ -96,6 +98,8 @@ namespace MathematicsX
 			for (int i = 0; i < dim; i++)
 				result[i] = lhs[i] / rhs[i];
 		}
+		public static T Div<T>(double lhs, T rhs) where T : struct, IVector
+		{ T nv = new T(); Div(lhs, rhs, ref nv); return nv; }
 		public static T Div<T>(T lhs, double rhs) where T : struct, IVector
 		{ T nv = new T(); Div(lhs, rhs, ref nv); return nv; }
 		public static T Div<T>(T lhs, T rhs) where T : struct, IVector
