@@ -8,22 +8,6 @@ namespace MathematicsX
 		public double x;
 		public double y;
 
-		public double this[int index]
-		{
-			get
-			{
-				if (index == 0) return x;
-				else if (index == 1) return y;
-				else throw new IndexOutOfRangeException();
-			}
-			set
-			{
-				if (index == 0) x = value;
-				else if (index == 1) y = value;
-				else throw new IndexOutOfRangeException();
-			}
-		}
-
 		public Cplx(double x, double y)
 		{
 			this.x = x;
@@ -141,9 +125,19 @@ namespace MathematicsX
 			c.y = Math.Sin(theta) * rho;
 			return c;
 		}
+
+		public static Cplx GetRandom()
+		{
+			double theta = MathX.DoublePI * MathX.GetRandom();
+			Cplx nc;
+			nc.x = Math.Sin(theta);
+			nc.y = Math.Cos(theta);
+			return nc;
+		}
 		
 		public static readonly Cplx zero = new Cplx();
 		public static readonly Cplx i = new Cplx(0, 1);
+		public static readonly Cplx NaC = new Cplx(double.NaN, double.NaN);
 
 	}
 }

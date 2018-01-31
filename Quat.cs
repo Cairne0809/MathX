@@ -11,22 +11,6 @@ namespace MathematicsX
 		public double z;
 		public double w;
 
-		public unsafe double this[int index]
-		{
-			get
-			{
-				if (index >= 0 && index < 4)
-					fixed (double* ptr = &x) return *(ptr + index);
-				else throw new IndexOutOfRangeException();
-			}
-			set
-			{
-				if (index >= 0 && index < 4)
-					fixed (double* ptr = &x) *(ptr + index) = value;
-				else throw new IndexOutOfRangeException();
-			}
-		}
-
 		public Quat(double x, double y, double z, double w)
 		{
 			this.x = x;
