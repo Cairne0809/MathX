@@ -4,10 +4,8 @@ using System.Text;
 namespace MathematicsX
 {
 	[Serializable]
-	public struct Quat : IVector
+	public struct Quat
 	{
-		public int dimension { get { return 4; } }
-
 		public double x;
 		public double y;
 		public double z;
@@ -101,7 +99,10 @@ namespace MathematicsX
 		/// </summary>
 		public static Quat operator ~(Quat q)
 		{
-			return new Quat(-q.x, -q.y, -q.z, q.w);
+			q.x = -q.x;
+			q.y = -q.y;
+			q.z = -q.z;
+			return q;
 		}
 
 		/// <summary>
@@ -111,11 +112,12 @@ namespace MathematicsX
 		{
 			double x1 = lhs.x, y1 = lhs.y, z1 = lhs.z, w1 = lhs.w;
 			double x2 = rhs.x, y2 = rhs.y, z2 = rhs.z, w2 = rhs.w;
-			double x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2;
-			double y = w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2;
-			double z = w1 * z2 + z1 * w2 - y1 * x2 + x1 * y2;
-			double w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2;
-			return new Quat(x, y, z, w);
+			Quat nq;
+			nq.x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2;
+			nq.y = w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2;
+			nq.z = w1 * z2 + z1 * w2 - y1 * x2 + x1 * y2;
+			nq.w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2;
+			return nq;
 		}
 
 		/// <summary>
@@ -129,10 +131,11 @@ namespace MathematicsX
 			double ny = w1 * y2 - x1 * z2 + z1 * x2;
 			double nz = w1 * z2 + x1 * y2 - y1 * x2;
 			double nw = x1 * x2 + y1 * y2 + z1 * z2;
-			double vx = nw * x1 + nx * w1 - ny * z1 + nz * y1;
-			double vy = nw * y1 + nx * z1 + ny * w1 - nz * x1;
-			double vz = nw * z1 - nx * y1 + ny * x1 + nz * w1;
-			return new Vec3(vx, vy, vz);
+			Vec3 nv;
+			nv.x = nw * x1 + nx * w1 - ny * z1 + nz * y1;
+			nv.y = nw * y1 + nx * z1 + ny * w1 - nz * x1;
+			nv.z = nw * z1 - nx * y1 + ny * x1 + nz * w1;
+			return nv;
 		}
 		
 		public static Quat Slerp(Quat a, Quat b, double t)
@@ -140,31 +143,33 @@ namespace MathematicsX
 			double dot = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 			double theta = Math.Acos(dot < -1 ? -1 : dot > 1 ? 1 : dot);
 			double sin = Math.Sin(theta);
-			double aMul = Math.Sin((1 - t) * theta) / sin;
-			double bMul = Math.Sin(t * theta) / sin;
-			return new Quat(
-				aMul * a.x + bMul * b.x,
-				aMul * a.y + bMul * b.y,
-				aMul * a.z + bMul * b.z,
-				aMul * a.w + bMul * b.w);
+			double am = Math.Sin((1 - t) * theta) / sin;
+			double bm = Math.Sin(t * theta) / sin;
+			Quat nq;
+			nq.x = am * a.x + bm * b.x;
+			nq.y = am * a.y + bm * b.y;
+			nq.z = am * a.z + bm * b.z;
+			nq.w = am * a.w + bm * b.w;
+			return nq;
 		}
 
 		public static Quat FromEuler(double x, double y, double z)
 		{
-			double hx = x * 0.5;
-			double hy = y * 0.5;
-			double hz = z * 0.5;
-			double c1 = Math.Cos(hx);
-			double c2 = Math.Cos(hy);
-			double c3 = Math.Cos(hz);
-			double s1 = Math.Sin(hx);
-			double s2 = Math.Sin(hy);
-			double s3 = Math.Sin(hz);
-			double qx = s1 * c2 * c3 + c1 * s2 * s3;
-			double qy = c1 * s2 * c3 + s1 * c2 * s3;
-			double qz = c1 * c2 * s3 - s1 * s2 * c3;
-			double qw = c1 * c2 * c3 - s1 * s2 * s3;
-			return new Quat(qx, qy, qz, qw);
+			x *= 0.5;
+			y *= 0.5;
+			z *= 0.5;
+			double c1 = Math.Cos(x);
+			double c2 = Math.Cos(y);
+			double c3 = Math.Cos(z);
+			double s1 = Math.Sin(x);
+			double s2 = Math.Sin(y);
+			double s3 = Math.Sin(z);
+			Quat nq;
+			nq.x = s1 * c2 * c3 + c1 * s2 * s3;
+			nq.y = c1 * s2 * c3 + s1 * c2 * s3;
+			nq.z = c1 * c2 * s3 - s1 * s2 * c3;
+			nq.w = c1 * c2 * c3 - s1 * s2 * s3;
+			return nq;
 		}
 		public static Quat FromEuler(Vec3 v)
 		{
@@ -172,11 +177,12 @@ namespace MathematicsX
 		}
 		public static Vec3 ToEuler(double x, double y, double z, double w)
 		{
-			double vx = Math.Atan2(2 * (x * w - y * z), 1 - 2 * (x * x + z * z));
-			double vy = Math.Atan2(2 * (y * w - x * z), 1 - 2 * (y * y + z * z));
-			double sin = 2.0 * (x * y + z * w);
-			double vz = Math.Asin(sin > 1 ? 1 : sin < -1 ? -1 : sin);
-			return new Vec3(vx, vy, vz);
+			Vec3 nv;
+			nv.x = Math.Atan2(2 * (x * w - y * z), 1 - 2 * (x * x + z * z));
+			nv.y = Math.Atan2(2 * (y * w - x * z), 1 - 2 * (y * y + z * z));
+			nv.z = 2 * (x * y + z * w);
+			nv.z = Math.Asin(nv.z > 1 ? 1 : nv.z < -1 ? -1 : nv.z);
+			return nv;
 		}
 		public static Vec3 ToEuler(Quat q)
 		{
@@ -186,25 +192,32 @@ namespace MathematicsX
 		public static Quat FromAngleAxis(double angle, Vec3 axisNorm)
 		{
 			angle *= 0.5;
-			Vec3 qv = Math.Sin(angle) * axisNorm;
-			double qw = Math.Cos(angle);
-			return new Quat(qv, qw);
+			double sin = Math.Sin(angle);
+			Quat nq;
+			nq.x = sin * axisNorm.x;
+			nq.y = sin * axisNorm.y;
+			nq.z = sin * axisNorm.z;
+			nq.w = Math.Cos(angle);
+			return nq;
 		}
 		public static void ToAngleAxis(Quat q, out double angle, out Vec3 axisNorm)
 		{
 			double ha = Math.Acos(q.w);
 			double sin = Math.Sin(ha);
 			angle = ha + ha;
-			axisNorm = new Vec3(q.x, q.y, q.z) / sin;
+			axisNorm.x = q.x / sin;
+			axisNorm.y = q.y / sin;
+			axisNorm.z = q.z / sin;
 		}
 
 		public static Quat FromMat4x4(Mat4x4 m)
 		{
-			double w = 0.5 * Math.Sqrt(1 + m.m00 + m.m11 + m.m22);
-			double x = 0.5 * Math.Sqrt(1 + m.m00 - m.m11 - m.m22) * (m.m12 <= m.m21 ? 1 : -1);
-			double y = 0.5 * Math.Sqrt(1 - m.m00 + m.m11 - m.m22) * (m.m20 <= m.m02 ? 1 : -1);
-			double z = 0.5 * Math.Sqrt(1 - m.m00 - m.m11 + m.m22) * (m.m01 <= m.m10 ? 1 : -1);
-			return new Quat(x, y, z, w);
+			Quat nq;
+			nq.w = Math.Sqrt(1 + m.m00 + m.m11 + m.m22) * 0.5;
+			nq.x = Math.Sqrt(1 + m.m00 - m.m11 - m.m22) * (m.m12 <= m.m21 ? 0.5 : -0.5);
+			nq.y = Math.Sqrt(1 - m.m00 + m.m11 - m.m22) * (m.m20 <= m.m02 ? 0.5 : -0.5);
+			nq.z = Math.Sqrt(1 - m.m00 - m.m11 + m.m22) * (m.m01 <= m.m10 ? 0.5 : -0.5);
+			return nq;
 		}
 		public static Mat4x4 ToMat4x4(Quat q)
 		{

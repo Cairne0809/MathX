@@ -4,7 +4,9 @@ namespace MathematicsX
 {
 	public static class MathX
 	{
+		public const string ToleranceFormat = "F14";
 		public const double Tolerance = 1e-14;
+		public const double E = Math.E;
 		public const double PI = Math.PI;
 		public const double DoublePI = 2 * PI;
 		public const double HalfPI = 0.5 * PI;

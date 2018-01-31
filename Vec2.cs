@@ -18,21 +18,15 @@ namespace MathematicsX
 		{
 			get
 			{
-				switch (index)
-				{
-					case 0: return x;
-					case 1: return y;
-					default: throw new IndexOutOfRangeException();
-				}
+				if (index == 0) return x;
+				else if (index == 1) return y;
+				else throw new IndexOutOfRangeException();
 			}
 			set
 			{
-				switch (index)
-				{
-					case 0: x = value; break;
-					case 1: y = value; break;
-					default: throw new IndexOutOfRangeException();
-				}
+				if (index == 0) x = value;
+				else if (index == 1) y = value;
+				else throw new IndexOutOfRangeException();
 			}
 		}
 		
@@ -77,36 +71,103 @@ namespace MathematicsX
 		}
 
 
+		public static explicit operator Vec2(Cplx c) { return new Vec2(c.x, c.y); }
 		public static explicit operator Vec2(Vec3 v) { return new Vec2(v.x, v.y); }
 		public static explicit operator Vec2(Vec4 v) { return new Vec2(v.x, v.y); }
 
 		public static bool operator ==(Vec2 lhs, Vec2 rhs) { return lhs.ValueEquals(rhs); }
 		public static bool operator !=(Vec2 lhs, Vec2 rhs) { return !lhs.ValueEquals(rhs); }
 
-		public static Vec2 operator -(Vec2 v) { return new Vec2(-v.x, -v.y); }
+		public static Vec2 operator -(Vec2 v)
+		{
+			v.x = -v.x;
+			v.y = -v.y;
+			return v;
+		}
 
-		public static Vec2 operator +(double lhs, Vec2 rhs) { return new Vec2(lhs + rhs.x, lhs + rhs.y); }
-		public static Vec2 operator +(Vec2 lhs, double rhs) { return new Vec2(lhs.x + rhs, lhs.y + rhs); }
-		public static Vec2 operator +(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x + rhs.x, lhs.y + rhs.y); }
+		public static Vec2 operator +(double lhs, Vec2 rhs)
+		{
+			rhs.x += lhs;
+			rhs.y += lhs;
+			return rhs;
+		}
+		public static Vec2 operator +(Vec2 lhs, double rhs)
+		{
+			lhs.x += rhs;
+			lhs.y += rhs;
+			return lhs;
+		}
+		public static Vec2 operator +(Vec2 lhs, Vec2 rhs)
+		{
+			lhs.x += rhs.x;
+			lhs.y += rhs.y;
+			return lhs;
+		}
 
-		public static Vec2 operator -(double lhs, Vec2 rhs) { return new Vec2(lhs - rhs.x, lhs - rhs.y); }
-		public static Vec2 operator -(Vec2 lhs, double rhs) { return new Vec2(lhs.x - rhs, lhs.y - rhs); }
-		public static Vec2 operator -(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y); }
+		public static Vec2 operator -(double lhs, Vec2 rhs)
+		{
+			rhs.x = lhs - rhs.x;
+			rhs.y = lhs - rhs.y;
+			return rhs;
+		}
+		public static Vec2 operator -(Vec2 lhs, double rhs)
+		{
+			lhs.x -= rhs;
+			lhs.y -= rhs;
+			return lhs;
+		}
+		public static Vec2 operator -(Vec2 lhs, Vec2 rhs)
+		{
+			lhs.x -= rhs.x;
+			lhs.y -= rhs.y;
+			return lhs;
+		}
 
-		public static Vec2 operator *(double lhs, Vec2 rhs) { return new Vec2(lhs * rhs.x, lhs * rhs.y); }
-		public static Vec2 operator *(Vec2 lhs, double rhs) { return new Vec2(lhs.x * rhs, lhs.y * rhs); }
-		public static Vec2 operator *(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x * rhs.x, lhs.y * rhs.y); }
+		public static Vec2 operator *(double lhs, Vec2 rhs)
+		{
+			rhs.x *= lhs;
+			rhs.y *= lhs;
+			return rhs;
+		}
+		public static Vec2 operator *(Vec2 lhs, double rhs)
+		{
+			lhs.x *= rhs;
+			lhs.y *= rhs;
+			return lhs;
+		}
+		public static Vec2 operator *(Vec2 lhs, Vec2 rhs)
+		{
+			lhs.x *= rhs.x;
+			lhs.y *= rhs.y;
+			return lhs;
+		}
 
-		public static Vec2 operator /(double lhs, Vec2 rhs) { return new Vec2(lhs / rhs.x, lhs / rhs.y); }
-		public static Vec2 operator /(Vec2 lhs, double rhs) { return new Vec2(lhs.x / rhs, lhs.y / rhs); }
-		public static Vec2 operator /(Vec2 lhs, Vec2 rhs) { return new Vec2(lhs.x / rhs.x, lhs.y / rhs.y); }
+		public static Vec2 operator /(double lhs, Vec2 rhs)
+		{
+			rhs.x = lhs / rhs.x;
+			rhs.y = lhs / rhs.y;
+			return rhs;
+		}
+		public static Vec2 operator /(Vec2 lhs, double rhs)
+		{
+			lhs.x /= rhs;
+			lhs.y /= rhs;
+			return lhs;
+		}
+		public static Vec2 operator /(Vec2 lhs, Vec2 rhs)
+		{
+			lhs.x /= rhs.x;
+			lhs.y /= rhs.y;
+			return lhs;
+		}
 		
 		public static Vec2 GetRandom()
 		{
 			double theta = MathX.DoublePI * MathX.GetRandom();
-			double x = Math.Sin(theta);
-			double y = Math.Cos(theta);
-			return new Vec2(x, y);
+			Vec2 nv;
+			nv.x = Math.Sin(theta);
+			nv.y = Math.Cos(theta);
+			return nv;
 		}
 
 		public static double Cross(Vec2 lhs, Vec2 rhs)
@@ -123,9 +184,10 @@ namespace MathematicsX
 		{
 			double cos = Math.Cos(angle);
 			double sin = Math.Sin(angle);
-			double vx = cos * src.x - sin * src.y;
-			double vy = sin * src.x + cos * src.y;
-			return new Vec2(vx, vy);
+			Vec2 nv;
+			nv.x = cos * src.x - sin * src.y;
+			nv.y = sin * src.x + cos * src.y;
+			return nv;
 		}
 
 		public static readonly Vec2 zero = new Vec2();

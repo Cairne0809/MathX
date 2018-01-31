@@ -43,8 +43,8 @@ namespace MathematicsX
 		}
 		public double this[int row, int column]
 		{
-			get { return this[4 * row + column]; }
-			set { this[4 * row + column] = value; }
+			get { return this[column + row * 4]; }
+			set { this[column + row * 4] = value; }
 		}
 
 		public Mat4x4(double m00, double m01, double m02, double m03,
@@ -108,8 +108,13 @@ namespace MathematicsX
 			if (index >= 0 && index < 4)
 				fixed (double* ptr = &m00)
 				{
-					double* p = 4 * index + ptr;
-					return new Vec4(*(p++), *(p++), *(p++), *p);
+					double* p = ptr + index * 4;
+					Vec4 nv;
+					nv.x = *p;
+					nv.y = *(p + 1);
+					nv.z = *(p + 2);
+					nv.w = *(p + 3);
+					return nv;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -118,8 +123,11 @@ namespace MathematicsX
 			if (index >= 0 && index < 4)
 				fixed (double* ptr = &m00)
 				{
-					double* p = 4 * index + ptr;
-					*(p++) = row.x; *(p++) = row.y; *(p++) = row.z; *p = row.w;
+					double* p = ptr + index * 4;
+					*p = row.x;
+					*(p + 1) = row.y;
+					*(p + 2) = row.z;
+					*(p + 3) = row.w;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -130,7 +138,12 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = ptr + index;
-					return new Vec4(*p, *(p + 4), *(p + 8), *(p + 12));
+					Vec4 nv;
+					nv.x = *p;
+					nv.y = *(p + 4);
+					nv.z = *(p + 8);
+					nv.w = *(p + 12);
+					return nv;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -140,7 +153,10 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = ptr + index;
-					*p = column.x; *(p + 4) = column.y; *(p + 8) = column.z; *(p + 12) = column.w;
+					*p = column.x;
+					*(p + 4) = column.y;
+					*(p + 8) = column.z;
+					*(p + 12) = column.w;
 				}
 			else throw new IndexOutOfRangeException();
 		}

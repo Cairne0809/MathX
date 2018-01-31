@@ -209,23 +209,114 @@ namespace MathematicsX
 		public static bool operator ==(Vec4 lhs, Vec4 rhs) { return lhs.ValueEquals(rhs); }
 		public static bool operator !=(Vec4 lhs, Vec4 rhs) { return !lhs.ValueEquals(rhs); }
 
-		public static Vec4 operator -(Vec4 v) { return new Vec4(-v.x, -v.y, -v.z, -v.w); }
+		public static Vec4 operator -(Vec4 v)
+		{
+			v.x = -v.x;
+			v.y = -v.y;
+			v.z = -v.z;
+			v.w = -v.w;
+			return v;
+		}
 
-		public static Vec4 operator +(double lhs, Vec4 rhs) { return new Vec4(lhs + rhs.x, lhs + rhs.y, lhs + rhs.z, lhs + rhs.w); }
-		public static Vec4 operator +(Vec4 lhs, double rhs) { return new Vec4(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs, lhs.w + rhs); }
-		public static Vec4 operator +(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
+		public static Vec4 operator +(double lhs, Vec4 rhs)
+		{
+			rhs.x += lhs;
+			rhs.y += lhs;
+			rhs.z += lhs;
+			rhs.w += lhs;
+			return rhs;
+		}
+		public static Vec4 operator +(Vec4 lhs, double rhs)
+		{
+			lhs.x += rhs;
+			lhs.y += rhs;
+			lhs.z += rhs;
+			lhs.w += rhs;
+			return lhs;
+		}
+		public static Vec4 operator +(Vec4 lhs, Vec4 rhs)
+		{
+			lhs.x += rhs.x;
+			lhs.y += rhs.y;
+			lhs.z += rhs.z;
+			lhs.w += rhs.w;
+			return lhs;
+		}
 
-		public static Vec4 operator -(double lhs, Vec4 rhs) { return new Vec4(lhs - rhs.x, lhs - rhs.y, lhs - rhs.z, lhs - rhs.w); }
-		public static Vec4 operator -(Vec4 lhs, double rhs) { return new Vec4(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs, lhs.w - rhs); }
-		public static Vec4 operator -(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
+		public static Vec4 operator -(double lhs, Vec4 rhs)
+		{
+			rhs.x = lhs - rhs.x;
+			rhs.y = lhs - rhs.y;
+			rhs.z = lhs - rhs.z;
+			rhs.w = lhs - rhs.w;
+			return rhs;
+		}
+		public static Vec4 operator -(Vec4 lhs, double rhs)
+		{
+			lhs.x -= rhs;
+			lhs.y -= rhs;
+			lhs.z -= rhs;
+			lhs.w -= rhs;
+			return lhs;
+		}
+		public static Vec4 operator -(Vec4 lhs, Vec4 rhs)
+		{
+			lhs.x -= rhs.x;
+			lhs.y -= rhs.y;
+			lhs.z -= rhs.z;
+			lhs.w -= rhs.w;
+			return lhs;
+		}
 
-		public static Vec4 operator *(double lhs, Vec4 rhs) { return new Vec4(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w); }
-		public static Vec4 operator *(Vec4 lhs, double rhs) { return new Vec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
-		public static Vec4 operator *(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
+		public static Vec4 operator *(double lhs, Vec4 rhs)
+		{
+			rhs.x *= lhs;
+			rhs.y *= lhs;
+			rhs.z *= lhs;
+			rhs.w *= lhs;
+			return rhs;
+		}
+		public static Vec4 operator *(Vec4 lhs, double rhs)
+		{
+			lhs.x *= rhs;
+			lhs.y *= rhs;
+			lhs.z *= rhs;
+			lhs.w *= rhs;
+			return lhs;
+		}
+		public static Vec4 operator *(Vec4 lhs, Vec4 rhs)
+		{
+			lhs.x *= rhs.x;
+			lhs.y *= rhs.y;
+			lhs.z *= rhs.z;
+			lhs.w *= rhs.w;
+			return lhs;
+		}
 
-		public static Vec4 operator /(double lhs, Vec4 rhs) { return new Vec4(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w); }
-		public static Vec4 operator /(Vec4 lhs, double rhs) { return new Vec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
-		public static Vec4 operator /(Vec4 lhs, Vec4 rhs) { return new Vec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
+		public static Vec4 operator /(double lhs, Vec4 rhs)
+		{
+			rhs.x = lhs / rhs.x;
+			rhs.y = lhs / rhs.y;
+			rhs.z = lhs / rhs.z;
+			rhs.w = lhs / rhs.w;
+			return rhs;
+		}
+		public static Vec4 operator /(Vec4 lhs, double rhs)
+		{
+			lhs.x /= rhs;
+			lhs.y /= rhs;
+			lhs.z /= rhs;
+			lhs.w /= rhs;
+			return lhs;
+		}
+		public static Vec4 operator /(Vec4 lhs, Vec4 rhs)
+		{
+			lhs.x /= rhs.x;
+			lhs.y /= rhs.y;
+			lhs.z /= rhs.z;
+			lhs.w /= rhs.w;
+			return lhs;
+		}
 
 		public static Vec4 GetRandom()
 		{
@@ -233,11 +324,12 @@ namespace MathematicsX
 			double theta = MathX.DoublePI * MathX.GetRandom();
 			double phi = Math.Acos(MathX.GetRandom(-1, 1));
 			double beta = Math.Acos(MathX.GetRandom(-1, 1));
-			double x = Math.Sin(theta) * Math.Sin(phi) * Math.Sin(beta);
-			double y = Math.Cos(theta) * Math.Sin(phi) * Math.Sin(beta);
-			double z = Math.Cos(phi) * Math.Sin(beta);
-			double w = Math.Cos(beta);
-			return new Vec4(x, y, z, w);
+			Vec4 nv;
+			nv.x = Math.Sin(theta) * Math.Sin(phi) * Math.Sin(beta);
+			nv.y = Math.Cos(theta) * Math.Sin(phi) * Math.Sin(beta);
+			nv.z = Math.Cos(phi) * Math.Sin(beta);
+			nv.w = Math.Cos(beta);
+			return nv;
 		}
 
 		public static readonly Vec4 zero = new Vec4();

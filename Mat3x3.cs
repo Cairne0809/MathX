@@ -36,8 +36,8 @@ namespace MathematicsX
 		}
 		public double this[int row, int column]
 		{
-			get { return this[3 * row + column]; }
-			set { this[3 * row + column] = value; }
+			get { return this[column + row * 3]; }
+			set { this[column + row * 3] = value; }
 		}
 
 		public Mat3x3(double m00, double m01, double m02,
@@ -89,8 +89,12 @@ namespace MathematicsX
 			if (index >= 0 && index < 3)
 				fixed (double* ptr = &m00)
 				{
-					double* p = 3 * index + ptr;
-					return new Vec3(*(p++), *(p++), *p);
+					double* p = ptr + index * 3;
+					Vec3 nv;
+					nv.x = *p;
+					nv.y = *(p + 1);
+					nv.z = *(p + 2);
+					return nv;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -99,8 +103,10 @@ namespace MathematicsX
 			if (index >= 0 && index < 3)
 				fixed (double* ptr = &m00)
 				{
-					double* p = 3 * index + ptr;
-					*(p++) = row.x; *(p++) = row.y; *p = row.z;
+					double* p = ptr + index * 3;
+					*p = row.x;
+					*(p + 1) = row.y;
+					*(p + 2) = row.z;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -111,7 +117,11 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = ptr + index;
-					return new Vec3(*p, *(p + 3), *(p + 6));
+					Vec3 nv;
+					nv.x = *p;
+					nv.y = *(p + 3);
+					nv.z = *(p + 6);
+					return nv;
 				}
 			else throw new IndexOutOfRangeException();
 		}
@@ -121,7 +131,9 @@ namespace MathematicsX
 				fixed (double* ptr = &m00)
 				{
 					double* p = ptr + index;
-					*p = column.x; *(p + 3) = column.y; *(p + 6) = column.z;
+					*p = column.x;
+					*(p + 3) = column.y;
+					*(p + 6) = column.z;
 				}
 			else throw new IndexOutOfRangeException();
 		}

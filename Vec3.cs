@@ -115,40 +115,120 @@ namespace MathematicsX
 		public static bool operator ==(Vec3 lhs, Vec3 rhs) { return lhs.ValueEquals(rhs); }
 		public static bool operator !=(Vec3 lhs, Vec3 rhs) { return !lhs.ValueEquals(rhs); }
 
-		public static Vec3 operator -(Vec3 v) { return new Vec3(-v.x, -v.y, -v.z); }
+		public static Vec3 operator -(Vec3 v)
+		{
+			v.x = -v.x;
+			v.y = -v.y;
+			v.z = -v.z;
+			return v;
+		}
 
-		public static Vec3 operator +(double lhs, Vec3 rhs) { return new Vec3(lhs + rhs.x, lhs + rhs.y, lhs + rhs.z); }
-		public static Vec3 operator +(Vec3 lhs, double rhs) { return new Vec3(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs); }
-		public static Vec3 operator +(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z); }
+		public static Vec3 operator +(double lhs, Vec3 rhs)
+		{
+			rhs.x += lhs;
+			rhs.y += lhs;
+			rhs.z += lhs;
+			return rhs;
+		}
+		public static Vec3 operator +(Vec3 lhs, double rhs)
+		{
+			lhs.x += rhs;
+			lhs.y += rhs;
+			lhs.z += rhs;
+			return lhs;
+		}
+		public static Vec3 operator +(Vec3 lhs, Vec3 rhs)
+		{
+			lhs.x += rhs.x;
+			lhs.y += rhs.y;
+			lhs.z += rhs.z;
+			return lhs;
+		}
 
-		public static Vec3 operator -(double lhs, Vec3 rhs) { return new Vec3(lhs - rhs.x, lhs - rhs.y, lhs - rhs.z); }
-		public static Vec3 operator -(Vec3 lhs, double rhs) { return new Vec3(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs); }
-		public static Vec3 operator -(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z); }
+		public static Vec3 operator -(double lhs, Vec3 rhs)
+		{
+			rhs.x = lhs - rhs.x;
+			rhs.y = lhs - rhs.y;
+			rhs.z = lhs - rhs.z;
+			return rhs;
+		}
+		public static Vec3 operator -(Vec3 lhs, double rhs)
+		{
+			lhs.x -= rhs;
+			lhs.y -= rhs;
+			lhs.z -= rhs;
+			return lhs;
+		}
+		public static Vec3 operator -(Vec3 lhs, Vec3 rhs)
+		{
+			lhs.x -= rhs.x;
+			lhs.y -= rhs.y;
+			lhs.z -= rhs.z;
+			return lhs;
+		}
 
-		public static Vec3 operator *(double lhs, Vec3 rhs) { return new Vec3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z); }
-		public static Vec3 operator *(Vec3 lhs, double rhs) { return new Vec3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs); }
-		public static Vec3 operator *(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z); }
+		public static Vec3 operator *(double lhs, Vec3 rhs)
+		{
+			rhs.x *= lhs;
+			rhs.y *= lhs;
+			rhs.z *= lhs;
+			return rhs;
+		}
+		public static Vec3 operator *(Vec3 lhs, double rhs)
+		{
+			lhs.x *= rhs;
+			lhs.y *= rhs;
+			lhs.z *= rhs;
+			return lhs;
+		}
+		public static Vec3 operator *(Vec3 lhs, Vec3 rhs)
+		{
+			lhs.x *= rhs.x;
+			lhs.y *= rhs.y;
+			lhs.z *= rhs.z;
+			return lhs;
+		}
 
-		public static Vec3 operator /(double lhs, Vec3 rhs) { return new Vec3(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z); }
-		public static Vec3 operator /(Vec3 lhs, double rhs) { return new Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs); }
-		public static Vec3 operator /(Vec3 lhs, Vec3 rhs) { return new Vec3(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z); }
+		public static Vec3 operator /(double lhs, Vec3 rhs)
+		{
+			rhs.x = lhs / rhs.x;
+			rhs.y = lhs / rhs.y;
+			rhs.z = lhs / rhs.z;
+			return rhs;
+		}
+		public static Vec3 operator /(Vec3 lhs, double rhs)
+		{
+			lhs.x /= rhs;
+			lhs.y /= rhs;
+			lhs.z /= rhs;
+			return lhs;
+		}
+		public static Vec3 operator /(Vec3 lhs, Vec3 rhs)
+		{
+			lhs.x /= rhs.x;
+			lhs.y /= rhs.y;
+			lhs.z /= rhs.z;
+			return lhs;
+		}
 
 		public static Vec3 GetRandom()
 		{
 			double theta = MathX.DoublePI * MathX.GetRandom();
 			double phi = Math.Acos(MathX.GetRandom(-1, 1));
-			double x = Math.Sin(theta) * Math.Sin(phi);
-			double y = Math.Cos(theta) * Math.Sin(phi);
-			double z = Math.Cos(phi);
-			return new Vec3(x, y, z);
+			Vec3 nv;
+			nv.x = Math.Sin(theta) * Math.Sin(phi);
+			nv.y = Math.Cos(theta) * Math.Sin(phi);
+			nv.z = Math.Cos(phi);
+			return nv;
 		}
 		
 		public static Vec3 Cross(Vec3 lhs, Vec3 rhs)
 		{
-			double x = lhs.y * rhs.z - lhs.z * rhs.y;
-			double y = lhs.z * rhs.x - lhs.x * rhs.z;
-			double z = lhs.x * rhs.y - lhs.y * rhs.x;
-			return new Vec3(x, y, z);
+			Vec3 nv;
+			nv.x = lhs.y * rhs.z - lhs.z * rhs.y;
+			nv.y = lhs.z * rhs.x - lhs.x * rhs.z;
+			nv.z = lhs.x * rhs.y - lhs.y * rhs.x;
+			return nv;
 		}
 
 		public static double Mixed(Vec3 v0, Vec3 v1, Vec3 v2)
@@ -171,10 +251,11 @@ namespace MathematicsX
 			double xy = x * y, yz = y * z, xz = x * z;
 			double cos = Math.Cos(angle);
 			double sin = Math.Sin(angle);
-			double vx = (xx + (1 - xx) * cos) * sx + (xy * (1 - cos) - z * sin) * sy + (xz * (1 - cos) + y * sin) * sz;
-			double vy = (xy * (1 - cos) + z * sin) * sx + (yy + (1 - yy) * cos) * sy + (yz * (1 - cos) - x * sin) * sz;
-			double vz = (xz * (1 - cos) - y * sin) * sx + (yz * (1 - cos) + x * sin) * sy + (zz + (1 - zz) * cos) * sz;
-			return new Vec3(vx, vy, vz);
+			Vec3 nv;
+			nv.x = (xx + (1 - xx) * cos) * sx + (xy * (1 - cos) - z * sin) * sy + (xz * (1 - cos) + y * sin) * sz;
+			nv.y = (xy * (1 - cos) + z * sin) * sx + (yy + (1 - yy) * cos) * sy + (yz * (1 - cos) - x * sin) * sz;
+			nv.z = (xz * (1 - cos) - y * sin) * sx + (yz * (1 - cos) + x * sin) * sy + (zz + (1 - zz) * cos) * sz;
+			return nv;
 		}
 
 		public static readonly Vec3 zero = new Vec3();
