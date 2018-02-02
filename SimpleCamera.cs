@@ -2,7 +2,7 @@
 
 namespace MathematicsX
 {
-	public class Camera
+	public class SimpleCamera
 	{
 		double m_halfFOV = 22.5 * MathX.Deg2Rad;
 		double m_halfW = 100;

@@ -11,21 +11,15 @@ namespace MathematicsX
 		{
 			get
 			{
-				switch (index)
-				{
-					case 0: return p0;
-					case 1: return p1;
-					default: throw new IndexOutOfRangeException();
-				}
+				if (index == 0) return p0;
+				else if (index == 1) return p1;
+				else throw new IndexOutOfRangeException();
 			}
 			set
 			{
-				switch (index)
-				{
-					case 0: p0 = value; break;
-					case 1: p1 = value; break;
-					default: throw new IndexOutOfRangeException();
-				}
+				if (index == 0) p0 = value;
+				else if (index == 1) p1 = value;
+				else throw new IndexOutOfRangeException();
 			}
 		}
 
