@@ -17,7 +17,7 @@
 		}
 		public T min { get { return m_pos; } }
 		public T max { get { return VecX.Add(m_pos, m_size); } }
-		public T center { get { T temp = VecX.Mul(m_size, 0.5); temp = VecX.Add(m_pos, temp); return temp; } }
+		public T center { get { return VecX.Add(VecX.Mul(m_size, 0.5), m_pos); } }
 		public T extends { get { return VecX.Mul(m_size, 0.5); } }
 		
 		public AxisAlignedBox(T pos, T size)

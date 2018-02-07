@@ -177,7 +177,10 @@ namespace MathematicsX
 
 		public static Vec2 Skew(Vec2 v)
 		{
-			return new Vec2(-v.y, v.x);
+			Vec2 nv;
+			nv.x = -v.y;
+			nv.y = v.x;
+			return nv;
 		}
 
 		public static Vec2 Rotate(Vec2 src, double angle)

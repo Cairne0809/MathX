@@ -42,17 +42,15 @@ namespace MathematicsX
 		public void MinMax(out T min, out T max)
 		{
 			int dim = p0.dimension;
-			min = new T();
+			min = p0;
 			for (int i = 0; i < dim; i++)
 			{
-				min[i] = p0[i];
 				if (p1[i] < min[i]) min[i] = p1[i];
 				if (p2[i] < min[i]) min[i] = p2[i];
 			}
-			max = new T();
+			max = p0;
 			for (int i = 0; i < dim; i++)
 			{
-				max[i] = p0[i];
 				if (p1[i] >= max[i]) max[i] = p1[i];
 				if (p2[i] >= max[i]) max[i] = p2[i];
 			}

@@ -323,12 +323,12 @@ namespace MathematicsX
 			//Not even
 			double theta = MathX.DoublePI * MathX.GetRandom();
 			double phi = Math.Acos(MathX.GetRandom(-1, 1));
-			double beta = Math.Acos(MathX.GetRandom(-1, 1));
+			double rho = Math.Acos(MathX.GetRandom(-1, 1));
 			Vec4 nv;
-			nv.x = Math.Sin(theta) * Math.Sin(phi) * Math.Sin(beta);
-			nv.y = Math.Cos(theta) * Math.Sin(phi) * Math.Sin(beta);
-			nv.z = Math.Cos(phi) * Math.Sin(beta);
-			nv.w = Math.Cos(beta);
+			nv.x = Math.Sin(theta) * Math.Sin(phi) * Math.Sin(rho);
+			nv.y = Math.Cos(theta) * Math.Sin(phi) * Math.Sin(rho);
+			nv.z = Math.Cos(phi) * Math.Sin(rho);
+			nv.w = Math.Cos(rho);
 			return nv;
 		}
 
