@@ -238,11 +238,6 @@ namespace MathematicsX
 				 + v2.x * v0.y * v1.z - v2.x * v1.y * v0.z;
 		}
 
-		public static Vec3 ProjectOnPlane(Vec3 src, Vec3 norm)
-		{
-			return VecX.Project(src, Cross(Cross(norm, src), norm));
-		}
-
 		public static Vec3 Rotate(Vec3 src, double angle, Vec3 axisNorm)
 		{
 			double sx = src.x, sy = src.y, sz = src.z;

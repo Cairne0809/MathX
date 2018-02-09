@@ -307,7 +307,7 @@ namespace MathematicsX
 		
 		public static Vec2 Project(Vec2 src, Vec2 dstNorm) { return Dot(src, dstNorm) * dstNorm; }
 		public static Vec3 Project(Vec3 src, Vec3 dstNorm) { return Dot(src, dstNorm) * dstNorm; }
-		public static T Project<T>(T src, T dstNorm) where T : struct, IVector
+		public static T Project<T>(T src, IVector dstNorm) where T : struct, IVector
 		{
 			double dot = Dot(src, dstNorm);
 			int dim = src.dimension;
@@ -316,9 +316,25 @@ namespace MathematicsX
 			return src;
 		}
 
+		public static Vec3 ProjectOnPlane(Vec3 src, Vec3 sobX, Vec3 sobY)
+		{
+			double dotX = Dot(src, sobX);
+			double dotY = Dot(src, sobY);
+			return dotX * sobX + dotY * sobY;
+		}
+		public static T ProjectOnPlane<T>(T src, IVector sobX, IVector sobY) where T : struct, IVector
+		{
+			double dotX = Dot(src, sobX);
+			double dotY = Dot(src, sobY);
+			int dim = src.dimension;
+			for (int i = 0; i < dim; i++)
+				src[i] = dotX * sobX[i] + dotY * sobY[i];
+			return src;
+		}
+
 		public static Vec2 Mirror(Vec2 src, Vec2 axisNorm) { return 2 * Project(src, axisNorm) - src; }
 		public static Vec3 Mirror(Vec3 src, Vec3 axisNorm) { return 2 * Project(src, axisNorm) - src; }
-		public static T Mirror<T>(T src, T axisNorm) where T : struct, IVector
+		public static T Mirror<T>(T src, IVector axisNorm) where T : struct, IVector
 		{
 			double dot2 = Dot(src, axisNorm) * 2;
 			int dim = src.dimension;
@@ -329,7 +345,7 @@ namespace MathematicsX
 
 		public static Vec2 Reflect(Vec2 src, Vec2 axisNorm) { return src - 2 * Project(src, axisNorm); }
 		public static Vec3 Reflect(Vec3 src, Vec3 axisNorm) { return src - 2 * Project(src, axisNorm); }
-		public static T Reflect<T>(T src, T axisNorm) where T : struct, IVector
+		public static T Reflect<T>(T src, IVector axisNorm) where T : struct, IVector
 		{
 			double dot2 = Dot(src, axisNorm) * 2;
 			int dim = src.dimension;
@@ -352,7 +368,7 @@ namespace MathematicsX
 			if (k >= 0) return eta * srcNorm - (eta * dot + Math.Sqrt(k)) * axisNorm;
 			return srcNorm;
 		}
-		public static T Refract<T>(T srcNorm, T axisNorm, double eta) where T : struct, IVector
+		public static T Refract<T>(T srcNorm, IVector axisNorm, double eta) where T : struct, IVector
 		{
 			double dot = Dot(srcNorm, axisNorm);
 			double k = 1 - eta * eta * (1 - dot * dot);
