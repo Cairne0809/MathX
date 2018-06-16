@@ -300,10 +300,11 @@ namespace MathematicsX
 			double xy = x * y, yz = y * z, xz = x * z;
 			double cos = Math.Cos(angle);
 			double sin = Math.Sin(angle);
+			double _cos = 1 - cos;
 			return new Mat4x4(
-				xx + (1 - xx) * cos, xy * (1 - cos) - z * sin, xz * (1 - cos) + y * sin, 0,
-				xy * (1 - cos) + z * sin, yy + (1 - yy) * cos, yz * (1 - cos) - x * sin, 0,
-				xz * (1 - cos) - y * sin, yz * (1 - cos) + x * sin, zz + (1 - zz) * cos, 0,
+				xx + (1 - xx) * cos, xy * _cos - z * sin, xz * _cos + y * sin, 0,
+				xy * _cos + z * sin, yy + (1 - yy) * cos, yz * _cos - x * sin, 0,
+				xz * _cos - y * sin, yz * _cos + x * sin, zz + (1 - zz) * cos, 0,
 				0, 0, 0, 1);
 		}
 
