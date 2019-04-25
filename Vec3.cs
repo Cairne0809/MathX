@@ -6,7 +6,7 @@ namespace MathematicsX
 	[Serializable]
 	public struct Vec3 : IVector
 	{
-		public int dimension { get { return 3; } }
+		public int Dimension { get { return 3; } }
 
 		public double x;
 		public double y;
@@ -31,17 +31,17 @@ namespace MathematicsX
 			get
 			{
 				if (index >= 0 && index < 3)
-					fixed (double* ptr = &x) return *(ptr + index);
+					fixed (double* ptr = &x) return ptr[index];
 				else throw new IndexOutOfRangeException();
 			}
 			set
 			{
 				if (index >= 0 && index < 3)
-					fixed (double* ptr = &x) *(ptr + index) = value;
+					fixed (double* ptr = &x) ptr[index] = value;
 				else throw new IndexOutOfRangeException();
 			}
 		}
-		
+
 		public Vec3(double x, double y, double z)
 		{
 			this.x = x;
@@ -59,12 +59,6 @@ namespace MathematicsX
 			this.x = x;
 			this.y = yz.x;
 			this.z = yz.y;
-		}
-		public Vec3(Vec3 xyz)
-		{
-			this.x = xyz.x;
-			this.y = xyz.y;
-			this.z = xyz.z;
 		}
 
 		public Vec2 S2(string swizzle)
@@ -92,19 +86,9 @@ namespace MathematicsX
 				.Append(z.ToString(format)).Append(")");
 			return sb.ToString();
 		}
-		public override string ToString() { return ToString(""); }
-		public override int GetHashCode() { return base.GetHashCode(); }
-		public override bool Equals(object obj) { return base.Equals(obj); }
-		public bool ValueEquals(Vec3 v)
+		public override string ToString()
 		{
-			double pt = MathX.Tolerance;
-			double nt = -pt;
-			double dx = x - v.x;
-			double dy = y - v.y;
-			double dz = z - v.z;
-			return dx <= pt && dx >= nt
-				&& dy <= pt && dy >= nt
-				&& dz <= pt && dz >= nt;
+			return ToString(MathX.ToleranceFormat);
 		}
 
 
@@ -112,145 +96,71 @@ namespace MathematicsX
 		public static explicit operator Vec3(Vec4 v) { return new Vec3(v.x, v.y, v.z); }
 		public static explicit operator Vec3(Quat q) { return new Vec3(q.x, q.y, q.z); }
 
-		public static bool operator ==(Vec3 lhs, Vec3 rhs) { return lhs.ValueEquals(rhs); }
-		public static bool operator !=(Vec3 lhs, Vec3 rhs) { return !lhs.ValueEquals(rhs); }
-
 		public static Vec3 operator -(Vec3 v)
 		{
-			v.x = -v.x;
-			v.y = -v.y;
-			v.z = -v.z;
-			return v;
+			return new Vec3(-v.x, -v.y, -v.z);
 		}
 
 		public static Vec3 operator +(double lhs, Vec3 rhs)
 		{
-			rhs.x += lhs;
-			rhs.y += lhs;
-			rhs.z += lhs;
-			return rhs;
+			return new Vec3(lhs + rhs.x, lhs + rhs.y, lhs + rhs.z);
 		}
 		public static Vec3 operator +(Vec3 lhs, double rhs)
 		{
-			lhs.x += rhs;
-			lhs.y += rhs;
-			lhs.z += rhs;
-			return lhs;
+			return new Vec3(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs);
 		}
 		public static Vec3 operator +(Vec3 lhs, Vec3 rhs)
 		{
-			lhs.x += rhs.x;
-			lhs.y += rhs.y;
-			lhs.z += rhs.z;
-			return lhs;
+			return new Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
 		}
 
 		public static Vec3 operator -(double lhs, Vec3 rhs)
 		{
-			rhs.x = lhs - rhs.x;
-			rhs.y = lhs - rhs.y;
-			rhs.z = lhs - rhs.z;
-			return rhs;
+			return new Vec3(lhs - rhs.x, lhs - rhs.y, lhs - rhs.z);
 		}
 		public static Vec3 operator -(Vec3 lhs, double rhs)
 		{
-			lhs.x -= rhs;
-			lhs.y -= rhs;
-			lhs.z -= rhs;
-			return lhs;
+			return new Vec3(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs);
 		}
 		public static Vec3 operator -(Vec3 lhs, Vec3 rhs)
 		{
-			lhs.x -= rhs.x;
-			lhs.y -= rhs.y;
-			lhs.z -= rhs.z;
-			return lhs;
+			return new Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
 		}
 
 		public static Vec3 operator *(double lhs, Vec3 rhs)
 		{
-			rhs.x *= lhs;
-			rhs.y *= lhs;
-			rhs.z *= lhs;
-			return rhs;
+			return new Vec3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z);
 		}
 		public static Vec3 operator *(Vec3 lhs, double rhs)
 		{
-			lhs.x *= rhs;
-			lhs.y *= rhs;
-			lhs.z *= rhs;
-			return lhs;
+			return new Vec3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs);
 		}
 		public static Vec3 operator *(Vec3 lhs, Vec3 rhs)
 		{
-			lhs.x *= rhs.x;
-			lhs.y *= rhs.y;
-			lhs.z *= rhs.z;
-			return lhs;
+			return new Vec3(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z);
 		}
 
 		public static Vec3 operator /(double lhs, Vec3 rhs)
 		{
-			rhs.x = lhs / rhs.x;
-			rhs.y = lhs / rhs.y;
-			rhs.z = lhs / rhs.z;
-			return rhs;
+			return new Vec3(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z);
 		}
 		public static Vec3 operator /(Vec3 lhs, double rhs)
 		{
-			lhs.x /= rhs;
-			lhs.y /= rhs;
-			lhs.z /= rhs;
-			return lhs;
+			return new Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
 		}
 		public static Vec3 operator /(Vec3 lhs, Vec3 rhs)
 		{
-			lhs.x /= rhs.x;
-			lhs.y /= rhs.y;
-			lhs.z /= rhs.z;
-			return lhs;
+			return new Vec3(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z);
 		}
 
 		public static Vec3 GetRandom()
 		{
-			double theta = MathX.DoublePI * MathX.GetRandom();
+			double theta = MathX.TWO_PI * MathX.GetRandom();
 			double phi = Math.Acos(MathX.GetRandom(-1, 1));
 			Vec3 nv;
 			nv.x = Math.Sin(theta) * Math.Sin(phi);
 			nv.y = Math.Cos(theta) * Math.Sin(phi);
 			nv.z = Math.Cos(phi);
-			return nv;
-		}
-		
-		public static Vec3 Cross(Vec3 lhs, Vec3 rhs)
-		{
-			Vec3 nv;
-			nv.x = lhs.y * rhs.z - lhs.z * rhs.y;
-			nv.y = lhs.z * rhs.x - lhs.x * rhs.z;
-			nv.z = lhs.x * rhs.y - lhs.y * rhs.x;
-			return nv;
-		}
-
-		public static double Mixed(Vec3 v0, Vec3 v1, Vec3 v2)
-		{
-			return v0.x * v1.y * v2.z - v0.x * v2.y * v1.z
-				 + v1.x * v2.y * v0.z - v1.x * v0.y * v2.z
-				 + v2.x * v0.y * v1.z - v2.x * v1.y * v0.z;
-		}
-
-		public static Vec3 Rotate(Vec3 src, double angle, Vec3 axisNorm)
-		{
-			double sx = src.x, sy = src.y, sz = src.z;
-			double x = axisNorm.x, y = axisNorm.y, z = axisNorm.z;
-			double xx = x * x, yy = y * y, zz = z * z;
-			double xy = x * y, yz = y * z, xz = x * z;
-			double cos = Math.Cos(angle);
-			double sin = Math.Sin(angle);
-			double _cos = 1 - cos;
-			Vec3 nv;
-			nv.x = (xx + (1 - xx) * cos) * sx + (xy * _cos - z * sin) * sy + (xz * _cos + y * sin) * sz;
-			nv.y = (xy * _cos + z * sin) * sx + (yy + (1 - yy) * cos) * sy + (yz * _cos - x * sin) * sz;
-			nv.z = (xz * _cos - y * sin) * sx + (yz * _cos + x * sin) * sy + (zz + (1 - zz) * cos) * sz;
 			return nv;
 		}
 

@@ -5,139 +5,141 @@ namespace MathematicsX
 {
 	public struct Cplx
 	{
-		public double x;
-		public double y;
+		public double a;
+		public double b;
 
-		public Cplx(double x, double y)
+		public Cplx(double a, double b)
 		{
-			this.x = x;
-			this.y = y;
-		}
-		public Cplx(Cplx c)
-		{
-			this.x = c.x;
-			this.y = c.y;
+			this.a = a;
+			this.b = b;
 		}
 
 		public string ToString(string format)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("C(")
-				.Append(x.ToString(format)).Append(", ")
-				.Append(y.ToString(format)).Append(")");
+			sb.Append(a.ToString(format));
+			if (b != 0)
+			{
+				if (b > 0) sb.Append("+");
+				sb.Append(b.ToString(format)).Append("i");
+			}
 			return sb.ToString();
 		}
-		public override string ToString() { return ToString(""); }
-		public override int GetHashCode() { return base.GetHashCode(); }
-		public override bool Equals(object obj) { return base.Equals(obj); }
-		public bool ValueEquals(Cplx c)
+		public override string ToString()
 		{
-			double pt = MathX.Tolerance;
-			double nt = -pt;
-			double dx = x - c.x;
-			double dy = y - c.y;
-			return dx <= pt && dx >= nt
-				&& dy <= pt && dy >= nt;
+			return ToString(MathX.ToleranceFormat);
 		}
 
 
-		public static implicit operator Cplx(double n) { return new Cplx(n, 0); }
+		public static implicit operator Cplx(double x) { return new Cplx(x, 0); }
+		public static explicit operator double(Cplx x) { return x.a; }
 		public static explicit operator Cplx(Vec2 v) { return new Cplx(v.x, v.y); }
 
-		public static bool operator ==(Cplx lhs, Cplx rhs) { return lhs.ValueEquals(rhs); }
-		public static bool operator !=(Cplx lhs, Cplx rhs) { return !lhs.ValueEquals(rhs); }
-
-		public static Cplx operator -(Cplx c)
+		public static bool IsNaN(Cplx x)
 		{
-			c.x = -c.x;
-			c.y = -c.y;
-			return c;
+			return double.IsNaN(x.a) || double.IsNaN(x.b);
+		}
+
+		public static Cplx operator -(Cplx x)
+		{
+			x.a = -x.a;
+			x.b = -x.b;
+			return x;
 		}
 
 		public static Cplx operator +(Cplx lhs, Cplx rhs)
 		{
-			lhs.x += rhs.x;
-			lhs.y += rhs.y;
+			lhs.a += rhs.a;
+			lhs.b += rhs.b;
 			return lhs;
 		}
 
 		public static Cplx operator -(Cplx lhs, Cplx rhs)
 		{
-			lhs.x -= rhs.x;
-			lhs.y -= rhs.y;
+			lhs.a -= rhs.a;
+			lhs.b -= rhs.b;
 			return lhs;
 		}
 
 		public static Cplx operator *(Cplx lhs, Cplx rhs)
 		{
+			if (lhs.b == 0 && rhs.b == 0)
+			{
+				return new Cplx(lhs.a * rhs.a, 0);
+			}
 			Cplx nc;
-			nc.x = lhs.x * rhs.x - lhs.y * rhs.y;
-			nc.y = lhs.y * rhs.x + lhs.x * rhs.y;
+			nc.a = lhs.a * rhs.a - lhs.b * rhs.b;
+			nc.b = lhs.b * rhs.a + lhs.a * rhs.b;
 			return nc;
 		}
 
 		public static Cplx operator /(Cplx lhs, Cplx rhs)
 		{
-			double div = rhs.x * rhs.x + rhs.y * rhs.y;
+			if (lhs.b == 0 && rhs.b == 0)
+			{
+				return new Cplx(lhs.a / rhs.a, 0);
+			}
+			double div = rhs.a * rhs.a + rhs.b * rhs.b;
 			Cplx nc;
-			nc.x = (lhs.x * rhs.x + lhs.y * rhs.y) / div;
-			nc.y = (lhs.y * rhs.x - lhs.x * rhs.y) / div;
+			nc.a = (lhs.a * rhs.a + lhs.b * rhs.b) / div;
+			nc.b = (lhs.b * rhs.a - lhs.a * rhs.b) / div;
 			return nc;
 		}
 
-		public static Cplx operator ~(Cplx c)
+		public static Cplx operator ~(Cplx x)
 		{
-			c.y = -c.y;
-			return c;
+			x.b = -x.b;
+			return x;
 		}
 
-		public static double SqrLength(Cplx c)
+		public static double SqrLength(Cplx x)
 		{
-			return c.x * c.x + c.y * c.y;
+			return x.a * x.a + x.b * x.b;
 		}
 
-		public static double Length(Cplx c)
+		public static double Length(Cplx x)
 		{
-			return Math.Sqrt(c.x * c.x + c.y * c.y);
+			return Math.Sqrt(x.a * x.a + x.b * x.b);
 		}
 
-		public static void GetArgument(Cplx c, out double rho, out double theta)
+		public static void GetArgument(Cplx x, out double rho, out double theta)
 		{
-			rho = Length(c);
-			theta = Math.Atan2(c.y, c.x);
+			rho = Length(x);
+			theta = Math.Atan2(x.b, x.a);
 		}
 
 		public static Cplx FromArgument(double rho, double theta)
 		{
 			Cplx nc;
-			nc.x = Math.Cos(theta) * rho;
-			nc.y = Math.Sin(theta) * rho;
+			nc.a = Math.Cos(theta) * rho;
+			nc.b = Math.Sin(theta) * rho;
 			return nc;
 		}
-
-		public static Cplx Pow(Cplx c, double n)
+		
+		public static Cplx Pow(Cplx x, double y)
 		{
-			double rho = Length(c);
-			double theta = Math.Atan2(c.y, c.x);
-			rho = Math.Pow(rho, n);
-			theta *= n;
-			c.x = Math.Cos(theta) * rho;
-			c.y = Math.Sin(theta) * rho;
-			return c;
+			double rho = Length(x);
+			double theta = Math.Atan2(x.b, x.a);
+			rho = Math.Pow(rho, y);
+			theta *= y;
+			x.a = Math.Cos(theta) * rho;
+			x.b = Math.Sin(theta) * rho;
+			return x;
 		}
 
-		public static Cplx GetRandom()
+		public static Cplx Sqrt(Cplx x)
 		{
-			double theta = MathX.DoublePI * MathX.GetRandom();
-			Cplx nc;
-			nc.x = Math.Sin(theta);
-			nc.y = Math.Cos(theta);
-			return nc;
+			double rho = Length(x);
+			double theta = Math.Atan2(x.a, x.b);
+			rho = Math.Sqrt(rho);
+			theta *= 0.5;
+			x.a = Math.Cos(theta) * rho;
+			x.b = Math.Sin(theta) * rho;
+			return x;
 		}
 		
 		public static readonly Cplx zero = new Cplx();
 		public static readonly Cplx i = new Cplx(0, 1);
-		public static readonly Cplx NaC = new Cplx(double.NaN, double.NaN);
-
+		public static readonly Cplx NaN = new Cplx(double.NaN, double.NaN);
 	}
 }

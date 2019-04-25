@@ -1,9 +1,10 @@
 ﻿namespace MathematicsX
 {
-	public interface IMatrix
+	public interface ISquareMatrix
 	{
-		int row { get; }
-		int column { get; }
+		int Row { get; }
+		int Column { get; }
+		int Length { get; }
 		double this[int index] { get; set; }
 		double this[int row, int column] { get; set; }
 	}

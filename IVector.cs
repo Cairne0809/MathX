@@ -2,7 +2,7 @@
 {
 	public interface IVector
 	{
-		int dimension { get; }
+		int Dimension { get; }
 		double this[int index] { get; set; }
 	}
 }

@@ -6,7 +6,7 @@ namespace MathematicsX
 	[Serializable]
 	public struct Vec4 : IVector
 	{
-		public int dimension { get { return 4; } }
+		public int Dimension { get { return 4; } }
 
 		public double x;
 		public double y;
@@ -75,19 +75,19 @@ namespace MathematicsX
 		public Vec4 wyzx { get { return new Vec4(w, y, z, x); } set { w = value.x; y = value.y; z = value.z; x = value.w; } }
 		public Vec4 wzxy { get { return new Vec4(w, z, x, y); } set { w = value.x; z = value.y; x = value.z; y = value.w; } }
 		public Vec4 wzyx { get { return new Vec4(w, z, y, x); } set { w = value.x; z = value.y; y = value.z; x = value.w; } }
-		
+
 		public unsafe double this[int index]
 		{
 			get
 			{
 				if (index >= 0 && index < 4)
-					fixed (double* ptr = &x) return *(ptr + index);
+					fixed (double* ptr = &x) return ptr[index];
 				else throw new IndexOutOfRangeException();
 			}
 			set
 			{
 				if (index >= 0 && index < 4)
-					fixed (double* ptr = &x) *(ptr + index) = value;
+					fixed (double* ptr = &x) ptr[index] = value;
 				else throw new IndexOutOfRangeException();
 			}
 		}
@@ -141,13 +141,6 @@ namespace MathematicsX
 			this.z = yzw.y;
 			this.w = yzw.z;
 		}
-		public Vec4(Vec4 xyzw)
-		{
-			this.x = xyzw.x;
-			this.y = xyzw.x;
-			this.z = xyzw.y;
-			this.w = xyzw.z;
-		}
 
 		public Vec2 S2(string swizzle)
 		{
@@ -184,21 +177,9 @@ namespace MathematicsX
 				.Append(w.ToString(format)).Append(")");
 			return sb.ToString();
 		}
-		public override string ToString() { return ToString(""); }
-		public override int GetHashCode() { return base.GetHashCode(); }
-		public override bool Equals(object obj) { return base.Equals(obj); }
-		public bool ValueEquals(Vec4 v)
+		public override string ToString()
 		{
-			double pt = MathX.Tolerance;
-			double nt = -pt;
-			double dx = x - v.x;
-			double dy = y - v.y;
-			double dz = z - v.z;
-			double dw = w - v.w;
-			return dx <= pt && dx >= nt
-				&& dy <= pt && dy >= nt
-				&& dz <= pt && dz >= nt
-				&& dw <= pt && dw >= nt;
+			return ToString(MathX.ToleranceFormat);
 		}
 
 
@@ -206,122 +187,67 @@ namespace MathematicsX
 		public static implicit operator Vec4(Vec3 v) { return new Vec4(v.x, v.y, v.z, 0); }
 		public static explicit operator Vec4(Quat q) { return new Vec4(q.x, q.y, q.z, q.w); }
 
-		public static bool operator ==(Vec4 lhs, Vec4 rhs) { return lhs.ValueEquals(rhs); }
-		public static bool operator !=(Vec4 lhs, Vec4 rhs) { return !lhs.ValueEquals(rhs); }
-
 		public static Vec4 operator -(Vec4 v)
 		{
-			v.x = -v.x;
-			v.y = -v.y;
-			v.z = -v.z;
-			v.w = -v.w;
-			return v;
+			return new Vec4(-v.x, -v.y, -v.z, -v.w);
 		}
 
 		public static Vec4 operator +(double lhs, Vec4 rhs)
 		{
-			rhs.x += lhs;
-			rhs.y += lhs;
-			rhs.z += lhs;
-			rhs.w += lhs;
-			return rhs;
+			return new Vec4(lhs + rhs.x, lhs + rhs.y, lhs + rhs.z, lhs + rhs.w);
 		}
 		public static Vec4 operator +(Vec4 lhs, double rhs)
 		{
-			lhs.x += rhs;
-			lhs.y += rhs;
-			lhs.z += rhs;
-			lhs.w += rhs;
-			return lhs;
+			return new Vec4(lhs.x + rhs, lhs.y + rhs, lhs.z + rhs, lhs.w + rhs);
 		}
 		public static Vec4 operator +(Vec4 lhs, Vec4 rhs)
 		{
-			lhs.x += rhs.x;
-			lhs.y += rhs.y;
-			lhs.z += rhs.z;
-			lhs.w += rhs.w;
-			return lhs;
+			return new Vec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w);
 		}
 
 		public static Vec4 operator -(double lhs, Vec4 rhs)
 		{
-			rhs.x = lhs - rhs.x;
-			rhs.y = lhs - rhs.y;
-			rhs.z = lhs - rhs.z;
-			rhs.w = lhs - rhs.w;
-			return rhs;
+			return new Vec4(lhs - rhs.x, lhs - rhs.y, lhs - rhs.z, lhs - rhs.w);
 		}
 		public static Vec4 operator -(Vec4 lhs, double rhs)
 		{
-			lhs.x -= rhs;
-			lhs.y -= rhs;
-			lhs.z -= rhs;
-			lhs.w -= rhs;
-			return lhs;
+			return new Vec4(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs, lhs.w - rhs);
 		}
 		public static Vec4 operator -(Vec4 lhs, Vec4 rhs)
 		{
-			lhs.x -= rhs.x;
-			lhs.y -= rhs.y;
-			lhs.z -= rhs.z;
-			lhs.w -= rhs.w;
-			return lhs;
+			return new Vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w);
 		}
 
 		public static Vec4 operator *(double lhs, Vec4 rhs)
 		{
-			rhs.x *= lhs;
-			rhs.y *= lhs;
-			rhs.z *= lhs;
-			rhs.w *= lhs;
-			return rhs;
+			return new Vec4(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w);
 		}
 		public static Vec4 operator *(Vec4 lhs, double rhs)
 		{
-			lhs.x *= rhs;
-			lhs.y *= rhs;
-			lhs.z *= rhs;
-			lhs.w *= rhs;
-			return lhs;
+			return new Vec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs);
 		}
 		public static Vec4 operator *(Vec4 lhs, Vec4 rhs)
 		{
-			lhs.x *= rhs.x;
-			lhs.y *= rhs.y;
-			lhs.z *= rhs.z;
-			lhs.w *= rhs.w;
-			return lhs;
+			return new Vec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w);
 		}
 
 		public static Vec4 operator /(double lhs, Vec4 rhs)
 		{
-			rhs.x = lhs / rhs.x;
-			rhs.y = lhs / rhs.y;
-			rhs.z = lhs / rhs.z;
-			rhs.w = lhs / rhs.w;
-			return rhs;
+			return new Vec4(lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w);
 		}
 		public static Vec4 operator /(Vec4 lhs, double rhs)
 		{
-			lhs.x /= rhs;
-			lhs.y /= rhs;
-			lhs.z /= rhs;
-			lhs.w /= rhs;
-			return lhs;
+			return new Vec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs);
 		}
 		public static Vec4 operator /(Vec4 lhs, Vec4 rhs)
 		{
-			lhs.x /= rhs.x;
-			lhs.y /= rhs.y;
-			lhs.z /= rhs.z;
-			lhs.w /= rhs.w;
-			return lhs;
+			return new Vec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w);
 		}
 
 		public static Vec4 GetRandom()
 		{
 			//Not even
-			double theta = MathX.DoublePI * MathX.GetRandom();
+			double theta = MathX.TWO_PI * MathX.GetRandom();
 			double phi = Math.Acos(MathX.GetRandom(-1, 1));
 			double rho = Math.Acos(MathX.GetRandom(-1, 1));
 			Vec4 nv;

@@ -2,7 +2,7 @@
 
 namespace MathematicsX
 {
-	public struct Triangle<T> where T : struct, IVector
+	public struct Triangle<T> where T : IVector, new()
 	{
 		public T p0;
 		public T p1;
@@ -41,7 +41,7 @@ namespace MathematicsX
 
 		public void MinMax(out T min, out T max)
 		{
-			int dim = p0.dimension;
+			int dim = p0.Dimension;
 			min = p0;
 			for (int i = 0; i < dim; i++)
 			{
@@ -59,12 +59,14 @@ namespace MathematicsX
 		public void CenterRadius(out T center, out double radius)
 		{
 			center = new T();
-			int dim = p0.dimension;
+			int dim = p0.Dimension;
 			for (int i = 0; i < dim; i++)
 			{
 				center[i] = (p0[i] + p1[i] + p2[i]) / 3;
 			}
 			radius = VecX.Distance(center, p0);
+			radius = Math.Max(radius, VecX.Distance(center, p1));
+			radius = Math.Max(radius, VecX.Distance(center, p2));
 		}
 
 	}

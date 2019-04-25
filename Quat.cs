@@ -25,13 +25,6 @@ namespace MathematicsX
 			this.z = v.z;
 			this.w = w;
 		}
-		public Quat(Quat q)
-		{
-			this.x = q.x;
-			this.y = q.y;
-			this.z = q.z;
-			this.w = q.w;
-		}
 
 		public string ToString(string format)
 		{
@@ -43,13 +36,10 @@ namespace MathematicsX
 				.Append(w.ToString(format)).Append(")");
 			return sb.ToString();
 		}
-		public override string ToString() { return ToString(""); }
-		public override int GetHashCode() { return base.GetHashCode(); }
-		public override bool Equals(object obj) { return base.Equals(obj); }
+		public override string ToString() { return ToString(MathX.ToleranceFormat); }
 		public bool ValueEquals(Quat q)
 		{
-			double pt = MathX.Tolerance;
-			double nt = -pt;
+			double pt = MathX.TOLERANCE, nt = -pt;
 			double dx, dy, dz, dw;
 			if (w > 0 ^ q.w > 0)
 			{
@@ -71,22 +61,28 @@ namespace MathematicsX
 				&& dw <= pt && dw >= nt;
 		}
 
+		public void Normalize()
+		{
+			double div = x * x + y * y + z * z + w * w;
+			if (div > 0)
+			{
+				div = Math.Sqrt(div);
+				x /= div;
+				y /= div;
+				z /= div;
+				w /= div;
+			}
+		}
 
 		public static explicit operator Quat(Vec3 v) { return new Quat(v.x, v.y, v.z, 0); }
 		public static explicit operator Quat(Vec4 v) { return new Quat(v.x, v.y, v.z, v.w); }
 
-		public static bool operator ==(Quat lhs, Quat rhs) { return lhs.ValueEquals(rhs); }
-		public static bool operator !=(Quat lhs, Quat rhs) { return !lhs.ValueEquals(rhs); }
-
 		/// <summary>
-		/// Conjugate: ~Q = (-x, -y, -z, w)
+		/// Conjugate: ~Q = (-x, -y, -z, w) = (x, y, z, -w)
 		/// </summary>
 		public static Quat operator ~(Quat q)
 		{
-			q.x = -q.x;
-			q.y = -q.y;
-			q.z = -q.z;
-			return q;
+			return new Quat(q.x, q.y, q.z, -q.w);
 		}
 
 		/// <summary>
@@ -194,7 +190,7 @@ namespace MathematicsX
 			axisNorm.z = q.z / sin;
 		}
 
-		public static Quat FromMat4x4(Mat4x4 m)
+		public static Quat FromMat4x4(SqMat4 m)
 		{
 			Quat nq;
 			nq.w = Math.Sqrt(1 + m.m00 + m.m11 + m.m22) * 0.5;
@@ -203,22 +199,29 @@ namespace MathematicsX
 			nq.z = Math.Sqrt(1 - m.m00 - m.m11 + m.m22) * (m.m01 <= m.m10 ? 0.5 : -0.5);
 			return nq;
 		}
-		public static Mat4x4 ToMat4x4(Quat q)
+		public static SqMat4 ToMat4x4(Quat q)
 		{
 			double x = q.x, y = q.y, z = q.z, w = q.w;
 			double xx = x * x, yy = y * y, zz = z * z;
 			double xy = x * y, yz = y * z, xz = x * z;
 			double xw = x * w, yw = y * w, zw = z * w;
-			return new Mat4x4(
+			return new SqMat4(
 				1 - 2 * (yy + zz), 2 * (xy - zw), 2 * (xz + yw), 0,
 				2 * (xy + zw), 1 - 2 * (xx + zz), 2 * (yz - xw), 0,
 				2 * (xz - yw), 2 * (yz + xw), 1 - 2 * (xx + yy), 0,
 				0, 0, 0, 1);
 		}
 
+		public static Quat FromTo(Vec3 fromNorm, Vec3 toNorm)
+		{
+			Vec3 mf = VecX.Normalize(fromNorm + toNorm);
+			Quat nq = new Quat(VecX.Cross(mf, toNorm), VecX.Dot(mf, toNorm));
+			return nq;
+		}
+
 		public static Quat GetRandom()
 		{
-			double a = MathX.GetRandom(-MathX.DoublePI, MathX.DoublePI);
+			double a = MathX.GetRandom(-MathX.TWO_PI, MathX.TWO_PI);
 			return FromAngleAxis(a, Vec3.GetRandom());
 		}
 

@@ -1,30 +1,29 @@
 ﻿namespace MathematicsX
 {
-	public struct AxisAlignedBox<T> where T : struct, IVector
+	public struct AxisAlignedBox<T> where T : IVector, new()
 	{
-		T m_pos;
-		T m_size;
-
-		public T pos
-		{
-			get { return m_pos; }
-			set { m_pos = value; }
-		}
-		public T size
-		{
-			get { return m_size; }
-			set { m_size = VecX.Abs(value); }
-		}
-		public T min { get { return m_pos; } }
-		public T max { get { return VecX.Add(m_pos, m_size); } }
-		public T center { get { return VecX.Add(VecX.Mul(m_size, 0.5), m_pos); } }
-		public T extends { get { return VecX.Mul(m_size, 0.5); } }
+		private T m_pos;
+		private T m_size;
 		
 		public AxisAlignedBox(T pos, T size)
 		{
 			m_pos = pos;
-			m_size = VecX.Abs(size);
+			m_size = size;
 		}
 
+		public T Pos
+		{
+			get { return m_pos; }
+			set { m_pos = value; }
+		}
+		public T Size
+		{
+			get { return m_size; }
+			set { m_size = VecX.Abs(value); }
+		}
+		public T Min { get { return m_pos; } }
+		public T Max { get { return VecX.Add(m_pos, m_size); } }
+		public T Center { get { return VecX.Add(m_pos, VecX.Mul(m_size, 0.5)); } }
+		public T Extends { get { return VecX.Mul(m_size, 0.5); } }
 	}
 }
